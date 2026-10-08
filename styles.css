@@ -505,3 +505,28 @@ svg{display:block}
 @media(max-width:430px){.cats,.pgrid,.icards,.revs{grid-template-columns:1fr}}
 
 .acc__a>p{padding-bottom:22px}
+
+/* =====================================================================
+   DARK TOP — шапка чорна (єдиний темний блок з hero), решта сайту світла
+   ===================================================================== */
+.header{background:var(--ink);border-bottom:1px solid rgba(255,255,255,.10)}
+.header.scrolled{background:rgba(11,11,13,.97);backdrop-filter:blur(16px);box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.brand{background:none;padding:0;clip-path:none}
+.header.scrolled .brand{padding:0}
+.search{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.search:focus-within{background:rgba(255,255,255,.13);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)}
+.search input{color:#fff}
+.search input::placeholder{color:rgba(255,255,255,.45)}
+.search button{color:#fff}
+.header__phone{color:#fff}
+.header__phone:hover{color:var(--red-hot)}
+.burger span{background:#fff}
+.meganav{background:#111115;border-top:1px solid rgba(255,255,255,.09)}
+.meganav a{color:#D5D5DD}
+.meganav a:hover,.meganav a.active{color:#fff}
+.meganav__brands{color:#5F5F69}
+.mobile-menu{background:#111115;border-bottom:1px solid rgba(255,255,255,.1)}
+.mobile-menu a{color:#fff;border-bottom:1px solid rgba(255,255,255,.1)}
+
+/* перша секція не ховається під фіксованою шапкою */
+.phero{padding-top:var(--hh)}

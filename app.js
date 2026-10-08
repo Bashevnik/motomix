@@ -409,6 +409,7 @@ function initSmooth() {
   s.onload = () => {
     try {
       const lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      lenis.scrollTo(0, { immediate: true });
       const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
       requestAnimationFrame(raf);
     } catch {}
@@ -418,6 +419,8 @@ function initSmooth() {
 
 /* ---------------- boot ---------------- */
 (async function boot() {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
   await Promise.all([...document.querySelectorAll('[data-include]')].map(async n => {
     try { n.innerHTML = await (await fetch(n.getAttribute('data-include'))).text(); } catch {}
   }));
