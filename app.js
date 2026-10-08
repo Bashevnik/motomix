@@ -41,7 +41,7 @@ const pcardHtml = (p) => `
       <div class="pcard__spec">${p.spec.map(s => `<span>${s}</span>`).join('')}</div>
       <div class="pcard__foot">
         <div class="pcard__price">Ціна за запитом<small>уточнюйте наявність</small></div>
-        <button class="btn btn--red" data-order="${p.name}">Замовити</button>
+        <button class="tlink" data-order="${p.name}">Замовити <svg class="icon"><use href="#ic-arrow"></use></svg></button>
       </div>
     </div>
   </article>`;
@@ -50,10 +50,14 @@ const pcardHtml = (p) => `
 function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach(c => box.appendChild(el(`
-    <a class="cat reveal" href="catalog.html?cat=${encodeURIComponent(c.name)}">
-      <img src="${c.img}" alt="${c.name}" loading="lazy">
-      <div class="cat__go">${svg('ic-arrow')}</div>
-      <div class="cat__body"><div class="cat__name">${c.name}</div><div class="cat__count">${c.count}</div></div>
+    <a class="ecard reveal" href="catalog.html?cat=${encodeURIComponent(c.name)}">
+      <div class="ecard__img"><img src="${c.img}" alt="${c.name}" loading="lazy"></div>
+      <div class="ecard__body">
+        <div class="ecard__title">${c.name}</div>
+        <div class="ecard__desc">${c.count}</div>
+        <div class="ecard__div"></div>
+        <span class="ecard__link">Дивитись ${svg('ic-arrow')}</span>
+      </div>
     </a>`)));
 }
 function renderProducts() {
