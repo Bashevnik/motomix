@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MOTOMIX — мотоцикли, пітбайки, ендуро · Біла Церква</title>
+    <meta name="description"
+        content="MOTOMIX — магазин мототехніки у Білій Церкві: ендуро, пітбайки, мотоцикли, скутери, електротранспорт. Бренди Geon, Kovi, Kayo, Shineray, Musstang. Trade-in, доставка по Україні.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="assets/logo.png">
+    <meta name="theme-color" content="#0a0a0c">
+</head>
+
+<body>
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="wrap topbar__in">
+            <div class="topbar__loc">📍 Біла Церква · <span>Пн–Нд 9:00–20:00</span></div>
+            <div class="topbar__right">
+                <a href="https://www.instagram.com/moto_mix_bc/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.tiktok.com/@moto_mix_bc" target="_blank" rel="noopener">TikTok</a>
+                <a class="topbar__phone" href="tel:+380938701107">+38 093 870 11 07</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="wrap header__in">
+            <nav class="nav nav--left">
+                <a href="#catalog">Каталог</a>
+                <a href="#top">Топ продаж</a>
+                <a href="#brands">Бренди</a>
+                <a href="#tradein">Trade-in</a>
+            </nav>
+            <a href="#" class="brand" aria-label="MOTOMIX">
+                <img src="assets/logo.png" alt="MOTOMIX" class="brand__img">
+            </a>
+            <div class="header__actions">
+                <a class="header__phone" href="tel:+380938701107">
+                    <span class="header__phone-ic">📞</span>
+                    <span>+38 093 870 11 07</span>
+                </a>
+                <button class="btn btn--red" data-order="Загальна заявка">Залишити заявку</button>
+                <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#catalog">Каталог</a>
+        <a href="#top">Топ продаж</a>
+        <a href="#brands">Бренди</a>
+        <a href="#tradein">Trade-in</a>
+        <a href="tel:+380938701107">+38 093 870 11 07</a>
+        <button class="btn btn--red btn--block" data-order="Заявка з меню">Залишити заявку</button>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero__media">
+            <img src="assets/hero/enduro-action.jpg" alt="" class="hero__img">
+            <div class="hero__shade"></div>
+        </div>
+        <div class="wrap hero__in">
+            <div class="hero__tag">МОТОТЕХНІКА · БІЛА ЦЕРКВА</div>
+            <h1 class="hero__title">ТЕХНІКА, ЩО<br><span>ЖИВЕ ДРАЙВОМ</span></h1>
+            <p class="hero__sub">Ендуро, пітбайки, мотоцикли, скутери та електротранспорт.
+                Офіційні бренди, чесна консультація, доставка по всій Україні.</p>
+            <div class="hero__cta">
+                <a href="#catalog" class="btn btn--red btn--lg">Каталог</a>
+                <button class="btn btn--ghost btn--lg" data-order="Підбір техніки">Підібрати техніку</button>
+            </div>
+            <div class="hero__stats">
+                <div><b>20+</b><span>брендів у продажу</span></div>
+                <div><b>Trade-in</b><span>обмін старого на нове</span></div>
+                <div><b>0%</b><span>передоплати при доставці</span></div>
+            </div>
+        </div>
+        <div class="hero__scroll">прокрути ↓</div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="section" id="catalog">
+        <div class="wrap">
+            <div class="section__head">
+                <h2 class="section__title">Каталог за категоріями</h2>
+                <p class="section__lead">Обери напрям — підберемо модель під твій стиль і бюджет</p>
+            </div>
+            <div class="cats" id="cats"></div>
+        </div>
+    </section>
+
+    <!-- TOP SALES -->
+    <section class="section section--dark" id="top">
+        <div class="wrap">
+            <div class="section__head">
+                <h2 class="section__title">Топ продаж</h2>
+                <p class="section__lead">Моделі, які беруть найчастіше — у наявності та під замовлення</p>
+            </div>
+            <div class="grid-products" id="products"></div>
+        </div>
+    </section>
+
+    <!-- ADVANTAGES (5 cols) -->
+    <section class="section">
+        <div class="wrap">
+            <div class="adv">
+                <div class="adv__item"><div class="adv__ic">🚚</div><b>Доставка по Україні</b><span>без передоплати, Нова Пошта</span></div>
+                <div class="adv__item"><div class="adv__ic">🎧</div><b>Жива консультація</b><span>підкажемо під стиль і зріст</span></div>
+                <div class="adv__item"><div class="adv__ic">🛠️</div><b>Сервіс і запчастини</b><span>обслуговування після покупки</span></div>
+                <div class="adv__item"><div class="adv__ic">✅</div><b>Офіційні бренди</b><span>гарантія та оригінал</span></div>
+                <div class="adv__item"><div class="adv__ic">🔁</div><b>Trade-in</b><span>обмін старого на нове</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED SPLIT (photo + ecosystem element) -->
+    <section class="section section--dark">
+        <div class="wrap split">
+            <div class="split__media">
+                <img src="assets/hero/forest-ride.jpg" alt="Ендуро в русі">
+                <svg class="split__moto" viewBox="0 0 200 90" aria-hidden="true">
+                    <use href="#enduro-glyph"></use>
+                </svg>
+            </div>
+            <div class="split__text">
+                <div class="section__tag">Для бездоріжжя й міста</div>
+                <h2 class="section__title">Ендуро, що не боїться маршруту</h2>
+                <p>Повнорозмірні ендуро 250–300 куб і легкі пітбайки для початку. Підберемо під зріст,
+                    досвід і задачі — від перших покатеньок до серйозного оффроуду.</p>
+                <ul class="split__list">
+                    <li>Повний пакет документів і реєстрація</li>
+                    <li>Передпродажна підготовка кожної одиниці</li>
+                    <li>Екіпіровка та шоломи у комплект</li>
+                </ul>
+                <button class="btn btn--red" data-order="Консультація по ендуро">Отримати консультацію</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRANDS SWIPER -->
+    <section class="section" id="brands">
+        <div class="wrap">
+            <div class="section__head">
+                <h2 class="section__title">Торгові марки</h2>
+                <p class="section__lead">Працюємо з перевіреними виробниками мототехніки</p>
+            </div>
+        </div>
+        <div class="marquee" id="brands-track"></div>
+    </section>
+
+    <!-- TRADE-IN CTA -->
+    <section class="cta" id="tradein">
+        <div class="wrap cta__in">
+            <div>
+                <h2 class="cta__title">Обміняй свій старий мотоцикл на новий</h2>
+                <p>Оцінимо твою техніку та зарахуємо її вартість у покупку. Швидко й чесно.</p>
+            </div>
+            <button class="btn btn--red btn--lg" data-order="Trade-in заявка">Розрахувати Trade-in</button>
+        </div>
+    </section>
+
+    <!-- FOOTER (epic) -->
+    <footer class="footer">
+        <div class="footer__big">
+            <span>MOTO<i>MIX</i></span>
+            <svg class="footer__moto" viewBox="0 0 200 90" aria-hidden="true"><use href="#enduro-glyph"></use></svg>
+        </div>
+        <div class="wrap footer__grid">
+            <div class="footer__col">
+                <img src="assets/logo.png" alt="MOTOMIX" class="footer__logo">
+                <p>Мототехніка у Білій Церкві: ендуро · пітбайки · скутери · e-bike.</p>
+            </div>
+            <div class="footer__col">
+                <h4>Навігація</h4>
+                <a href="#catalog">Каталог</a>
+                <a href="#top">Топ продаж</a>
+                <a href="#brands">Бренди</a>
+                <a href="#tradein">Trade-in</a>
+            </div>
+            <div class="footer__col">
+                <h4>Контакти</h4>
+                <a href="tel:+380938701107">+38 093 870 11 07</a>
+                <a href="https://www.instagram.com/moto_mix_bc/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.tiktok.com/@moto_mix_bc" target="_blank" rel="noopener">TikTok</a>
+                <span>Біла Церква · Пн–Нд 9:00–20:00</span>
+            </div>
+            <div class="footer__col">
+                <h4>Інформація</h4>
+                <a href="#">Доставка та оплата</a>
+                <a href="#">Гарантія та сервіс</a>
+                <a href="#">Політика конфіденційності</a>
+            </div>
+        </div>
+        <div class="wrap footer__bottom">
+            <span>© 2026 MOTOMIX. Усі права захищено.</span>
+            <span>Зроблено SkyBreeze</span>
+        </div>
+    </footer>
+
+    <!-- ORDER MODAL -->
+    <div class="modal" id="orderModal" aria-hidden="true">
+        <div class="modal__backdrop" data-close></div>
+        <div class="modal__box" role="dialog" aria-modal="true">
+            <button class="modal__close" data-close aria-label="Закрити">×</button>
+            <h3 class="modal__title">Залишити заявку</h3>
+            <p class="modal__sub" id="modalSub">Залиш контакти — передзвонимо, проконсультуємо, забронюємо.</p>
+            <form id="orderForm" class="form">
+                <input type="hidden" name="subject" id="orderSubject" value="">
+                <label>Ім'я<input type="text" name="name" required placeholder="Як до вас звертатися"></label>
+                <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
+                <label>Коментар<textarea name="comment" rows="3" placeholder="Модель, питання, зручний час дзвінка"></textarea></label>
+                <button type="submit" class="btn btn--red btn--block btn--lg">Відправити заявку</button>
+                <div class="form__note" id="formNote"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- shared SVG glyph: stylized enduro silhouette -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="enduro-glyph" viewBox="0 0 200 90">
+            <path fill="currentColor" d="M44 78a18 18 0 1 1 0-36 18 18 0 0 1 0 36zm0-8a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm112 8a18 18 0 1 1 0-36 18 18 0 0 1 0 36zm0-8a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"/>
+            <path fill="currentColor" d="M60 60l22-24h20l8-14 10 2-10 18H78l-6 7 34 1 18 18-6 6-16-16-30-1-7 7zM96 34l40 2 14 18-7 5-11-15-38-2z"/>
+            <path fill="currentColor" d="M118 20l18-4 4 8-16 4zM30 56l18-14 5 6-17 13z"/>
+        </symbol>
+    </svg>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
