@@ -1,5 +1,5 @@
 /* ============ MOTOMIX — app (multi-page) ============ */
-const ORDER_ENDPOINT = ''; // Vercel /api/order — порожньо = демо-режим
+const ORDER_ENDPOINT = ''; // '' = той самий домен (/api/order на Vercel). Інакше — абсолютний URL.
 
 /* ---------------- DATA ---------------- */
 const CATEGORIES = [
@@ -390,15 +390,21 @@ function initModal() {
   document.getElementById('orderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    const text = `🏍️ <b>Нова заявка MOTOMIX</b>\nТема: ${fd.get('subject')}\nІм'я: ${fd.get('name')}\nТелефон: ${fd.get('phone')}\n`
-      + (fd.get('comment') ? `Коментар: ${fd.get('comment')}\n` : '');
+    const payload = {
+      subject: fd.get('subject'), name: fd.get('name'), phone: fd.get('phone'),
+      comment: fd.get('comment'), company: fd.get('company'), page: location.pathname + location.search,
+    };
     note.textContent = 'Відправляємо…'; note.className = 'form__note';
     try {
-      if (!ORDER_ENDPOINT) { console.log('[DEMO ORDER]\n' + text); await new Promise(r => setTimeout(r, 450)); }
-      else { const r = await fetch(ORDER_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ text }) }); if (!r.ok) throw 0; }
-      note.textContent = '✅ Дякуємо! Зв\'яжемось найближчим часом.'; note.className = 'form__note ok';
-      e.target.reset(); setTimeout(close, 2000);
-    } catch { note.textContent = '⚠️ Не вдалось відправити. Подзвоніть: +38 093 870 11 07'; note.className = 'form__note err'; }
+      const r = await fetch(ORDER_ENDPOINT || '/api/order', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      if (!r.ok) throw new Error('bad status');
+      note.textContent = '✅ Дякуємо! Передзвонимо найближчим часом.'; note.className = 'form__note ok';
+      e.target.reset(); setTimeout(close, 2200);
+    } catch {
+      note.textContent = '⚠️ Не вдалось відправити. Подзвоніть: +38 093 870 11 07'; note.className = 'form__note err';
+    }
   });
 }
 

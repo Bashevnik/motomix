@@ -29,6 +29,7 @@
     <p class="modal__sub" id="modalSub">Залиш контакти — передзвонимо, проконсультуємо, забронюємо.</p>
     <form id="orderForm" class="form">
       <input type="hidden" name="subject" id="orderSubject" value="">
+      <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label>Ім'я<input type="text" name="name" required placeholder="Як до вас звертатися"></label>
       <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
       <label>Коментар<textarea name="comment" rows="3" placeholder="Модель, питання, зручний час дзвінка"></textarea></label>
