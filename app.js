@@ -1,5 +1,5 @@
 /* ============ MOTOMIX — app (multi-page) ============ */
-const ORDER_ENDPOINT = ''; // '' = той самий домен (/api/order на Vercel). Інакше — абсолютний URL.
+const ORDER_ENDPOINT = 'https://motomix.vercel.app/api/order'; // прод-ендпоінт (працює і з дзеркала на GitHub Pages)
 
 /* ---------------- DATA ---------------- */
 const CATEGORIES = [

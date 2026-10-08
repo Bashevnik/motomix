@@ -1,6 +1,4 @@
 preview-*.png
+_ref/
 ig.json
 node_modules/
-
-.vercel
-.env*
