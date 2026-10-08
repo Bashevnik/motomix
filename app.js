@@ -11,7 +11,7 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-  { id:'geon-gns-300', name:'GEON GNS 300', brand:'GEON', cat:'Ендуро', badge:'Хіт', img:'assets/ig/post-1.jpg',
+  { id:'geon-gns-300', name:'GEON GNS 300', brand:'GEON', cat:'Ендуро', cc:300, badge:'Хіт', img:'assets/ig/post-1.jpg',
     gallery:['assets/ig/post-1.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
     spec:['300 см³','4-такт','з документами'],
     desc:'Повнорозмірне ендуро для тих, хто вже впевнено тримається в сідлі. Рідинне охолодження тримає температуру на довгих підйомах, 6-ступенева КПП дає запас і для лісу, і для траси. Йде з повним пакетом документів — одразу ставиш на облік.',
@@ -19,7 +19,7 @@ const PRODUCTS = [
             'Колеса':'21" / 18"', 'Гальма':'дискові', 'Документи':'повний пакет', 'Призначення':'ендуро / оффроуд' },
     kit:['Передпродажна підготовка','Пакет документів для реєстрації','Базовий набір інструменту','Гарантійний талон'] },
 
-  { id:'kayo-t4-300', name:'KAYO T4 300', brand:'KAYO', cat:'Ендуро', badge:'', img:'assets/ig/post-3.jpg',
+  { id:'kayo-t4-300', name:'KAYO T4 300', brand:'KAYO', cat:'Ендуро', cc:300, badge:'', img:'assets/ig/post-3.jpg',
     gallery:['assets/ig/post-3.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg'],
     spec:['300 см³','баланс-вал','оффроуд'],
     desc:'Ендуро з балансувальним валом — менше вібрації на довгих перегонах, менше втоми в руках. Міцна рама та довгоходова підвіска тримають удар на складному ґрунті.',
@@ -27,7 +27,7 @@ const PRODUCTS = [
             'КПП':'6 ступенів', 'Колеса':'21" / 18"', 'Гальма':'дискові', 'Призначення':'ендуро' },
     kit:['Передпродажна підготовка','Гарантійний талон','Консультація з обслуговування'] },
 
-  { id:'kovi-pr50', name:'KOVI PR50', brand:'KOVI', cat:'Пітбайки', badge:'Новинка', img:'assets/ig/post-2.jpg',
+  { id:'kovi-pr50', name:'KOVI PR50', brand:'KOVI', cat:'Пітбайки', cc:50, badge:'Новинка', img:'assets/ig/post-2.jpg',
     gallery:['assets/ig/post-2.jpg','assets/products/pitbike.jpg'],
     spec:['пітбайк','для старту','легкий'],
     desc:'Легкий пітбайк для першого досвіду та тренувань на треку. Невелика вага і проста механіка прощають помилки — ідеально, щоб поставити техніку їзди.',
@@ -35,7 +35,7 @@ const PRODUCTS = [
             'Гальма':'дискові', 'Призначення':'навчання, трек' },
     kit:['Передпродажна підготовка','Інструмент','Гарантійний талон'] },
 
-  { id:'shineray-xy250', name:'Shineray XY 250GY', brand:'SHINERAY', cat:'Ендуро', badge:'Під замовлення', img:'assets/products/enduro.jpg',
+  { id:'shineray-xy250', name:'Shineray XY 250GY', brand:'SHINERAY', cat:'Ендуро', cc:250, badge:'Під замовлення', img:'assets/products/enduro.jpg',
     gallery:['assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
     spec:['250 см³','ендуро','під замовлення'],
     desc:'Універсальне ендуро 250 для щоденних виїздів і подорожей. Повітряне охолодження — простіше в обслуговуванні, менше витрат у сервісі.',
@@ -43,7 +43,7 @@ const PRODUCTS = [
             'КПП':'5 ступенів', 'Колеса':'21" / 18"', 'Призначення':'ендуро / туризм' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
-  { id:'musstang-region-250', name:'Musstang Region 250', brand:'MUSSTANG', cat:'Мотоцикли', badge:'', img:'assets/hero/moto-dark.jpg',
+  { id:'musstang-region-250', name:'Musstang Region 250', brand:'MUSSTANG', cat:'Мотоцикли', cc:250, badge:'', img:'assets/hero/moto-dark.jpg',
     gallery:['assets/hero/moto-dark.jpg','assets/hero/story-1.jpg'],
     spec:['250 см³','дорожній','надійний'],
     desc:'Дорожній мотоцикл для міста і траси. Невибагливий до пального, зрозумілий у ремонті, з доступними запчастинами.',
@@ -51,7 +51,7 @@ const PRODUCTS = [
             'Колеса':'18" / 17"', 'Гальма':'диск / барабан', 'Призначення':'місто + траса' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
-  { id:'kovi-125', name:'Пітбайк KOVI 125', brand:'KOVI', cat:'Пітбайки', badge:'', img:'assets/products/pitbike.jpg',
+  { id:'kovi-125', name:'Пітбайк KOVI 125', brand:'KOVI', cat:'Пітбайки', cc:125, badge:'', img:'assets/products/pitbike.jpg',
     gallery:['assets/products/pitbike.jpg','assets/ig/post-2.jpg'],
     spec:['125 см³','повітр. охол.','для старту'],
     desc:'Класичний пітбайк 125 — найпопулярніший старт у мото. Достатньо тяги для треку, але без надлишку, який лякає новачка.',
@@ -73,28 +73,28 @@ const PRODUCTS = [
     specs:{ 'Склад':'шолом, рукавички, захист', 'Розміри':'S–XXL', 'Призначення':'ендуро / крос' },
     kit:['Підбір розміру','Консультація'] },
 
-  { id:'geon-trail', name:'GEON Trail Edition', brand:'GEON', cat:'Ендуро', badge:'', img:'assets/hero/forest-ride.jpg',
+  { id:'geon-trail', name:'GEON Trail Edition', brand:'GEON', cat:'Ендуро', cc:300, badge:'', img:'assets/hero/forest-ride.jpg',
     gallery:['assets/hero/forest-ride.jpg','assets/hero/story-2.jpg'],
     spec:['ендуро','оффроуд','тест-драйв'],
     desc:'Версія для лісових маршрутів: довгоходова підвіска та захист картера. Для тих, хто їздить там, де закінчується асфальт.',
     specs:{ 'Тип':'ендуро', 'Призначення':'лісові маршрути', 'Підвіска':'довгоходова' },
     kit:['Передпродажна підготовка','Гарантія'] },
 
-  { id:'lifan-road', name:'LIFAN дорожній', brand:'LIFAN', cat:'Мотоцикли', badge:'', img:'assets/hero/rider.jpg',
+  { id:'lifan-road', name:'LIFAN дорожній', brand:'LIFAN', cat:'Мотоцикли', cc:250, badge:'', img:'assets/hero/rider.jpg',
     gallery:['assets/hero/rider.jpg','assets/hero/story-1.jpg'],
     spec:['місто+траса','надійний','сервіс'],
     desc:'Надійний дорожній мотоцикл із доступним сервісом. Варіант для щоденних поїздок без зайвих витрат.',
     specs:{ 'Тип':'дорожній', 'КПП':'5 ступенів', 'Призначення':'щоденні поїздки' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
-  { id:'kayo-cross', name:'KAYO Cross', brand:'KAYO', cat:'Пітбайки', badge:'', img:'assets/hero/story-2.jpg',
+  { id:'kayo-cross', name:'KAYO Cross', brand:'KAYO', cat:'Пітбайки', cc:125, badge:'', img:'assets/hero/story-2.jpg',
     gallery:['assets/hero/story-2.jpg','assets/products/pitbike.jpg'],
     spec:['крос','спорт','трек'],
     desc:'Кросовий апарат для треку і змагань. Спортивна підвіска та агресивна геометрія — не для спокійних прогулянок.',
     specs:{ 'Тип':'кросовий', 'Призначення':'трек, змагання', 'Підвіска':'спортивна' },
     kit:['Передпродажна підготовка','Консультація'] },
 
-  { id:'enduro-sport', name:'Ендуро Sport 250', brand:'BSE', cat:'Ендуро', badge:'', img:'assets/hero/enduro-action.jpg',
+  { id:'enduro-sport', name:'Ендуро Sport 250', brand:'BSE', cat:'Ендуро', cc:250, badge:'', img:'assets/hero/enduro-action.jpg',
     gallery:['assets/hero/enduro-action.jpg','assets/products/enduro.jpg'],
     spec:['250 см³','спорт','легкий'],
     desc:'Легке спортивне ендуро 250. Мала вага дає керованість на вузьких стежках і менше втоми за кермом.',
@@ -196,47 +196,81 @@ function renderRail() {
 
 /* --- catalog: sticky sidebar filters + grid --- */
 function renderCatalog() {
-  const grid = document.getElementById('catalog-grid'); if (!grid) return;
-  const catBox = document.getElementById("f-cats"), brandSel = document.getElementById("f-brand");
-  const countEl = document.getElementById('f-count'), sortSel = document.getElementById('f-sort');
-  const cats = ['Усі', ...CATEGORIES.map(c => c.name)];
-  const brandsUsed = ['Усі', ...[...new Set(PRODUCTS.map(p => p.brand))]];
-  const q = (qs('q') || '').toLowerCase();
-  let aCat = cats.includes(qs('cat')) ? qs('cat') : 'Усі', aBrand = 'Усі', sort = 'default';
+  const grid = document.getElementById("catalog-grid"); if (!grid) return;
+  const countEl = document.getElementById("f-count"), sortSel = document.getElementById("f-sort");
+  const chipsBox = document.getElementById("f-chips");
+  const ALL = "Усі";
+  const groups = {
+    cat:   { label: "Тип",        values: [ALL, ...CATEGORIES.map(c => c.name)] },
+    brand: { label: "Бренд",      values: [ALL, ...[...new Set(PRODUCTS.map(p => p.brand))]] },
+    cc:    { label: "Об’єм, см³", values: [ALL, ...[...new Set(PRODUCTS.map(p => p.cc).filter(Boolean))].sort((a,b)=>a-b)] },
+  };
+  const state = { cat: ALL, brand: ALL, cc: ALL };
+  const q = (qs("q") || "").toLowerCase();
+  if (groups.cat.values.includes(qs("cat"))) state.cat = qs("cat");
+  if (qs("cc") && groups.cc.values.map(String).includes(qs("cc"))) state.cc = Number(qs("cc"));
 
-  const match = (p) => (aCat === 'Усі' || p.cat === aCat) && (aBrand === 'Усі' || p.brand === aBrand)
-    && (!q || (p.name + ' ' + p.brand + ' ' + p.cat + ' ' + p.spec.join(' ')).toLowerCase().includes(q));
-  const countFor = (type, v) => PRODUCTS.filter(p => {
-    if (type === 'cat') return (v === 'Усі' || p.cat === v) && (aBrand === 'Усі' || p.brand === aBrand);
-    return (v === 'Усі' || p.brand === v) && (aCat === 'Усі' || p.cat === aCat);
+  const match = (p) =>
+    (state.cat === ALL || p.cat === state.cat) &&
+    (state.brand === ALL || p.brand === state.brand) &&
+    (state.cc === ALL || p.cc === state.cc) &&
+    (!q || (p.name + " " + p.brand + " " + p.cat + " " + p.spec.join(" ")).toLowerCase().includes(q));
+
+  const countFor = (g, v) => PRODUCTS.filter(p => {
+    const t = { ...state, [g]: v };
+    return (t.cat === ALL || p.cat === t.cat) && (t.brand === ALL || p.brand === t.brand) && (t.cc === ALL || p.cc === t.cc);
   }).length;
 
   const draw = () => {
     let list = PRODUCTS.filter(match);
-    if (sort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === 'za') list = [...list].sort((a, b) => b.name.localeCompare(a.name));
-    grid.innerHTML = '';
+    const sort = sortSel ? sortSel.value : "default";
+    if (sort === "az") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "za") list = [...list].sort((a, b) => b.name.localeCompare(a.name));
+    grid.innerHTML = "";
     if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
     else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
     if (countEl) countEl.textContent = `Знайдено: ${list.length}`;
-    lists(); revealInit();
+    paintBars(); paintChips(); revealInit();
   };
-  const lists = () => {
-    if (!catBox) return;
-    catBox.innerHTML = "";
-    cats.forEach(v => {
-      const b = el(`<button class="${aCat === v ? "active" : ""}">${v}<i>${countFor("cat", v)}</i></button>`);
-      b.addEventListener("click", () => { aCat = v; draw(); });
-      catBox.appendChild(b);
+
+  const paintBars = () => {
+    Object.entries(groups).forEach(([g, cfg]) => {
+      const box = document.querySelector(`.fdd[data-g="${g}"]`); if (!box) return;
+      const btn = box.querySelector(".fdd__b"), panel = box.querySelector(".fdd__p");
+      const sel = state[g];
+      btn.innerHTML = `${sel === ALL ? cfg.label : sel}` + ico("ic-chev");
+      btn.classList.toggle("on", sel !== ALL);
+      panel.innerHTML = "";
+      cfg.values.forEach(v => {
+        const n = countFor(g, v);
+        const o = el(`<button type="button" class="${state[g] === v ? "sel" : ""}" ${!n && v !== ALL ? "disabled" : ""}>${v}<i>${n}</i></button>`);
+        o.addEventListener("click", () => { state[g] = v; box.classList.remove("open"); draw(); });
+        panel.appendChild(o);
+      });
     });
   };
-  if (brandSel && !brandSel.options.length) {
-    brandsUsed.forEach(v => brandSel.appendChild(el(`<option value="${v}">${v === "Усі" ? "Усі бренди" : v}</option>`)));
-    brandSel.addEventListener("change", e => { aBrand = e.target.value; draw(); });
-  }
-  sortSel?.addEventListener('change', e => { sort = e.target.value; draw(); });
-  document.getElementById('f-reset')?.addEventListener('click', () => { aCat = 'Усі'; aBrand = 'Усі'; draw(); });
-  document.getElementById('f-toggle')?.addEventListener('click', () => document.getElementById('fside')?.classList.toggle('open'));
+
+  const paintChips = () => {
+    if (!chipsBox) return;
+    chipsBox.innerHTML = "";
+    Object.entries(groups).forEach(([g, cfg]) => {
+      if (state[g] === ALL) return;
+      const c = el(`<button type="button" class="fchip">${cfg.label}: <b>${state[g]}</b> ×</button>`);
+      c.addEventListener("click", () => { state[g] = ALL; draw(); });
+      chipsBox.appendChild(c);
+    });
+  };
+
+  // відкриття/закриття випадайок
+  document.querySelectorAll(".fdd .fdd__b").forEach(b => b.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const box = b.closest(".fdd"), was = box.classList.contains("open");
+    document.querySelectorAll(".fdd.open").forEach(x => x.classList.remove("open"));
+    if (!was) box.classList.add("open");
+  }));
+  document.addEventListener("click", () => document.querySelectorAll(".fdd.open").forEach(x => x.classList.remove("open")));
+  document.getElementById("f-reset")?.addEventListener("click", () => { state.cat = ALL; state.brand = ALL; state.cc = ALL; draw(); });
+  sortSel?.addEventListener("change", draw);
   draw();
 }
 

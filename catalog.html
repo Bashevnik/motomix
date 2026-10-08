@@ -20,33 +20,31 @@
     <section class="phero phero--compact">
         <div class="phero__media"><img src="assets/hero/story-2.jpg" alt=""></div>
         <div class="wrap phero__in">
-            <div class="crumbs"><a href="index.html">Головна</a><em>/</em><span>Каталог</span></div>
+            <div class="crumbs"><a href="index.html">Головна</a><em>›</em><span>Каталог</span></div>
             <h1>Каталог мототехніки</h1>
         </div>
     </section>
 
-    <section class="section" style="padding-top:clamp(28px,3vw,48px)">
-        <div class="wrap shop">
-            <aside class="fside" id="fside">
-                <div class="fgroup">
-                    <div class="fgroup__t">Напрям</div>
-                    <div class="flist" id="f-cats"></div>
-                </div>
-                <button class="btn btn--line btn--block" id="f-reset">Скинути фільтри</button>
-            </aside>
-            <div>
-                <div class="fbar-top">
-                    <span class="fcount" id="f-count"></span>
-                    <button class="btn btn--line fmobile" id="f-toggle">Фільтри</button>
-                    <select class="fsort" id="f-brand" aria-label="Бренд"></select>
+    <section class="section" style="padding-top:clamp(24px,2.6vw,40px)">
+        <div class="wrap">
+            <div class="fbar" id="fbar">
+                <span class="fbar__t">Фільтр</span>
+                <div class="fdd" data-g="cat"><button class="fdd__b" type="button">Тип <svg class="icon"><use href="#ic-chev"></use></svg></button><div class="fdd__p"></div></div>
+                <div class="fdd" data-g="brand"><button class="fdd__b" type="button">Бренд <svg class="icon"><use href="#ic-chev"></use></svg></button><div class="fdd__p"></div></div>
+                <div class="fdd" data-g="cc"><button class="fdd__b" type="button">Об’єм, см³ <svg class="icon"><use href="#ic-chev"></use></svg></button><div class="fdd__p"></div></div>
+                <button class="fdd__reset" id="f-reset" type="button">Скинути</button>
+                <div class="fbar__sort">
+                    <span>Сортування:</span>
                     <select class="fsort" id="f-sort" aria-label="Сортування">
-                        <option value="default">За замовчуванням</option>
-                        <option value="az">Назва A→Я</option>
-                        <option value="za">Назва Я→A</option>
+                        <option value="default">за замовчуванням</option>
+                        <option value="az">назва A→Я</option>
+                        <option value="za">назва Я→A</option>
                     </select>
                 </div>
-                <div class="pgrid" id="catalog-grid"></div>
             </div>
+            <div class="fchips" id="f-chips"></div>
+            <div class="fcount" id="f-count"></div>
+            <div class="pgrid" id="catalog-grid"></div>
         </div>
     </section>
 
