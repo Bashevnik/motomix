@@ -11,37 +11,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
-    <meta name="theme-color" content="#07070A">
+    <meta name="theme-color" content="#F2F1ED">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <section class="phero">
+    <section class="phero phero--compact">
         <div class="phero__media"><img src="assets/hero/story-2.jpg" alt=""></div>
         <div class="wrap phero__in">
             <div class="crumbs"><a href="index.html">Головна</a><em>/</em><span>Каталог</span></div>
-            <h1>Каталог<br>мототехніки</h1>
-            <p>Ендуро, пітбайки, мотоцикли, скутери та екіпіровка. Фільтруй за напрямом і брендом — або залиш заявку, підберемо під твій запит.</p>
+            <h1>Каталог мототехніки</h1>
         </div>
     </section>
 
-    <section class="section">
-        <div class="wrap">
-            <div class="fbar">
-                <div class="frow"><span class="flabel">Напрям</span><div class="frow" id="f-cats" style="gap:10px"></div></div>
-                <div class="frow"><span class="flabel">Бренд</span><div class="frow" id="f-brands" style="gap:10px"></div></div>
-                <div class="frow">
-                    <span class="flabel">Сортування</span>
-                    <select id="f-sort" class="chip" style="padding:.55em 1.1em;background:transparent;color:#A8A8B2">
-                        <option value="default" style="background:#16161C">За замовчуванням</option>
-                        <option value="az" style="background:#16161C">Назва A→Я</option>
-                        <option value="za" style="background:#16161C">Назва Я→A</option>
-                    </select>
-                    <span class="fcount" id="f-count"></span>
+    <section class="section" style="padding-top:clamp(28px,3vw,48px)">
+        <div class="wrap shop">
+            <aside class="fside" id="fside">
+                <div class="fgroup">
+                    <div class="fgroup__t">Напрям</div>
+                    <div class="flist" id="f-cats"></div>
                 </div>
+                <div class="fgroup">
+                    <div class="fgroup__t">Бренд</div>
+                    <div class="flist" id="f-brands"></div>
+                </div>
+                <button class="btn btn--line btn--block" id="f-reset">Скинути фільтри</button>
+            </aside>
+            <div>
+                <div class="fbar-top">
+                    <span class="fcount" id="f-count"></span>
+                    <button class="btn btn--line fmobile" id="f-toggle">Фільтри</button>
+                    <select class="fsort" id="f-sort" aria-label="Сортування">
+                        <option value="default">За замовчуванням</option>
+                        <option value="az">Назва A→Я</option>
+                        <option value="za">Назва Я→A</option>
+                    </select>
+                </div>
+                <div class="pgrid" id="catalog-grid"></div>
             </div>
-            <div class="pgrid" id="catalog-grid"></div>
         </div>
     </section>
 

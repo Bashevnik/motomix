@@ -5,33 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Товар — MOTOMIX</title>
-    <meta name="description" content="Характеристики, комплектація та замовлення мототехніки MOTOMIX. Біла Церква, доставка по Україні.">
+    <meta name="description" content="Характеристики, опис, комплектація та відгуки. Замовлення мототехніки MOTOMIX, Біла Церква.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
-    <meta name="theme-color" content="#07070A">
+    <meta name="theme-color" content="#F2F1ED">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <section class="phero" style="min-height:42vh">
+    <section class="phero phero--compact">
         <div class="phero__media"><img src="assets/hero/moto-dark.jpg" alt=""></div>
         <div class="wrap phero__in">
             <div class="crumbs"><a href="index.html">Головна</a><em>/</em><a href="catalog.html">Каталог</a><em>/</em><span id="pdp-crumb">Товар</span></div>
-            <h1 id="pdp-h1" style="font-size:clamp(1.9rem,4vw,3.4rem)">Товар</h1>
+            <h1 id="pdp-h1">Товар</h1>
         </div>
     </section>
 
-    <section class="section">
+    <section class="section" style="padding-top:clamp(28px,3vw,48px)">
         <div class="wrap">
             <div class="pdp" id="pdp"></div>
         </div>
     </section>
 
-    <section class="section section--carbon">
+    <section class="section section--tint" style="padding-block:clamp(44px,5vw,80px)">
+        <div class="wrap">
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Відгуки</span>
+                    <h2 class="stitle">Що кажуть клієнти</h2>
+                </div>
+                <button class="btn btn--line" data-order="Відгук про товар">Залишити відгук</button>
+            </div>
+            <div class="revs" id="reviews"></div>
+        </div>
+    </section>
+
+    <section class="section">
         <div class="wrap">
             <div class="shead">
                 <div class="shead__l">

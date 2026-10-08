@@ -14,20 +14,23 @@ const PRODUCTS = [
   { id:'geon-gns-300', name:'GEON GNS 300', brand:'GEON', cat:'Ендуро', badge:'Хіт', img:'assets/ig/post-1.jpg',
     gallery:['assets/ig/post-1.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
     spec:['300 см³','4-такт','з документами'],
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', 'Об\'єм':'300 см³', 'Охолодження':'рідинне', 'КПП':'6 ступенів',
+    desc:'Повнорозмірне ендуро для тих, хто вже впевнено тримається в сідлі. Рідинне охолодження тримає температуру на довгих підйомах, 6-ступенева КПП дає запас і для лісу, і для траси. Йде з повним пакетом документів — одразу ставиш на облік.',
+    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'300 см³', 'Охолодження':'рідинне', 'КПП':'6 ступенів',
             'Колеса':'21" / 18"', 'Гальма':'дискові', 'Документи':'повний пакет', 'Призначення':'ендуро / оффроуд' },
     kit:['Передпродажна підготовка','Пакет документів для реєстрації','Базовий набір інструменту','Гарантійний талон'] },
 
   { id:'kayo-t4-300', name:'KAYO T4 300', brand:'KAYO', cat:'Ендуро', badge:'', img:'assets/ig/post-3.jpg',
     gallery:['assets/ig/post-3.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg'],
     spec:['300 см³','баланс-вал','оффроуд'],
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', 'Об\'єм':'300 см³', 'Особливість':'балансувальний вал',
+    desc:'Ендуро з балансувальним валом — менше вібрації на довгих перегонах, менше втоми в руках. Міцна рама та довгоходова підвіска тримають удар на складному ґрунті.',
+    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'300 см³', 'Особливість':'балансувальний вал',
             'КПП':'6 ступенів', 'Колеса':'21" / 18"', 'Гальма':'дискові', 'Призначення':'ендуро' },
     kit:['Передпродажна підготовка','Гарантійний талон','Консультація з обслуговування'] },
 
   { id:'kovi-pr50', name:'KOVI PR50', brand:'KOVI', cat:'Пітбайки', badge:'Новинка', img:'assets/ig/post-2.jpg',
     gallery:['assets/ig/post-2.jpg','assets/products/pitbike.jpg'],
     spec:['пітбайк','для старту','легкий'],
+    desc:'Легкий пітбайк для першого досвіду та тренувань на треку. Невелика вага і проста механіка прощають помилки — ідеально, щоб поставити техніку їзди.',
     specs:{ 'Тип':'пітбайк', 'Охолодження':'повітряне', 'КПП':'механічна', 'Колеса':'14" / 12"',
             'Гальма':'дискові', 'Призначення':'навчання, трек' },
     kit:['Передпродажна підготовка','Інструмент','Гарантійний талон'] },
@@ -35,63 +38,79 @@ const PRODUCTS = [
   { id:'shineray-xy250', name:'Shineray XY 250GY', brand:'SHINERAY', cat:'Ендуро', badge:'Під замовлення', img:'assets/products/enduro.jpg',
     gallery:['assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
     spec:['250 см³','ендуро','під замовлення'],
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', 'Об\'єм':'250 см³', 'Охолодження':'повітряне',
+    desc:'Універсальне ендуро 250 для щоденних виїздів і подорожей. Повітряне охолодження — простіше в обслуговуванні, менше витрат у сервісі.',
+    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'250 см³', 'Охолодження':'повітряне',
             'КПП':'5 ступенів', 'Колеса':'21" / 18"', 'Призначення':'ендуро / туризм' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
   { id:'musstang-region-250', name:'Musstang Region 250', brand:'MUSSTANG', cat:'Мотоцикли', badge:'', img:'assets/hero/moto-dark.jpg',
     gallery:['assets/hero/moto-dark.jpg','assets/hero/story-1.jpg'],
     spec:['250 см³','дорожній','надійний'],
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', 'Об\'єм':'250 см³', 'КПП':'5 ступенів',
+    desc:'Дорожній мотоцикл для міста і траси. Невибагливий до пального, зрозумілий у ремонті, з доступними запчастинами.',
+    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'250 см³', 'КПП':'5 ступенів',
             'Колеса':'18" / 17"', 'Гальма':'диск / барабан', 'Призначення':'місто + траса' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
   { id:'kovi-125', name:'Пітбайк KOVI 125', brand:'KOVI', cat:'Пітбайки', badge:'', img:'assets/products/pitbike.jpg',
     gallery:['assets/products/pitbike.jpg','assets/ig/post-2.jpg'],
     spec:['125 см³','повітр. охол.','для старту'],
-    specs:{ 'Об\'єм':'125 см³', 'Охолодження':'повітряне', 'КПП':'механічна, 4 ст.',
+    desc:'Класичний пітбайк 125 — найпопулярніший старт у мото. Достатньо тяги для треку, але без надлишку, який лякає новачка.',
+    specs:{ "Об'єм":'125 см³', 'Охолодження':'повітряне', 'КПП':'механічна, 4 ст.',
             'Колеса':'14" / 12"', 'Призначення':'старт, трек' },
     kit:['Передпродажна підготовка','Інструмент','Гарантія'] },
 
   { id:'yadea-scooter', name:'Скутер Yadea', brand:'YADEA', cat:'Скутери', badge:'', img:'assets/products/scooter.jpg',
     gallery:['assets/products/scooter.jpg'],
     spec:['місто','економний','щоденний'],
+    desc:'Скутер для щоденних поїздок по місту. Варіатор — рушив і поїхав, без перемикань. Економний і простий в обслуговуванні.',
     specs:{ 'Тип':'скутер', 'КПП':'варіатор', 'Колеса':'12"', 'Гальма':'диск / барабан', 'Призначення':'місто' },
     kit:['Передпродажна підготовка','Гарантія'] },
 
   { id:'helmet-set', name:'Шолом + екіпіровка', brand:'MOTO', cat:'Екіпіровка', badge:'', img:'assets/products/helmet.jpg',
     gallery:['assets/products/helmet.jpg'],
     spec:['шолом','захист','комплект'],
+    desc:'Базовий комплект захисту: шолом, рукавички та захист корпусу. Підбираємо за розміром — міряти обовʼязково.',
     specs:{ 'Склад':'шолом, рукавички, захист', 'Розміри':'S–XXL', 'Призначення':'ендуро / крос' },
     kit:['Підбір розміру','Консультація'] },
 
   { id:'geon-trail', name:'GEON Trail Edition', brand:'GEON', cat:'Ендуро', badge:'', img:'assets/hero/forest-ride.jpg',
     gallery:['assets/hero/forest-ride.jpg','assets/hero/story-2.jpg'],
     spec:['ендуро','оффроуд','тест-драйв'],
+    desc:'Версія для лісових маршрутів: довгоходова підвіска та захист картера. Для тих, хто їздить там, де закінчується асфальт.',
     specs:{ 'Тип':'ендуро', 'Призначення':'лісові маршрути', 'Підвіска':'довгоходова' },
     kit:['Передпродажна підготовка','Гарантія'] },
 
   { id:'lifan-road', name:'LIFAN дорожній', brand:'LIFAN', cat:'Мотоцикли', badge:'', img:'assets/hero/rider.jpg',
     gallery:['assets/hero/rider.jpg','assets/hero/story-1.jpg'],
     spec:['місто+траса','надійний','сервіс'],
+    desc:'Надійний дорожній мотоцикл із доступним сервісом. Варіант для щоденних поїздок без зайвих витрат.',
     specs:{ 'Тип':'дорожній', 'КПП':'5 ступенів', 'Призначення':'щоденні поїздки' },
     kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
 
   { id:'kayo-cross', name:'KAYO Cross', brand:'KAYO', cat:'Пітбайки', badge:'', img:'assets/hero/story-2.jpg',
     gallery:['assets/hero/story-2.jpg','assets/products/pitbike.jpg'],
     spec:['крос','спорт','трек'],
+    desc:'Кросовий апарат для треку і змагань. Спортивна підвіска та агресивна геометрія — не для спокійних прогулянок.',
     specs:{ 'Тип':'кросовий', 'Призначення':'трек, змагання', 'Підвіска':'спортивна' },
     kit:['Передпродажна підготовка','Консультація'] },
 
   { id:'enduro-sport', name:'Ендуро Sport 250', brand:'BSE', cat:'Ендуро', badge:'', img:'assets/hero/enduro-action.jpg',
     gallery:['assets/hero/enduro-action.jpg','assets/products/enduro.jpg'],
     spec:['250 см³','спорт','легкий'],
-    specs:{ 'Об\'єм':'250 см³', 'Тип':'ендуро-спорт', 'Призначення':'оффроуд' },
+    desc:'Легке спортивне ендуро 250. Мала вага дає керованість на вузьких стежках і менше втоми за кермом.',
+    specs:{ "Об'єм":'250 см³', 'Тип':'ендуро-спорт', 'Призначення':'оффроуд' },
     kit:['Передпродажна підготовка','Гарантія'] },
 ];
 
 const BRANDS = ['GEON','KOVI','KAYO','SHINERAY','MUSSTANG','SPARK','LIFAN','BAJAJ','FORTE','LONCIN',
   'YADEA','LINHAI','MIKILON','BENELLI','FADA','BSE','CFMOTO','RENEGADE'];
+
+/* ЗАГЛУШКА: приклади відгуків — замінити на реальні від клієнта */
+const REVIEWS = [
+  { n:'Андрій', c:'Біла Церква', t:'Брав ендуро — підібрали під мій зріст, не нав\'язували дорожче. Підготували, пояснили по обслуговуванню. Катаю другий сезон, питань нема.' },
+  { n:'Олег', c:'Київ', t:'Привезли в Київ без передоплати, як і домовлялись. Документи всі на місці, поставив на облік без проблем.' },
+  { n:'Віталій', c:'Фастів', t:'Здав старий мопед по Trade-in, доплатив різницю. Оцінили нормально, без заниження. Рекомендую.' },
+];
 
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
@@ -140,26 +159,23 @@ function renderBrands() {
 function renderStrip() {
   const box = document.getElementById('strip'); if (!box) return;
   const items = [
-    ['ic-truck', 'Доставка по Україні'], ['ic-shield', 'Офіційні бренди'],
-    ['ic-swap', 'Trade-in'], ['ic-wrench', 'Сервіс і запчастини'],
-    ['ic-support', 'Жива консультація'], ['ic-doc', 'Повний пакет документів'],
+    ['ic-truck','Доставка по Україні'], ['ic-shield','Офіційні бренди'], ['ic-swap','Trade-in'],
+    ['ic-wrench','Сервіс і запчастини'], ['ic-support','Жива консультація'], ['ic-doc','Повний пакет документів'],
   ];
   const track = el(`<div class="strip__track"></div>`);
   [...items, ...items].forEach(([i, t]) => track.appendChild(el(`<div class="strip__item">${ico(i)}${t}</div>`)));
   box.appendChild(track);
 }
 
-/* --- product rail: horizontal carousel, autoscroll 1 card / 3s --- */
+/* --- product rail: autoscroll 1 card / 3s, arrows sit on the rail --- */
 function renderRail() {
   const track = document.getElementById('rail-track'); if (!track) return;
   PRODUCTS.slice(0, 8).forEach(p => track.appendChild(el(pcardHtml(p))));
-  const view = track.parentElement;
-  const bar = document.querySelector('#rail-bar i');
+  const view = track.parentElement, bar = document.querySelector('#rail-bar i');
   let idx = 0;
   const step = () => {
-    const card = track.children[0]; if (!card) return 0;
-    const gap = parseFloat(getComputedStyle(track).gap) || 16;
-    return card.getBoundingClientRect().width + gap;
+    const card = track.children[0]; if (!card) return 1;
+    return card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).gap) || 16);
   };
   const maxIdx = () => Math.max(0, track.children.length - Math.floor(view.clientWidth / step()));
   const go = (i) => {
@@ -167,64 +183,80 @@ function renderRail() {
     track.style.transform = `translateX(${-idx * step()}px)`;
     if (bar) bar.style.width = `${((idx + 1) / (maxIdx() + 1)) * 100}%`;
   };
-  document.getElementById('rail-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
-  document.getElementById('rail-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
   let timer = null;
   const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
-  const restart = () => { clearInterval(timer); timer = setInterval(tick, 3000); }; // правило: автосвайп 3 с
+  const restart = () => { clearInterval(timer); timer = setInterval(tick, 3000); };
+  document.getElementById('rail-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
+  document.getElementById('rail-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
   view.addEventListener('mouseenter', () => clearInterval(timer));
   view.addEventListener('mouseleave', restart);
   window.addEventListener('resize', () => go(idx));
   go(0); restart();
 }
 
-/* --- catalog with filters --- */
+/* --- catalog: sticky sidebar filters + grid --- */
 function renderCatalog() {
   const grid = document.getElementById('catalog-grid'); if (!grid) return;
   const catBox = document.getElementById('f-cats'), brandBox = document.getElementById('f-brands');
   const countEl = document.getElementById('f-count'), sortSel = document.getElementById('f-sort');
   const cats = ['Усі', ...CATEGORIES.map(c => c.name)];
-  const brands = ['Усі', ...[...new Set(PRODUCTS.map(p => p.brand))]];
-  let aCat = qs('cat') && cats.includes(qs('cat')) ? qs('cat') : 'Усі';
-  let aBrand = 'Усі', sort = 'default';
+  const brandsUsed = ['Усі', ...[...new Set(PRODUCTS.map(p => p.brand))]];
+  const q = (qs('q') || '').toLowerCase();
+  let aCat = cats.includes(qs('cat')) ? qs('cat') : 'Усі', aBrand = 'Усі', sort = 'default';
+
+  const match = (p) => (aCat === 'Усі' || p.cat === aCat) && (aBrand === 'Усі' || p.brand === aBrand)
+    && (!q || (p.name + ' ' + p.brand + ' ' + p.cat + ' ' + p.spec.join(' ')).toLowerCase().includes(q));
+  const countFor = (type, v) => PRODUCTS.filter(p => {
+    if (type === 'cat') return (v === 'Усі' || p.cat === v) && (aBrand === 'Усі' || p.brand === aBrand);
+    return (v === 'Усі' || p.brand === v) && (aCat === 'Усі' || p.cat === aCat);
+  }).length;
 
   const draw = () => {
-    let list = PRODUCTS.filter(p => (aCat === 'Усі' || p.cat === aCat) && (aBrand === 'Усі' || p.brand === aBrand));
+    let list = PRODUCTS.filter(match);
     if (sort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'za') list = [...list].sort((a, b) => b.name.localeCompare(a.name));
     grid.innerHTML = '';
-    if (!list.length) {
-      grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
-    } else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
+    if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
+    else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
     if (countEl) countEl.textContent = `Знайдено: ${list.length}`;
-    revealInit();
+    lists(); revealInit();
   };
-  const chips = (box, arr, get, set) => {
-    box.innerHTML = '';
-    arr.forEach(v => {
-      const b = el(`<button class="chip${get() === v ? ' active' : ''}">${v}</button>`);
-      b.addEventListener('click', () => { set(v); box.querySelectorAll('.chip').forEach(x => x.classList.toggle('active', x.textContent === v)); draw(); });
-      box.appendChild(b);
-    });
+  const lists = () => {
+    const build = (box, arr, type, get, set) => {
+      if (!box) return;
+      box.innerHTML = '';
+      arr.forEach(v => {
+        const b = el(`<button class="${get() === v ? 'active' : ''}">${v}<i>${countFor(type, v)}</i></button>`);
+        b.addEventListener('click', () => { set(v); draw(); });
+        box.appendChild(b);
+      });
+    };
+    build(catBox, cats, 'cat', () => aCat, v => aCat = v);
+    build(brandBox, brandsUsed, 'brand', () => aBrand, v => aBrand = v);
   };
-  if (catBox) chips(catBox, cats, () => aCat, v => aCat = v);
-  if (brandBox) chips(brandBox, brands, () => aBrand, v => aBrand = v);
   sortSel?.addEventListener('change', e => { sort = e.target.value; draw(); });
+  document.getElementById('f-reset')?.addEventListener('click', () => { aCat = 'Усі'; aBrand = 'Усі'; draw(); });
+  document.getElementById('f-toggle')?.addEventListener('click', () => document.getElementById('fside')?.classList.toggle('open'));
   draw();
 }
 
-/* --- product page --- */
+/* --- product page: swipe gallery + accordions + reviews --- */
 function renderProduct() {
   const root = document.getElementById('pdp'); if (!root) return;
   const p = PRODUCTS.find(x => x.id === qs('id')) || PRODUCTS[0];
   document.title = `${p.name} — MOTOMIX`;
-  const crumb = document.getElementById('pdp-crumb'); if (crumb) crumb.textContent = p.name;
-  const h1 = document.getElementById('pdp-h1'); if (h1) h1.textContent = p.name;
-  const gal = p.gallery && p.gallery.length ? p.gallery : [p.img];
+  const c = document.getElementById('pdp-crumb'); if (c) c.textContent = p.name;
+  const h = document.getElementById('pdp-h1'); if (h) h.textContent = p.name;
+  const gal = (p.gallery && p.gallery.length) ? p.gallery : [p.img];
+
   root.innerHTML = `
-    <div>
-      <div class="pdp__main"><img id="pdp-img" src="${gal[0]}" alt="${p.name}"></div>
-      <div class="pdp__thumbs">${gal.map((g, i) => `<button class="${i ? '' : 'active'}" data-src="${g}"><img src="${g}" alt=""></button>`).join('')}</div>
+    <div class="gallery">
+      <div class="gallery__main" id="galMain">
+        <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${p.name}" draggable="false">`).join('')}</div>
+        ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" aria-label="Попереднє">${ico('ic-arrow-l')}</button>
+        <button class="gallery__nav gallery__nav--n" id="galNext" aria-label="Наступне">${ico('ic-arrow')}</button>` : ''}
+      </div>
+      ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button class="${i ? '' : 'active'}" data-i="${i}"><img src="${g}" alt=""></button>`).join('')}</div>` : ''}
     </div>
     <div class="pdp__info">
       <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> ${p.brand} · ${p.cat}</span>
@@ -234,22 +266,81 @@ function renderProduct() {
         <button class="btn btn--red btn--lg" data-order="${p.name}">Замовити</button>
         <a class="btn btn--line btn--lg" href="tel:+380938701107">${ico('ic-phone')} Подзвонити</a>
       </div>
-      <table class="spec-table">${Object.entries(p.specs || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table>
-      <h3 class="disp" style="color:#fff;font-size:1.3rem;margin-bottom:14px">У комплекті</h3>
-      <ul class="story__list">${(p.kit || []).map(k => `<li>${k}</li>`).join('')}</ul>
+      <div class="acc">
+        <div class="acc__i open"><button class="acc__q">Характеристики ${ico('ic-plus')}</button>
+          <div class="acc__a"><div><table class="spec-table">${Object.entries(p.specs || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div></div></div>
+        <div class="acc__i"><button class="acc__q">Опис ${ico('ic-plus')}</button>
+          <div class="acc__a"><div><p>${p.desc || ''}</p></div></div></div>
+        <div class="acc__i"><button class="acc__q">Комплектація ${ico('ic-plus')}</button>
+          <div class="acc__a"><div><ul>${(p.kit || []).map(k => `<li>${k}</li>`).join('')}</ul></div></div></div>
+        <div class="acc__i"><button class="acc__q">Доставка та оплата ${ico('ic-plus')}</button>
+          <div class="acc__a"><div><ul>
+            <li>Доставка по всій Україні, без передоплати</li>
+            <li>Самовивіз у Білій Церкві</li>
+            <li>Готівка, картка, безготівковий розрахунок</li>
+            <li>Повний пакет документів для реєстрації</li></ul></div></div></div>
+      </div>
       <div class="trust">
         <div>${ico('ic-shield')}<b>Гарантія</b><span>офіційний бренд</span></div>
         <div>${ico('ic-truck')}<b>Доставка</b><span>по всій Україні</span></div>
         <div>${ico('ic-wrench')}<b>Сервіс</b><span>після покупки</span></div>
       </div>
     </div>`;
-  root.querySelectorAll('.pdp__thumbs button').forEach(b => b.addEventListener('click', () => {
-    document.getElementById('pdp-img').src = b.dataset.src;
-    root.querySelectorAll('.pdp__thumbs button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-  }));
+
+  initGallery(gal.length);
+  initAcc();
   const rel = document.getElementById('related');
   if (rel) PRODUCTS.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4).forEach(x => rel.appendChild(el(pcardHtml(x))));
+  const rev = document.getElementById('reviews');
+  if (rev) REVIEWS.forEach(r => rev.appendChild(el(`
+    <div class="rev rv">
+      <div class="rev__top">
+        <div class="rev__av">${r.n[0]}</div>
+        <div class="rev__who"><b>${r.n}</b><span>${r.c}</span></div>
+      </div>
+      <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
+      <p>${r.t}</p>
+    </div>`)));
+}
+
+/* --- swipeable gallery (drag + arrows + thumbs) --- */
+function initGallery(total) {
+  const main = document.getElementById('galMain'), strip = document.getElementById('galStrip');
+  if (!main || !strip || total < 1) return;
+  let i = 0, startX = 0, dx = 0, dragging = false;
+  const w = () => main.clientWidth;
+  const go = (n) => {
+    i = Math.max(0, Math.min(n, total - 1));
+    strip.style.transition = '.6s cubic-bezier(.19,1,.22,1)';
+    strip.style.transform = `translateX(${-i * w()}px)`;
+    document.querySelectorAll('#galThumbs button').forEach((b, k) => b.classList.toggle('active', k === i));
+  };
+  document.getElementById('galPrev')?.addEventListener('click', () => go(i - 1));
+  document.getElementById('galNext')?.addEventListener('click', () => go(i + 1));
+  document.querySelectorAll('#galThumbs button').forEach(b => b.addEventListener('click', () => go(+b.dataset.i)));
+  const down = (x) => { dragging = true; startX = x; dx = 0; main.classList.add('drag'); strip.style.transition = 'none'; };
+  const move = (x) => { if (!dragging) return; dx = x - startX; strip.style.transform = `translateX(${-i * w() + dx}px)`; };
+  const up = () => { if (!dragging) return; dragging = false; main.classList.remove('drag');
+    if (Math.abs(dx) > w() * 0.18) go(dx < 0 ? i + 1 : i - 1); else go(i); };
+  main.addEventListener('pointerdown', e => down(e.clientX));
+  main.addEventListener('pointermove', e => move(e.clientX));
+  main.addEventListener('pointerup', up); main.addEventListener('pointerleave', up);
+  window.addEventListener('resize', () => go(i));
+  go(0);
+}
+
+/* --- accordion (product + FAQ) --- */
+function initAcc() {
+  document.querySelectorAll('.acc__q:not([data-ready])').forEach(q => {
+    q.dataset.ready = '1';
+    q.addEventListener('click', () => {
+      const item = q.closest('.acc__i'), a = item.querySelector('.acc__a'), was = item.classList.contains('open');
+      const scope = item.parentElement;
+      scope.querySelectorAll('.acc__i.open').forEach(x => { x.classList.remove('open'); x.querySelector('.acc__a').style.maxHeight = null; });
+      if (!was) { item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+    });
+  });
+  document.querySelectorAll('.acc__i.open .acc__a').forEach(a => { a.style.maxHeight = a.scrollHeight + 'px'; });
 }
 
 /* ---------------- chrome ---------------- */
@@ -277,14 +368,6 @@ function revealInit() {
     if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); }
   }), { threshold: 0.1, rootMargin: '0px 0px -60px' });
   document.querySelectorAll('.rv:not(.in)').forEach((n, i) => { n.style.transitionDelay = `${(i % 5) * 70}ms`; io.observe(n); });
-}
-
-function initFaq() {
-  document.querySelectorAll('.faq__q').forEach(q => q.addEventListener('click', () => {
-    const item = q.closest('.faq__i'), a = item.querySelector('.faq__a'), open = item.classList.contains('open');
-    document.querySelectorAll('.faq__i.open').forEach(i => { i.classList.remove('open'); i.querySelector('.faq__a').style.maxHeight = null; });
-    if (!open) { item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
-  }));
 }
 
 function initModal() {
@@ -319,7 +402,6 @@ function initModal() {
   });
 }
 
-/* --- Lenis smooth scroll --- */
 function initSmooth() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const s = document.createElement('script');
@@ -339,7 +421,7 @@ function initSmooth() {
   await Promise.all([...document.querySelectorAll('[data-include]')].map(async n => {
     try { n.innerHTML = await (await fetch(n.getAttribute('data-include'))).text(); } catch {}
   }));
-  initChrome(); initModal(); initFaq();
+  initChrome(); initModal();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
-  revealInit(); initSmooth();
+  initAcc(); revealInit(); initSmooth();
 })();
