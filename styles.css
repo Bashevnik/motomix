@@ -575,3 +575,56 @@ svg{display:block}
   .callback-fab{padding:14px}
   .callback-fab:hover span{max-width:0;opacity:0;margin-left:0}
 }
+
+/* =====================================================================
+   v9 — легка шапка · соцмережі · лого не зменшується · розряджений hero
+   ===================================================================== */
+:root{--htop:84px;--hnav:44px;--hh:132px}
+
+/* шапка легша: менше щільності, тонші межі */
+.header{border-bottom:1px solid rgba(255,255,255,.07)}
+.header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.28)}
+.header__top-in{gap:26px}
+.header__left{display:flex;align-items:center;gap:14px;min-width:0}
+.header__soc{display:flex;gap:7px;flex:0 0 auto}
+.header__soc a{width:34px;height:34px;display:grid;place-items:center;color:#C9C9D2;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:.3s var(--ease)}
+.header__soc a:hover{color:#fff;background:var(--red);box-shadow:none}
+.header__soc .icon{width:16px;height:16px}
+
+/* ЛОГО — фіксований розмір, не зменшується при скролі */
+.brand img,.header.scrolled .brand img{height:62px}
+
+/* пошук — повітряніший і тихіший */
+.search{max-width:330px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.search input{padding:10px 14px;font-size:.88rem}
+.search button{padding:0 14px}
+
+/* меню — легкі, майже безвагові пункти */
+.meganav{background:transparent;border-top:1px solid rgba(255,255,255,.07);padding-block:5px}
+.meganav__in{gap:4px;min-height:var(--hnav)}
+.meganav a{background:transparent;box-shadow:none;padding:8px 14px;font-size:.84rem;letter-spacing:.05em;color:#BFBFC9}
+.meganav a:hover{background:rgba(255,255,255,.09);box-shadow:none;color:#fff}
+.meganav a.active{background:var(--red);color:#fff}
+
+/* HERO — більше повітря, менше тексту */
+.hero__title{font-size:clamp(2.6rem,6.2vw,6.2rem);line-height:.9}
+.hero__inner{padding-block:clamp(60px,9vh,100px)}
+.hero__sub{margin:22px 0 30px;max-width:460px}
+.hero__cta{gap:12px}
+.hero__call{margin-top:18px}
+
+/* ВНУТРІШНІ СТОРІНКИ: контент стартує ПІД шапкою — нічого не обрізається */
+.phero{padding-top:0}
+body.inner{padding-top:var(--hh)}
+
+@media(max-width:980px){
+  :root{--htop:64px;--hh:64px}
+  .brand img,.header.scrolled .brand img{height:42px}
+  .header__soc{display:none}
+}
+/* верхня панель каталогу: лічильник зліва, селекти разом справа */
+.fbar-top #f-brand{margin-left:auto}
+.fbar-top .fsort{appearance:none;-webkit-appearance:none;padding-right:2.2em;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);
+  background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}

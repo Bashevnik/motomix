@@ -197,7 +197,7 @@ function renderRail() {
 /* --- catalog: sticky sidebar filters + grid --- */
 function renderCatalog() {
   const grid = document.getElementById('catalog-grid'); if (!grid) return;
-  const catBox = document.getElementById('f-cats'), brandBox = document.getElementById('f-brands');
+  const catBox = document.getElementById("f-cats"), brandSel = document.getElementById("f-brand");
   const countEl = document.getElementById('f-count'), sortSel = document.getElementById('f-sort');
   const cats = ['Усі', ...CATEGORIES.map(c => c.name)];
   const brandsUsed = ['Усі', ...[...new Set(PRODUCTS.map(p => p.brand))]];
@@ -222,18 +222,18 @@ function renderCatalog() {
     lists(); revealInit();
   };
   const lists = () => {
-    const build = (box, arr, type, get, set) => {
-      if (!box) return;
-      box.innerHTML = '';
-      arr.forEach(v => {
-        const b = el(`<button class="${get() === v ? 'active' : ''}">${v}<i>${countFor(type, v)}</i></button>`);
-        b.addEventListener('click', () => { set(v); draw(); });
-        box.appendChild(b);
-      });
-    };
-    build(catBox, cats, 'cat', () => aCat, v => aCat = v);
-    build(brandBox, brandsUsed, 'brand', () => aBrand, v => aBrand = v);
+    if (!catBox) return;
+    catBox.innerHTML = "";
+    cats.forEach(v => {
+      const b = el(`<button class="${aCat === v ? "active" : ""}">${v}<i>${countFor("cat", v)}</i></button>`);
+      b.addEventListener("click", () => { aCat = v; draw(); });
+      catBox.appendChild(b);
+    });
   };
+  if (brandSel && !brandSel.options.length) {
+    brandsUsed.forEach(v => brandSel.appendChild(el(`<option value="${v}">${v === "Усі" ? "Усі бренди" : v}</option>`)));
+    brandSel.addEventListener("change", e => { aBrand = e.target.value; draw(); });
+  }
   sortSel?.addEventListener('change', e => { sort = e.target.value; draw(); });
   document.getElementById('f-reset')?.addEventListener('click', () => { aCat = 'Усі'; aBrand = 'Усі'; draw(); });
   document.getElementById('f-toggle')?.addEventListener('click', () => document.getElementById('fside')?.classList.toggle('open'));
@@ -430,6 +430,8 @@ function initSmooth() {
   await Promise.all([...document.querySelectorAll('[data-include]')].map(async n => {
     try { n.innerHTML = await (await fetch(n.getAttribute('data-include'))).text(); } catch {}
   }));
+  const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
+  setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
   initChrome(); initModal();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();

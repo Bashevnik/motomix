@@ -14,7 +14,7 @@
     <meta name="theme-color" content="#F2F1ED">
 </head>
 
-<body>
+<body class="inner">
     <div data-include="components/header.html"></div>
 
     <section class="phero phero--compact">
@@ -32,16 +32,13 @@
                     <div class="fgroup__t">Напрям</div>
                     <div class="flist" id="f-cats"></div>
                 </div>
-                <div class="fgroup">
-                    <div class="fgroup__t">Бренд</div>
-                    <div class="flist" id="f-brands"></div>
-                </div>
                 <button class="btn btn--line btn--block" id="f-reset">Скинути фільтри</button>
             </aside>
             <div>
                 <div class="fbar-top">
                     <span class="fcount" id="f-count"></span>
                     <button class="btn btn--line fmobile" id="f-toggle">Фільтри</button>
+                    <select class="fsort" id="f-brand" aria-label="Бренд"></select>
                     <select class="fsort" id="f-sort" aria-label="Сортування">
                         <option value="default">За замовчуванням</option>
                         <option value="az">Назва A→Я</option>
