@@ -530,3 +530,48 @@ svg{display:block}
 
 /* перша секція не ховається під фіксованою шапкою */
 .phero{padding-top:var(--hh)}
+
+/* =====================================================================
+   v8 — лого крупніше · меню-блоки · CTA «дзвінок за 30 секунд»
+   ===================================================================== */
+:root{--htop:92px;--hh:146px}
+.brand img{height:60px}
+.header.scrolled .brand img{height:48px}
+
+/* меню: кожен пункт — легкий клікабельний блок із фірмовим зрізом */
+.meganav{background:#101014;padding-block:7px}
+.meganav__in{gap:7px;height:auto;min-height:var(--hnav)}
+.meganav a{--c:8px;background:rgba(255,255,255,.06);padding:9px 17px;font-size:.88rem;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.meganav a::before{display:none}
+.meganav a:hover{background:rgba(255,255,255,.14);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.meganav a.active{background:var(--red);color:#fff;box-shadow:none}
+
+/* hero: текст-кнопка швидкого дзвінка */
+.hero__call{display:inline-flex;align-items:center;gap:10px;margin-top:22px;color:#fff;font-size:.92rem;
+  font-weight:500;letter-spacing:.02em;transition:.3s;padding:4px 0}
+.hero__call b{color:var(--red-hot);font-weight:700}
+.hero__call:hover{color:var(--red-hot)}
+.hero__call-dot{width:9px;height:9px;background:var(--red);border-radius:50%;position:relative;flex:0 0 auto}
+.hero__call-dot::after{content:"";position:absolute;inset:-5px;border:1px solid var(--red);border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
+
+/* плаваюча кнопка зворотного дзвінка (на всіх сторінках) */
+.callback-fab{--c:12px;position:fixed;right:clamp(14px,2vw,28px);bottom:clamp(14px,2vw,28px);z-index:90;
+  display:inline-flex;align-items:center;gap:0;background:var(--red);color:#fff;padding:15px;
+  box-shadow:0 14px 34px rgba(224,27,36,.42);transition:.4s var(--ease);overflow:hidden;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.callback-fab .icon{width:24px;height:24px;flex:0 0 auto}
+.callback-fab span{max-width:0;opacity:0;white-space:nowrap;font-size:.86rem;font-weight:600;
+  transition:.45s var(--ease);letter-spacing:.02em}
+.callback-fab b{font-weight:700}
+.callback-fab:hover{background:var(--red-hot)}
+.callback-fab:hover span{max-width:230px;opacity:1;margin-left:11px}
+@media(max-width:980px){
+  :root{--htop:64px;--hh:64px}
+  .brand img{height:40px}
+  .header.scrolled .brand img{height:36px}
+  .callback-fab{padding:14px}
+  .callback-fab:hover span{max-width:0;opacity:0;margin-left:0}
+}
