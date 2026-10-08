@@ -8,50 +8,77 @@
     <meta name="description" content="Trade-in у MOTOMIX: обміняй свій старий мотоцикл на новий. Чесна оцінка, залік вартості у покупку.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
+    <meta name="theme-color" content="#07070A">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <section class="page-hero">
-        <div class="page-hero__bg"><img src="assets/hero/story-1.jpg" alt=""></div>
-        <div class="wrap page-hero__in">
-            <div class="crumbs"><a href="index.html">Головна</a> <span>/</span> Trade-in</div>
-            <h1>Обміняй старе на нове</h1>
+    <section class="phero">
+        <div class="phero__media"><img src="assets/hero/enduro-action.jpg" alt=""></div>
+        <div class="wrap phero__in">
+            <div class="crumbs"><a href="index.html">Головна</a><em>/</em><span>Trade-in</span></div>
+            <h1>Обміняй старе<br>на нове</h1>
             <p>Оцінимо твою поточну техніку та зарахуємо її вартість у покупку нової. Чесно, швидко, без зайвого клопоту.</p>
         </div>
     </section>
 
-    <section class="section section--surface">
+    <section class="section">
+        <span class="shead__num">01</span>
         <div class="wrap">
-            <div class="section__head"><span class="section__tag">Як це працює</span><h2 class="section__title">4 кроки до нового мото</h2></div>
-            <div class="info-grid" style="grid-template-columns:repeat(4,1fr)">
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-phone"></use></svg></div><h3>1 · Заявка</h3><p>Залиш контакти та дані своєї техніки.</p></div>
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-star"></use></svg></div><h3>2 · Оцінка</h3><p>Чесно оцінимо стан і ринкову вартість.</p></div>
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-swap"></use></svg></div><h3>3 · Залік</h3><p>Зарахуємо суму у вартість нової моделі.</p></div>
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-check"></use></svg></div><h3>4 · Видача</h3><p>Оформлюємо документи — і ти на новому мото.</p></div>
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Як це працює</span>
+                    <h2 class="stitle">4 кроки до нового мото</h2>
+                    <p class="slead">Без складних схем — усе прозоро й по-людськи.</p>
+                </div>
+            </div>
+            <div class="icards" style="grid-template-columns:repeat(4,1fr)">
+                <div class="icard rv"><span class="icard__n num-out">01</span><div class="icard__ic"><svg class="icon"><use href="#ic-phone"></use></svg></div>
+                    <h3>Заявка</h3><p>Залиш контакти та дані своєї техніки — модель, рік, стан.</p></div>
+                <div class="icard rv"><span class="icard__n num-out">02</span><div class="icard__ic"><svg class="icon"><use href="#ic-star"></use></svg></div>
+                    <h3>Оцінка</h3><p>Чесно оцінимо стан і ринкову вартість. Без заниження «аби забрати».</p></div>
+                <div class="icard rv"><span class="icard__n num-out">03</span><div class="icard__ic"><svg class="icon"><use href="#ic-swap"></use></svg></div>
+                    <h3>Залік</h3><p>Зарахуємо суму у вартість нової моделі з каталогу.</p></div>
+                <div class="icard rv"><span class="icard__n num-out">04</span><div class="icard__ic"><svg class="icon"><use href="#ic-check"></use></svg></div>
+                    <h3>Видача</h3><p>Оформлюємо документи — і ти виїжджаєш на новому мото.</p></div>
             </div>
         </div>
     </section>
 
-    <section class="section section--tint">
-        <div class="wrap prose">
-            <h2>Що беремо в Trade-in</h2>
-            <ul>
-                <li>Мотоцикли, ендуро, пітбайки, скутери у робочому стані.</li>
-                <li>Техніку з документами та без (уточнюйте індивідуально).</li>
-                <li>Будь-який бренд — оцінка за реальним станом.</li>
-            </ul>
+    <section class="section section--carbon">
+        <span class="shead__num">02</span>
+        <div class="wrap">
+            <div class="story">
+                <div class="story__media rv"><img src="assets/ig/post-3.jpg" alt="Техніка в Trade-in"><span class="story__tag">Оцінка</span></div>
+                <div class="story__text rv">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Умови</span>
+                    <h2 class="stitle">Що беремо в Trade-in</h2>
+                    <ul class="story__list">
+                        <li>Мотоцикли, ендуро, пітбайки, скутери в робочому стані</li>
+                        <li>Техніку з документами та без — уточнюйте індивідуально</li>
+                        <li>Будь-який бренд — оцінка за реальним станом</li>
+                        <li>Техніку після ДТП — розглядаємо окремо</li>
+                    </ul>
+                    <button class="btn btn--red btn--lg" data-order="Trade-in оцінка">Отримати оцінку</button>
+                </div>
+            </div>
         </div>
     </section>
 
     <section class="cta">
+        <img class="cta__bg" src="assets/hero/hero-main.jpg" alt="">
+        <div class="cta__shade"></div>
         <div class="wrap cta__in">
-            <div><h2 class="cta__title">Дізнайся вартість своєї техніки</h2><p>Залиш заявку — розрахуємо залік і підберемо нову модель.</p></div>
-            <button class="btn btn--red btn--lg" data-order="Trade-in оцінка">Розрахувати Trade-in</button>
+            <div class="cta__l">
+                <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Старт</span>
+                <h2 class="cta__title">Дізнайся вартість<br>своєї техніки</h2>
+                <p>Залиш заявку — розрахуємо залік і підберемо нову модель під різницю.</p>
+            </div>
+            <button class="btn btn--red btn--lg" data-order="Trade-in заявка">Розрахувати Trade-in</button>
         </div>
     </section>
 

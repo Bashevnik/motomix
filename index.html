@@ -5,144 +5,170 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MOTOMIX — мотоцикли, пітбайки, ендуро · Біла Церква</title>
-    <meta name="description" content="MOTOMIX — магазин мототехніки у Білій Церкві: ендуро, пітбайки, мотоцикли, скутери, електротранспорт. Бренди Geon, Kovi, Kayo, Shineray, Musstang. Trade-in, доставка по Україні.">
+    <meta name="description" content="MOTOMIX — мототехніка у Білій Церкві: ендуро, пітбайки, мотоцикли, скутери, електротранспорт, екіпіровка. GEON, KOVI, KAYO, SHINERAY. Trade-in, доставка по Україні без передоплати.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
-    <meta name="theme-color" content="#1b1a16">
+    <meta name="theme-color" content="#07070A">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <!-- HERO full-bleed -->
+    <!-- 01 · HERO -->
     <section class="hero">
-        <div class="hero__bg"><img src="assets/hero/hero-main.jpg" alt="Мотоцикліст на заході сонця"></div>
-        <div class="wrap hero__in">
-            <span class="hero__eyebrow eyebrow"><svg class="icon"><use href="#ic-pin"></use></svg> Мототехніка · Біла Церква</span>
-            <h1 class="hero__title">Техніка, що<br><span class="accent">живе драйвом</span></h1>
-            <p class="hero__sub">Ендуро, пітбайки, мотоцикли, скутери та електротранспорт. Офіційні бренди,
-                чесна консультація та доставка по всій Україні.</p>
-            <div class="hero__cta">
-                <a href="catalog.html" class="btn btn--red btn--lg">Перейти в каталог</a>
-                <button class="btn btn--light btn--lg" data-order="Підбір техніки">Підібрати техніку</button>
-            </div>
-            <div class="hero__stats">
-                <div><b>20+</b><span>брендів у продажу</span></div>
-                <div><b>Trade-in</b><span>обмін старого на нове</span></div>
-                <div><b>0%</b><span>передоплати при доставці</span></div>
+        <div class="hero__media"><img src="assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></div>
+        <div class="wrap hero__inner">
+            <div class="hero__copy">
+                <span class="eyebrow hero__eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Мототехніка · Біла Церква</span>
+                <h1 class="hero__title">Техніка,<br>що живе<br><span class="out">драйвом</span></h1>
+                <p class="hero__sub">Ендуро, пітбайки, мотоцикли, скутери та екіпіровка. Офіційні бренди,
+                    чесна консультація і доставка по всій Україні — без передоплати.</p>
+                <div class="hero__cta">
+                    <a href="catalog.html" class="btn btn--red btn--lg">Дивитись каталог</a>
+                    <button class="btn btn--line btn--lg" data-order="Підбір техніки">Підібрати техніку</button>
+                </div>
+                <div class="hero__stats">
+                    <div class="hero__stat"><b>18+</b><span>брендів у продажу</span></div>
+                    <div class="hero__stat"><b>Trade-in</b><span>обмін старого на нове</span></div>
+                    <div class="hero__stat"><b>0%</b><span>передоплати при доставці</span></div>
+                </div>
             </div>
         </div>
         <div class="hero__scroll">Гортай нижче</div>
     </section>
 
-    <!-- CATEGORIES (editorial, 5 in a row) -->
-    <section class="section section--surface" id="catalog">
-        <div class="wrap">
-            <div class="section__head">
-                <span class="section__tag">Каталог</span>
-                <h2 class="section__title">Обери свій напрям</h2>
-                <p class="section__lead">П'ять категорій техніки — підберемо модель під стиль, досвід і бюджет.</p>
-            </div>
-            <div class="ecards" id="cats"></div>
-        </div>
-    </section>
+    <!-- 02 · STRIP -->
+    <div class="strip" id="strip"></div>
 
-    <!-- STORY 1 -->
-    <section class="section section--tint">
-        <div class="wrap split">
-            <div class="split__media">
-                <img src="assets/hero/story-2.jpg" alt="Ендуро в русі">
-                <svg class="split__moto" viewBox="0 0 200 90" aria-hidden="true"><use href="#enduro-glyph"></use></svg>
-            </div>
-            <div class="split__text">
-                <span class="section__tag">Для бездоріжжя й міста</span>
-                <h2 class="section__title">Ендуро, що не боїться маршруту</h2>
-                <p>Повнорозмірні ендуро 250–300 куб і легкі пітбайки для старту. Підберемо під зріст, досвід і задачі —
-                    від перших покатеньок до серйозного оффроуду.</p>
-                <ul class="split__list">
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Повний пакет документів і реєстрація</li>
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Передпродажна підготовка кожної одиниці</li>
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Екіпіровка та шоломи у комплект</li>
-                </ul>
-                <a href="catalog.html?cat=Ендуро" class="tlink">Дивитись ендуро <svg class="icon"><use href="#ic-arrow"></use></svg></a>
-            </div>
-        </div>
-    </section>
-
-    <!-- TOP SALES -->
+    <!-- 03 · CATEGORIES -->
     <section class="section">
+        <span class="shead__num">01</span>
         <div class="wrap">
-            <div class="section__head">
-                <span class="section__tag">Хіти</span>
-                <h2 class="section__title">Топ продаж</h2>
-                <p class="section__lead">Моделі, які беруть найчастіше — у наявності та під замовлення.</p>
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Каталог</span>
+                    <h2 class="stitle">Обери свій напрям</h2>
+                    <p class="slead">П'ять напрямів техніки. Підкажемо модель під зріст, досвід і бюджет — без нав'язування.</p>
+                </div>
+                <a href="catalog.html" class="tlink">Весь каталог <svg class="icon"><use href="#ic-arrow"></use></svg></a>
             </div>
-            <div class="grid-products" id="products"></div>
+            <div class="cats" id="cats"></div>
         </div>
     </section>
 
-    <!-- ADVANTAGES (minimal row, custom icons) -->
-    <section class="section section--surface">
+    <!-- 04 · TOP SALES RAIL -->
+    <section class="section section--carbon">
+        <span class="shead__num">02</span>
         <div class="wrap">
-            <div class="section__head">
-                <span class="section__tag">Чому MOTOMIX</span>
-                <h2 class="section__title">Купуєш спокійно</h2>
-            </div>
-            <div class="adv">
-                <div class="adv__item reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-truck"></use></svg></div><b>Доставка по Україні</b><span>без передоплати, Нова Пошта</span></div>
-                <div class="adv__item reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-support"></use></svg></div><b>Жива консультація</b><span>підкажемо під стиль і зріст</span></div>
-                <div class="adv__item reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-wrench"></use></svg></div><b>Сервіс і запчастини</b><span>обслуговування після покупки</span></div>
-                <div class="adv__item reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-shield"></use></svg></div><b>Офіційні бренди</b><span>гарантія та оригінал</span></div>
-                <div class="adv__item reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-swap"></use></svg></div><b>Trade-in</b><span>обмін старого на нове</span></div>
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Хіти</span>
+                    <h2 class="stitle">Топ продаж</h2>
+                    <p class="slead">Моделі, які беруть найчастіше — у наявності та під замовлення.</p>
+                </div>
+                <div class="rail__ctrl">
+                    <button class="rail__btn" id="rail-prev" aria-label="Назад"><svg class="icon"><use href="#ic-arrow-l"></use></svg></button>
+                    <button class="rail__btn" id="rail-next" aria-label="Вперед"><svg class="icon"><use href="#ic-arrow"></use></svg></button>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- STORY 2 (reversed) -->
-    <section class="section section--tint">
-        <div class="wrap split split--rev">
-            <div class="split__media"><img src="assets/hero/story-1.jpg" alt="Мотоцикл на дорозі"></div>
-            <div class="split__text">
-                <span class="section__tag">Місто й траса</span>
-                <h2 class="section__title">Більше, ніж просто покупка</h2>
-                <p>Ми радимо чесно, готуємо кожну одиницю до видачі й залишаємось на зв'язку після. Твій мотоцикл —
-                    наша репутація, тому підходимо як до свого.</p>
-                <ul class="split__list">
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Чесна консультація без нав'язування</li>
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Офіційні бренди та гарантія</li>
-                    <li><svg class="icon"><use href="#ic-check"></use></svg> Сервіс і підтримка після купівлі</li>
-                </ul>
-                <a href="about.html" class="tlink">Про MOTOMIX <svg class="icon"><use href="#ic-arrow"></use></svg></a>
+        <div class="wrap">
+            <div class="rail">
+                <div class="rail__view"><div class="rail__track" id="rail-track"></div></div>
+                <div class="rail__ctrl" style="margin-top:28px"><div class="rail__bar" id="rail-bar"><i style="width:25%"></i></div></div>
             </div>
         </div>
     </section>
 
-    <!-- BRANDS -->
-    <section class="section section--surface" id="brands">
+    <!-- 05 · STORY: ENDURO -->
+    <section class="section">
+        <span class="shead__num">03</span>
         <div class="wrap">
-            <div class="section__head">
-                <span class="section__tag">Партнери</span>
-                <h2 class="section__title">Торгові марки</h2>
-                <p class="section__lead">Працюємо з перевіреними виробниками мототехніки.</p>
+            <div class="story">
+                <div class="story__media rv">
+                    <img src="assets/hero/story-2.jpg" alt="Ендуро в русі">
+                    <span class="story__tag">Ендуро</span>
+                </div>
+                <div class="story__text rv">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Для бездоріжжя й міста</span>
+                    <h2 class="stitle">Ендуро, що не боїться маршруту</h2>
+                    <p>Повнорозмірні ендуро 250–300 куб і легкі пітбайки для старту. Підберемо під зріст, досвід
+                        і задачі — від перших покатеньок до серйозного оффроуду.</p>
+                    <ul class="story__list">
+                        <li>Повний пакет документів і реєстрація</li>
+                        <li>Передпродажна підготовка кожної одиниці</li>
+                        <li>Екіпіровка та шоломи у комплект</li>
+                    </ul>
+                    <a href="catalog.html?cat=%D0%95%D0%BD%D0%B4%D1%83%D1%80%D0%BE" class="btn btn--red">Дивитись ендуро</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 06 · STATS BAND -->
+    <section class="stats">
+        <div class="wrap stats__in">
+            <div class="stats__i rv"><b>7</b><span>років на ринку</span></div>
+            <div class="stats__i rv"><b>18</b><span>брендів</span></div>
+            <div class="stats__i rv"><b>120+</b><span>моделей</span></div>
+            <div class="stats__i rv"><b>1700+</b><span>підписників</span></div>
+        </div>
+    </section>
+
+    <!-- 07 · STORY: SERVICE (reversed) -->
+    <section class="section section--carbon">
+        <span class="shead__num">04</span>
+        <div class="wrap">
+            <div class="story story--rev">
+                <div class="story__media rv">
+                    <img src="assets/hero/story-1.jpg" alt="Мотоцикл на дорозі">
+                    <span class="story__tag">Сервіс</span>
+                </div>
+                <div class="story__text rv">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Після покупки</span>
+                    <h2 class="stitle">Більше, ніж просто продаж</h2>
+                    <p>Радимо чесно, готуємо кожну одиницю до видачі й лишаємось на зв'язку після.
+                        Твій мотоцикл — наша репутація, тому підходимо як до свого.</p>
+                    <ul class="story__list">
+                        <li>Чесна консультація без нав'язування</li>
+                        <li>Офіційні бренди та гарантія виробника</li>
+                        <li>Сервіс, запчастини й підтримка</li>
+                    </ul>
+                    <a href="about.html" class="btn btn--line">Про MOTOMIX</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 08 · BRANDS -->
+    <section class="section">
+        <span class="shead__num">05</span>
+        <div class="wrap">
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Партнери</span>
+                    <h2 class="stitle">Торгові марки</h2>
+                    <p class="slead">Працюємо з перевіреними виробниками мототехніки.</p>
+                </div>
             </div>
         </div>
         <div class="marquee" id="brands-track"></div>
     </section>
 
-    <!-- TRADE-IN CTA band with photo -->
-    <section class="cta" id="tradein">
-        <img class="cta__bg" src="assets/hero/story-2.jpg" alt="">
+    <!-- 09 · TRADE-IN CTA -->
+    <section class="cta">
+        <img class="cta__bg" src="assets/hero/enduro-action.jpg" alt="">
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
-            <div>
-                <span class="section__tag">Trade-in</span>
-                <h2 class="cta__title">Обміняй свій старий мотоцикл на новий</h2>
-                <p>Оцінимо твою техніку та зарахуємо її вартість у покупку. Швидко й чесно.</p>
+            <div class="cta__l">
+                <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Trade-in</span>
+                <h2 class="cta__title">Обміняй старий<br>мотоцикл на новий</h2>
+                <p>Оцінимо твою техніку та зарахуємо її вартість у покупку. Швидко, прозоро, без торгу «в мінус».</p>
             </div>
-            <button class="btn btn--red btn--lg" data-order="Trade-in заявка">Розрахувати Trade-in</button>
+            <a href="tradein.html" class="btn btn--red btn--lg">Розрахувати Trade-in</a>
         </div>
     </section>
 

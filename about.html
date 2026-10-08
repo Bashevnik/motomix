@@ -5,55 +5,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Про нас — MOTOMIX</title>
-    <meta name="description" content="MOTOMIX — команда мотолюбителів з Білої Церкви. Чесна консультація, офіційні бренди, сервіс і Trade-in.">
+    <meta name="description" content="MOTOMIX — команда райдерів із Білої Церкви. Чесна консультація, офіційні бренди, сервіс і Trade-in.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
+    <meta name="theme-color" content="#07070A">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <section class="page-hero">
-        <div class="page-hero__bg"><img src="assets/hero/rider.jpg" alt=""></div>
-        <div class="wrap page-hero__in">
-            <div class="crumbs"><a href="index.html">Головна</a> <span>/</span> Про нас</div>
-            <h1>Ми живемо мотодрайвом</h1>
-            <p>MOTOMIX — команда райдерів із Білої Церкви. Продаємо техніку, якій довіряємо самі, і консультуємо так, як радили б другу.</p>
+    <section class="phero">
+        <div class="phero__media"><img src="assets/hero/rider.jpg" alt=""></div>
+        <div class="wrap phero__in">
+            <div class="crumbs"><a href="index.html">Головна</a><em>/</em><span>Про нас</span></div>
+            <h1>Ми живемо<br>мотодрайвом</h1>
+            <p>MOTOMIX — команда райдерів із Білої Церкви. Продаємо техніку, якій довіряємо самі, і радимо так, як радили б другу.</p>
         </div>
     </section>
 
-    <section class="section section--surface">
-        <div class="wrap prose">
-            <h2>Хто ми</h2>
-            <p>Ми починали з любові до мото — і зробили з неї справу. Сьогодні MOTOMIX — це магазин мототехніки
-                у Білій Церкві: ендуро, пітбайки, мотоцикли, скутери та електротранспорт від перевірених брендів
-                Geon, Kovi, Kayo, Shineray, Musstang та інших.</p>
-            <h2>Наш підхід</h2>
-            <ul>
-                <li>Радимо чесно — навіть якщо вигідніше промовчати.</li>
-                <li>Готуємо кожну одиницю до видачі: перевірка, налаштування, документи.</li>
-                <li>Залишаємось на зв'язку після покупки — сервіс і запчастини.</li>
-            </ul>
-        </div>
-    </section>
-
-    <section class="section section--tint">
+    <section class="section">
+        <span class="shead__num">01</span>
         <div class="wrap">
-            <div class="section__head"><span class="section__tag">Що отримуєш</span><h2 class="section__title">Більше, ніж просто покупка</h2></div>
-            <div class="info-grid">
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-support"></use></svg></div><h3>Консультація</h3><p>Підберемо техніку під зріст, досвід і бюджет — без нав'язування.</p></div>
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-shield"></use></svg></div><h3>Гарантія</h3><p>Офіційні бренди, документи та гарантійне обслуговування.</p></div>
-                <div class="info-card reveal"><div class="adv__ic"><svg class="icon"><use href="#ic-wrench"></use></svg></div><h3>Сервіс</h3><p>Обслуговування, запчастини й підтримка після покупки.</p></div>
+            <div class="story">
+                <div class="story__media rv"><img src="assets/hero/story-1.jpg" alt="Команда MOTOMIX"><span class="story__tag">Хто ми</span></div>
+                <div class="story__text rv">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Наша історія</span>
+                    <h2 class="stitle">Почали з любові — зробили справу</h2>
+                    <p>Сьогодні MOTOMIX — це магазин мототехніки у Білій Церкві: ендуро, пітбайки, мотоцикли,
+                        скутери та електротранспорт від перевірених брендів GEON, KOVI, KAYO, SHINERAY, MUSSTANG.</p>
+                    <p>Ми самі катаємо, самі обслуговуємо і знаємо, що означає «гарна техніка за свої гроші».
+                        Тому не продаємо те, чого не порадили б собі.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="wrap stats__in">
+            <div class="stats__i rv"><b>7</b><span>років на ринку</span></div>
+            <div class="stats__i rv"><b>18</b><span>брендів</span></div>
+            <div class="stats__i rv"><b>120+</b><span>моделей</span></div>
+            <div class="stats__i rv"><b>1700+</b><span>підписників</span></div>
+        </div>
+    </section>
+
+    <section class="section section--carbon">
+        <span class="shead__num">02</span>
+        <div class="wrap">
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Принципи</span>
+                    <h2 class="stitle">Як ми працюємо</h2>
+                </div>
+            </div>
+            <div class="icards">
+                <div class="icard rv"><span class="icard__n num-out">01</span><div class="icard__ic"><svg class="icon"><use href="#ic-support"></use></svg></div>
+                    <h3>Чесна консультація</h3><p>Підберемо техніку під зріст, досвід і бюджет. Якщо модель не підходить — скажемо прямо.</p></div>
+                <div class="icard rv"><span class="icard__n num-out">02</span><div class="icard__ic"><svg class="icon"><use href="#ic-shield"></use></svg></div>
+                    <h3>Офіційні бренди</h3><p>Тільки перевірені виробники, повний пакет документів і гарантія.</p></div>
+                <div class="icard rv"><span class="icard__n num-out">03</span><div class="icard__ic"><svg class="icon"><use href="#ic-wrench"></use></svg></div>
+                    <h3>Сервіс після</h3><p>Обслуговування, запчастини й підтримка — ми не зникаємо після продажу.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="shead__num">03</span>
+        <div class="wrap">
+            <div class="shead">
+                <div class="shead__l">
+                    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Галерея</span>
+                    <h2 class="stitle">Техніка наживо</h2>
+                </div>
+            </div>
+            <div class="gal">
+                <a href="#" class="rv"><img src="assets/ig/post-1.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/ig/post-2.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/ig/post-3.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/ig/post-4.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/ig/post-5.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/ig/post-6.jpg" alt=""></a>
+                <a href="#" class="rv"><img src="assets/products/helmet.jpg" alt=""></a>
             </div>
         </div>
     </section>
 
     <section class="cta">
+        <img class="cta__bg" src="assets/hero/story-2.jpg" alt="">
+        <div class="cta__shade"></div>
         <div class="wrap cta__in">
-            <div><h2 class="cta__title">Завітай або напиши нам</h2><p>Покажемо техніку наживо, відповімо на всі питання.</p></div>
+            <div class="cta__l">
+                <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Завітай</span>
+                <h2 class="cta__title">Подивись техніку<br>на власні очі</h2>
+                <p>Покажемо наживо, відповімо на питання, дамо посидіти в сідлі.</p>
+            </div>
             <button class="btn btn--red btn--lg" data-order="Заявка (Про нас)">Залишити заявку</button>
         </div>
     </section>

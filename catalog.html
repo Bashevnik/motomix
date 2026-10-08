@@ -4,39 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Каталог — MOTOMIX</title>
-    <meta name="description" content="Каталог мототехніки MOTOMIX: ендуро, пітбайки, мотоцикли, скутери, екіпіровка. Біла Церква.">
+    <title>Каталог мототехніки — MOTOMIX</title>
+    <meta name="description" content="Каталог MOTOMIX: ендуро, пітбайки, мотоцикли, скутери, екіпіровка. Бренди GEON, KOVI, KAYO, SHINERAY. Біла Церква, доставка по Україні.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png">
+    <meta name="theme-color" content="#07070A">
 </head>
 
 <body>
     <div data-include="components/header.html"></div>
 
-    <section class="page-hero">
-        <div class="page-hero__bg"><img src="assets/hero/story-2.jpg" alt=""></div>
-        <div class="wrap page-hero__in">
-            <div class="crumbs"><a href="index.html">Головна</a> <span>/</span> Каталог</div>
-            <h1>Каталог мототехніки</h1>
-            <p>Ендуро, пітбайки, мотоцикли, скутери та екіпіровка. Обери категорію — підкажемо з вибором і наявністю.</p>
+    <section class="phero">
+        <div class="phero__media"><img src="assets/hero/story-2.jpg" alt=""></div>
+        <div class="wrap phero__in">
+            <div class="crumbs"><a href="index.html">Головна</a><em>/</em><span>Каталог</span></div>
+            <h1>Каталог<br>мототехніки</h1>
+            <p>Ендуро, пітбайки, мотоцикли, скутери та екіпіровка. Фільтруй за напрямом і брендом — або залиш заявку, підберемо під твій запит.</p>
         </div>
     </section>
 
-    <section class="section section--surface">
+    <section class="section">
         <div class="wrap">
-            <div class="filters" id="catalog-filters"></div>
-            <div class="grid-products" id="catalog-grid"></div>
+            <div class="fbar">
+                <div class="frow"><span class="flabel">Напрям</span><div class="frow" id="f-cats" style="gap:10px"></div></div>
+                <div class="frow"><span class="flabel">Бренд</span><div class="frow" id="f-brands" style="gap:10px"></div></div>
+                <div class="frow">
+                    <span class="flabel">Сортування</span>
+                    <select id="f-sort" class="chip" style="padding:.55em 1.1em;background:transparent;color:#A8A8B2">
+                        <option value="default" style="background:#16161C">За замовчуванням</option>
+                        <option value="az" style="background:#16161C">Назва A→Я</option>
+                        <option value="za" style="background:#16161C">Назва Я→A</option>
+                    </select>
+                    <span class="fcount" id="f-count"></span>
+                </div>
+            </div>
+            <div class="pgrid" id="catalog-grid"></div>
         </div>
     </section>
 
     <section class="cta">
+        <img class="cta__bg" src="assets/hero/forest-ride.jpg" alt="">
+        <div class="cta__shade"></div>
         <div class="wrap cta__in">
-            <div>
-                <h2 class="cta__title">Не знайшов потрібну модель?</h2>
-                <p>Напиши нам — підберемо під твій бюджет і привеземо під замовлення.</p>
+            <div class="cta__l">
+                <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Підбір</span>
+                <h2 class="cta__title">Не знайшов<br>потрібну модель?</h2>
+                <p>Напиши нам — підберемо під бюджет і привеземо під замовлення.</p>
             </div>
             <button class="btn btn--red btn--lg" data-order="Підбір з каталогу">Залишити заявку</button>
         </div>
