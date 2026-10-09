@@ -694,3 +694,39 @@ body.inner{padding-top:var(--hh)}
 @media(max-width:1280px){.pgrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){.pgrid{grid-template-columns:repeat(2,1fr)}.fbar__sort{margin-left:0;width:100%}}
 @media(max-width:480px){.pgrid{grid-template-columns:1fr}}
+
+/* =====================================================================
+   v12 — біле нижнє меню · курсори · перетягування · категорійний вигляд
+   ===================================================================== */
+/* нижній ряд шапки — білий */
+.meganav{background:#fff;border-top:0;box-shadow:0 1px 0 rgba(11,11,13,.1)}
+.mi>a,.mi__solo{background:var(--surface-2);color:var(--ink-2);box-shadow:inset 0 0 0 1px rgba(11,11,13,.07)}
+.mi>a:hover,.mi__solo:hover,.mi:hover>a{background:var(--ink);color:#fff;box-shadow:none}
+.mi>a.active,.mi__solo.active{background:var(--red);color:#fff;box-shadow:none}
+.mi__drop{background:#fff;box-shadow:0 22px 48px rgba(11,11,13,.22),inset 0 0 0 1px rgba(11,11,13,.07)}
+
+/* курсори — скрізь, де можна клікнути або тягнути */
+.pcard,.cat,.bchip,.gal a,.mi>a,.mi__solo,.mi__drop a,.pdp__thumbs button,.gallery__thumbs button,
+.fchip,.fdd__p button,.flist button,.acc__q,.rail__nav,.footer__soc a,.header__soc a{cursor:pointer}
+.rail__view,.gallery__main{cursor:grab}
+.rail__view.drag,.gallery__main.drag{cursor:grabbing}
+.rail__view.drag *,.gallery__main.drag *{pointer-events:none}
+.rail__track img,.gallery__strip img{user-select:none;-webkit-user-drag:none}
+
+/* картка товару — клікабельна цілком */
+.pcard{text-decoration:none;color:inherit}
+.pcard:hover .tlink{color:var(--red)}
+.pcard:hover .tlink .icon{transform:translateX(6px)}
+
+/* категорійний вигляд каталогу */
+#cat-desc{color:#C8C8D0;margin-top:14px;max-width:620px;font-size:1.02rem;font-weight:300}
+#cat-h1{text-transform:uppercase}
+/* фікс специфічності: .meganav a перебивало .mi__solo */
+.meganav .mi__solo{--c:9px;background:var(--surface-2);color:var(--ink-2);
+  box-shadow:inset 0 0 0 1px rgba(11,11,13,.07);padding:10px 18px;font-size:.85rem;letter-spacing:.04em;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.meganav .mi__solo:hover{background:var(--ink);color:#fff;box-shadow:none}
+.meganav .mi__solo.active{background:var(--red);color:#fff;box-shadow:none}
+.meganav .mi>a{color:var(--ink-2)}
+.meganav .mi:hover>a,.meganav .mi>a:hover{color:#fff}
+.meganav .mi>a.active{color:#fff}
