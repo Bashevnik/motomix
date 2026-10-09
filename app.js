@@ -175,25 +175,30 @@ const REVIEWS = [
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const money = (n) => "₴ " + Number(n).toLocaleString("uk-UA").replace(/,/g, " ");
+const factsOf = (p) => {
+  const f = [{ k: "Бренд", v: p.brand, href: "catalog.html?brand=" + encodeURIComponent(p.brand) }];
+  if (p.cc) f.push({ k: "Обʼєм", v: p.cc + " см³", href: "catalog.html?cc=" + p.cc });
+  f.push({ k: "Тип", v: p.cat, href: "catalog.html?cat=" + encodeURIComponent(p.cat) });
+  return f;
+};
 const stockOf = (p) => p.badge === "Під замовлення" ? "Під замовлення" : "В наявності";
 const qs = (k) => new URLSearchParams(location.search).get(k);
 
 const pcardHtml = (p) => `
-  <a class="pcard rv" href="product.html?id=${p.id}">
+  <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
       <img src="${p.img}" alt="${p.name}" loading="lazy">
-      <span class="pcard__brand">${p.brand}</span>
     </div>
     <div class="pcard__body">
       <h3 class="pcard__name">${p.name}</h3>
-      <div class="pcard__spec">${p.spec.map(x => `<span>${x}</span>`).join("")}</div>
+      <dl class="facts">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd><a href="${f.href}">${f.v}</a></dd></div>`).join("")}</dl>
       <div class="pcard__foot">
         <div class="pcard__price">${p.price ? money(p.price) : "Ціна за запитом"}${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}<small class="${p.badge === "Під замовлення" ? "ord" : "in"}">${stockOf(p)}</small></div>
         <span class="tlink">Деталі ${ico("ic-arrow")}</span>
       </div>
     </div>
-  </a>`;
+  </article>`;
 
 /* ---------------- renders ---------------- */
 function renderCats() {
@@ -273,6 +278,7 @@ function renderCatalog() {
   const q = (qs("q") || "").toLowerCase();
   if (groups.cat.values.includes(qs("cat"))) state.cat = qs("cat");
   if (qs("cc") && groups.cc.values.map(String).includes(qs("cc"))) state.cc = Number(qs("cc"));
+  if (groups.brand.values.includes(qs("brand"))) state.brand = qs("brand");
 
   const inPrice = (p, label) => {
     if (label === ALL) return true;
@@ -387,7 +393,7 @@ function renderProduct() {
       ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button class="${i ? '' : 'active'}" data-i="${i}"><img src="${g}" alt=""></button>`).join('')}</div>` : ''}
     </div>
     <div class="pdp__info">
-      <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> ${p.brand} · ${p.cat}</span>
+      <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> <a href="catalog.html?brand=${encodeURIComponent(p.brand)}">${p.brand}</a> · <a href="catalog.html?cat=${encodeURIComponent(p.cat)}">${p.cat}</a></span>
       <h2 class="pdp__title">${p.name}</h2>
       <div class="pdp__price"><b>${p.price ? money(p.price) : "Ціна за запитом"}</b>${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}<span class="${p.badge === "Під замовлення" ? "ord" : "in"}">${stockOf(p)}</span></div>
       <div class="pdp__actions">
@@ -472,6 +478,20 @@ function initAcc() {
 }
 
 /* ---------------- chrome ---------------- */
+function initCards() {
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest(".pcard[data-href]"); if (!card) return;
+    if (e.target.closest("a,button")) return;        // внутрішні посилання працюють самі
+    if (window.__dragMoved) return;                   // тягнули карусель — не відкривати
+    location.href = card.dataset.href;
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    const card = document.activeElement?.closest?.(".pcard[data-href]");
+    if (card) location.href = card.dataset.href;
+  });
+}
+
 function initChrome() {
   const header = document.getElementById('header');
   if (header) {
@@ -560,7 +580,7 @@ function initSmooth() {
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
-  initChrome(); initModal();
+  initChrome(); initModal(); initCards();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();
 })();

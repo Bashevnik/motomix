@@ -780,3 +780,23 @@ body.inner{padding-top:var(--hh)}
 .pdp__price s{font-size:1rem;color:var(--ash);font-family:var(--body);font-style:normal}
 .pdp__price span.in{color:#1C8A45;font-weight:600}
 .pdp__price span.ord{color:var(--ash)}
+
+/* =====================================================================
+   v14 — структуровані характеристики замість потоку тегів
+   ===================================================================== */
+.facts{display:flex;flex-direction:column;margin:4px 0 2px}
+.facts__r{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:7px 0;border-bottom:1px dashed var(--line)}
+.facts__r:last-child{border-bottom:0}
+.facts dt{font-size:.74rem;color:var(--ash);letter-spacing:.03em;white-space:nowrap}
+.facts dd{font-size:.86rem;text-align:right}
+.facts dd a{color:var(--ink);font-weight:600;box-shadow:inset 0 -1px 0 transparent;transition:.22s}
+.facts dd a:hover{color:var(--red);box-shadow:inset 0 -1px 0 var(--red)}
+
+/* картка більше не <a>: керуємо фокусом вручну */
+.pcard:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.pcard__brand{display:none}
+
+/* клікабельні бренд/категорія на сторінці товару */
+.pdp__info .eyebrow a{color:var(--red);box-shadow:inset 0 -1px 0 transparent;transition:.22s}
+.pdp__info .eyebrow a:hover{box-shadow:inset 0 -1px 0 var(--red)}
