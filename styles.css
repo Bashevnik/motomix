@@ -769,3 +769,14 @@ body.inner{padding-top:var(--hh)}
   .mi,.meganav .mi__solo{flex:1 1 auto}
   .meganav .mi>a,.meganav .mi__solo{padding:11px 12px;font-size:.8rem}
 }
+
+/* ---- ціни ---- */
+.pcard__price{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;font-size:1.12rem}
+.pcard__price s{font-family:var(--body);font-style:normal;font-size:.82rem;color:var(--ash);opacity:.8}
+.pcard__price small{flex-basis:100%;font-family:var(--body);font-style:normal;font-size:.72rem;letter-spacing:.04em;font-weight:500}
+.pcard__price small.in{color:#1C8A45}
+.pcard__price small.ord{color:var(--ash)}
+.pdp__price{align-items:baseline;flex-wrap:wrap}
+.pdp__price s{font-size:1rem;color:var(--ash);font-family:var(--body);font-style:normal}
+.pdp__price span.in{color:#1C8A45;font-weight:600}
+.pdp__price span.ord{color:var(--ash)}
