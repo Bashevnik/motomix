@@ -18,41 +18,108 @@ const el = (h) => { const t = document.createElement('template'); t.innerHTML = 
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const priceText = (p) => p.priceRaw || "Ціна за запитом";
 const stockOf = () => "В наявності";
-const factsOf = (p) => {
-  const f = [{ k: "Бренд", v: p.brand, href: "catalog.html?brand=" + encodeURIComponent(p.brand) }];
-  if (p.cc) f.push({ k: "Обʼєм", v: p.cc + " см³", href: "catalog.html?cc=" + p.cc });
-  f.push({ k: "Тип", v: p.cat, href: "catalog.html?cat=" + encodeURIComponent(p.cat) });
-  return f;
-};
 const qs = (k) => new URLSearchParams(location.search).get(k);
 
-const pcardHtml = (p) => `
+/* ---------------- нормалізація назв з OLX ----------------
+   Сирий заголовок оголошення → «БРЕНД МОДЕЛЬ» + окремий рядок уточнень.
+   Працює автоматично і після повторного парсингу OLX. */
+const NM_TAIL = /^(нов(ий|а|і|е|ые|ый)|new|інжектор|инжектор|карбюратор|р|року|рік|випуску|шт|за|грн|стан|продам|терміново|наявності|продажу|в|у|\d{2,4}(cc|см3|куб))$/i;
+const NM_LEAD = /^(в|у|є|нов[а-яіїєґ]*|new|наявності|продажу|продам|мотоцик[а-яіїєґ]*|квадроцик[а-яіїєґ]*|квадрик|скутер|електро[а-яіїєґ]*|питбайк|підбайк[а-яіїєґ]*|пітбайк|бюджетний|топовий|дитяч[а-яіїєґ]*|детск[а-яіїєґ]*)$/i;
+const NM_TR = {а:'a',б:'b',в:'v',г:'g',ґ:'g',д:'d',е:'e',є:'ie',ж:'zh',з:'z',и:'y',і:'i',ї:'i',й:'i',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'sch',ь:'',ю:'iu',я:'ia',ы:'y',э:'e',ё:'e',ъ:''};
+const nmTr = (x) => x.toLowerCase().split("").map(c => NM_TR[c] !== undefined ? NM_TR[c] : c).join("");
+function nmLev(a, b) { const m = []; for (let i = 0; i <= b.length; i++) m[i] = [i];
+  for (let j = 0; j <= a.length; j++) m[0][j] = j;
+  for (let i = 1; i <= b.length; i++) for (let j = 1; j <= a.length; j++)
+    m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1], m[i][j-1], m[i-1][j]) + 1;
+  return m[b.length][a.length]; }
+const nmNear = (a, b) => { if (!a || !b) return false; a = a.toLowerCase(); b = b.toLowerCase();
+  return a === b || nmLev(a, b) <= (Math.max(a.length, b.length) >= 6 ? 2 : 1); };
+const nmCap = (t) => t.includes("-")
+  ? t.split("-").map(x => x.length <= 2 ? x.toUpperCase() : x[0].toUpperCase() + x.slice(1).toLowerCase()).join("-")
+  : (t.length <= 4 || /\d/.test(t)) ? t.toUpperCase() : t[0].toUpperCase() + t.slice(1).toLowerCase();
+
+const _nmCache = new Map();
+function nameOf(p) {
+  if (_nmCache.has(p.id)) return _nmCache.get(p.id);
+  let s = (p.name || "")
+    .replace(/[‍⁠️]/g, "")
+    .replace(/[‼❗❕⁉❣\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, " ")
+    .replace(/\s*[,.]\s*$/, "").replace(/\s+/g, " ").trim();
+
+  const year = (s.match(/\b(20\d{2})\b/) || [])[1] || "";
+  const hp   = (s.match(/(\d{2,3})\s*(?:ps|к\.?\s?с\.?|лс|hp)\b/i) || [])[1] || "";
+  const kw   = (s.match(/(\d{3,4})\s*w\b/i) || [])[1] || "";
+  const inj  = /інжектор|инжектор/i.test(s);
+  const kids = /дитяч|детск/i.test(s);
+
+  let toks = s.split(" ");
+  const yt = toks.findIndex(t => /^20\d{2}/.test(t));
+  if (yt >= 1) toks = toks.slice(0, yt);
+  const ci = toks.findIndex(t => t.endsWith(","));
+  if (ci >= 1 && ci < toks.length - 1) toks = toks.slice(0, ci + 1);
+  toks = toks.map(t => t.replace(/,/g, "").replace(/\.$/, "")).filter(Boolean);
+  while (toks.length > 1 && NM_TAIL.test(toks[toks.length - 1])) toks.pop();
+  while (toks.length > 1 && NM_LEAD.test(toks[0])) toks.shift();
+
+  const B = p.brand || "", bw = B.split(/\s+/).filter(Boolean);
+  toks = toks.filter(t => !bw.some(w => nmNear(t, w) || nmNear(nmTr(t), w.toLowerCase())));
+  while (toks.join(" ").length > 26 && toks.length > 2) toks.pop();
+
+  let out = toks.map((t, i) => /^\d/.test(t) ? t
+    : /[a-z]/i.test(t) ? nmCap(t)
+    : i === 0 ? t[0].toUpperCase() + t.slice(1).toLowerCase() : t.toLowerCase());
+  if (B && B !== "MOTOMIX") out.unshift(B);
+  out = out.filter((t, i) => i === 0 || t.toLowerCase() !== out[i - 1].toLowerCase());
+
+  const title = out.join(" ").replace(/\s*[-–—/]\s*$/, "").replace(/\b(\d+)\s+в\b/g, "$1 В").trim() || p.name;
+  const meta = [];
+  if (year) meta.push(year + " р.");
+  if (p.cc) meta.push(p.cc + " см³");
+  if (hp) meta.push(hp + " к.с.");
+  if (kw) meta.push(kw + " Вт");
+  if (inj) meta.push("інжектор");
+  if (kids) meta.push("дитячий");
+  const r = { title, meta: meta.join(" · ") };
+  _nmCache.set(p.id, r);
+  return r;
+}
+
+const factsOf = (p) => {
+  const f = [{ k: "Бренд", v: p.brand, href: "catalog.html?brand=" + encodeURIComponent(p.brand) }];
+  if (p.cc) f.push({ k: "Обʼєм двигуна", v: p.cc + " см³", href: "catalog.html?cc=" + p.cc });
+  f.push({ k: "Тип", v: p.type || p.cat, href: "catalog.html?type=" + encodeURIComponent(p.type || p.cat) });
+  f.push({ k: "Стан", v: "Новий", href: null });
+  return f;
+};
+
+/* карточка: фото → назва → уточнення → ціна → наявність */
+const pcardHtml = (p) => { const n = nameOf(p); return `
   <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      <img src="${p.img}" alt="${n.title}" loading="lazy">
     </div>
     <div class="pcard__body">
-      <h3 class="pcard__name">${p.name}</h3>
-      <dl class="facts">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd><a href="${f.href}">${f.v}</a></dd></div>`).join("")}</dl>
+      <h3 class="pcard__name">${n.title}</h3>
+      <p class="pcard__sub">${n.meta || p.type || ""}</p>
       <div class="pcard__foot">
-        <div class="pcard__price">${priceText(p)}<small class="in">${stockOf(p)}</small></div>
-        <span class="tlink">Деталі ${ico("ic-arrow")}</span>
+        <div class="pcard__price">${priceText(p)}</div>
+        <span class="pcard__stock">${stockOf(p)}</span>
       </div>
     </div>
-  </article>`;
+  </article>`; };
 
 /* ---------------- renders ---------------- */
 function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach((c, i) => box.appendChild(el(`
-    <a class="cat rv" href="catalog.html?cat=${encodeURIComponent(c.name)}">
+    <a class="cat rv" href="catalog.html?type=${encodeURIComponent(c.name)}">
       <img src="${c.img}" alt="${c.name}" loading="lazy">
       <span class="cat__n num-out">0${i + 1}</span>
       <div class="cat__body">
         <div class="cat__bar"></div>
         <div class="cat__name">${c.name}</div>
-        <div class="cat__meta">${c.meta}</div>
+        <div class="cat__meta">${c.short || ""}</div>
       </div>
     </a>`)));
 }
@@ -109,16 +176,18 @@ function renderCatalog() {
   const chipsBox = document.getElementById("f-chips");
   const ALL = "Усі";
   const groups = {
-    cat:   { label: "Тип",        values: [ALL, ...CATEGORIES.map(c => c.name)] },
+    type:  { label: "Тип",        values: [ALL, ...CATEGORIES.map(c => c.name)] },
     brand: { label: "Бренд",      values: [ALL, ...[...new Set(PRODUCTS.map(p => p.brand))]] },
     cc:    { label: "Об’єм, см³", values: [ALL, ...[...new Set(PRODUCTS.map(p => p.cc).filter(Boolean))].sort((a,b)=>a-b)] },
   };
   const PRICE_RANGES = [["до 50 000",0,50000],["50 000 – 100 000",50000,100000],
     ["100 000 – 150 000",100000,150000],["від 150 000",150000,Infinity]];
   groups.price = { label: "Ціна, ₴", values: [ALL, ...PRICE_RANGES.map(r => r[0])] };
-  const state = { cat: ALL, brand: ALL, cc: ALL, price: ALL };
+  const state = { type: ALL, brand: ALL, cc: ALL, price: ALL };
   const q = (qs("q") || "").toLowerCase();
-  if (groups.cat.values.includes(qs("cat"))) state.cat = qs("cat");
+  if (groups.type.values.includes(qs("type"))) state.type = qs("type");
+  // ?cat= (група верхнього рівня) теж працює — лишаємо старі посилання робочими
+  const grp = qs("cat");
   if (qs("cc") && groups.cc.values.map(String).includes(qs("cc"))) state.cc = Number(qs("cc"));
   if (groups.brand.values.includes(qs("brand"))) state.brand = qs("brand");
 
@@ -127,35 +196,31 @@ function renderCatalog() {
     const r = PRICE_RANGES.find(x => x[0] === label); if (!r) return true;
     return typeof p.priceUah === "number" && p.priceUah >= r[1] && p.priceUah < r[2];
   };
-  const fits = (p, st) => (st.cat === ALL || p.cat === st.cat) && (st.brand === ALL || p.brand === st.brand)
-    && (st.cc === ALL || p.cc === st.cc) && inPrice(p, st.price);
+  const fits = (p, st) => (st.type === ALL || p.type === st.type) && (st.brand === ALL || p.brand === st.brand)
+    && (st.cc === ALL || p.cc === st.cc) && inPrice(p, st.price)
+    && (!grp || p.cat === grp);
   const match = (p) => fits(p, state)
-    && (!q || (p.name + " " + p.brand + " " + p.cat + " " + p.spec.join(" ")).toLowerCase().includes(q));
+    && (!q || (p.name + " " + p.brand + " " + p.type + " " + p.cat).toLowerCase().includes(q));
   const countFor = (g, v) => PRODUCTS.filter(p => fits(p, { ...state, [g]: v })).length;
 
-  const CATMETA = {
-    "Мотоцикли":      { img: "assets/hero/story-2.jpg",     d: "Дорожні, ендуро та мотард від KOVI, LIFAN, GEON, KAYO, SHINERAY. Нові, з документами." },
-    "Квадроцикли":    { img: "assets/hero/forest-ride.jpg", d: "Квадроцикли для дорослих і дітей: KAYO, SOK MOTO, QUADRATERRA. 125-300 см³, 4x4." },
-    "Електроскутери": { img: "assets/hero/moto-dark.jpg",   d: "Електроскутери FADA — для міста, без пального." },
-    "Аксесуари":      { img: "assets/products/helmet.jpg",  d: "Оптика, екіпіровка та аксесуари для мототехніки." },
-  };
   const paintHead = () => {
     const h1 = document.getElementById("cat-h1"), desc = document.getElementById("cat-desc");
     const tail = document.getElementById("cat-crumb-tail"), img = document.getElementById("cat-img");
     const link = document.getElementById("cat-crumb-link");
-    const c = state.cat;
+    const c = state.type !== ALL ? state.type : (grp || ALL);
+    const meta = CATEGORIES.find(x => x.name === c);
     if (c === ALL) {
       if (h1) h1.textContent = "Каталог мототехніки";
-      if (desc) desc.textContent = "Мотоцикли, квадроцикли, електроскутери та аксесуари — обери напрям або скористайся фільтром.";
+      if (desc) desc.textContent = "Ендуро, мотарди, дорожні, спортбайки, пітбайки, квадроцикли та електроскутери — обери тип або скористайся фільтром.";
       if (tail) tail.innerHTML = "";
       if (link) link.removeAttribute("href");
       document.title = "Каталог мототехніки — MOTOMIX";
     } else {
       if (h1) h1.textContent = c;
-      if (desc) desc.textContent = (CATMETA[c] || {}).d || "";
+      if (desc) desc.textContent = meta ? meta.d : "";
       if (tail) tail.innerHTML = `<em>›</em><span>${c}</span>`;
       if (link) link.setAttribute("href", "catalog.html");
-      if (img && CATMETA[c]) img.src = CATMETA[c].img;
+      if (img && meta && meta.img) img.src = meta.img;
       document.title = `${c} — купити у Білій Церкві | MOTOMIX`;
     }
   };
@@ -210,7 +275,7 @@ function renderCatalog() {
     if (!was) box.classList.add("open");
   }));
   document.addEventListener("click", () => document.querySelectorAll(".fdd.open").forEach(x => x.classList.remove("open")));
-  document.getElementById("f-reset")?.addEventListener("click", () => { state.cat = ALL; state.brand = ALL; state.cc = ALL; state.price = ALL; draw(); });
+  document.getElementById("f-reset")?.addEventListener("click", () => { state.type = ALL; state.brand = ALL; state.cc = ALL; state.price = ALL; draw(); });
   sortSel?.addEventListener("change", draw);
   draw();
 }
@@ -219,22 +284,21 @@ function renderCatalog() {
 function renderProduct() {
   const root = document.getElementById('pdp'); if (!root) return;
   const p = PRODUCTS.find(x => x.id === qs('id')) || PRODUCTS[0];
-  document.title = `${p.name} — MOTOMIX`;
-  const c = document.getElementById('pdp-crumb'); if (c) c.textContent = p.name;
-  const h = document.getElementById('pdp-h1'); if (h) h.textContent = p.name;
+  const n = nameOf(p);
+  document.title = n.title + ' — купити у Білій Церкві | MOTOMIX';
   const gal = (p.gallery && p.gallery.length) ? p.gallery : [p.img];
-
-  const shortDesc = (p.desc || "").slice(0, 300);
   const needMore = (p.desc || "").length > 320;
+
   root.innerHTML = `
     <div class="gallery-col">
       <div class="gallery">
         <div class="gallery__main" id="galMain">
-          <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${p.name}" draggable="false">`).join("")}</div>
-          ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" aria-label="Попереднє">${ico("ic-arrow-l")}</button>
-          <button class="gallery__nav gallery__nav--n" id="galNext" aria-label="Наступне">${ico("ic-arrow")}</button>` : ""}
+          <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${n.title}" draggable="false">`).join("")}</div>
+          ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" type="button" aria-label="Попереднє фото">${ico("ic-arrow-l")}</button>
+          <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
+          <span class="gallery__count" id="galCount">1 / ${gal.length}</span>` : ""}
         </div>
-        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button class="${i ? "" : "active"}" data-i="${i}"><img src="${g}" alt=""></button>`).join("")}</div>` : ""}
+        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button type="button" class="${i ? "" : "active"}" data-i="${i}" aria-label="Фото ${i + 1}"><img src="${g}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
       </div>
       <section class="pdesc" id="pdesc">
         <h2 class="pdesc__t">Опис</h2>
@@ -242,15 +306,30 @@ function renderProduct() {
         ${needMore ? `<button class="pdesc__more" id="pdescMore" type="button">Переглянути більше ${ico("ic-chev")}</button>` : ""}
       </section>
     </div>
+
     <div class="pdp__info">
-      <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> <a href="catalog.html?brand=${encodeURIComponent(p.brand)}">${p.brand}</a> · <a href="catalog.html?cat=${encodeURIComponent(p.cat)}">${p.cat}</a></span>
-      <h2 class="pdp__title">${p.name}</h2>
-      <div class="pdp__price"><b>${priceText(p)}</b><span class="in">${stockOf(p)}</span></div>
-      <dl class="facts facts--pdp">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd><a href="${f.href}">${f.v}</a></dd></div>`).join("")}</dl>
-      <div class="pdp__actions">
-        <button class="btn btn--red btn--lg" data-order="${p.name}">Замовити</button>
-        <a class="btn btn--line btn--lg" href="tel:+380938701107">${ico("ic-phone")} Подзвонити</a>
+      <div class="crumbs crumbs--pdp">
+        <a href="index.html">Головна</a><em>›</em>
+        <a href="catalog.html">Каталог</a><em>›</em>
+        <a href="catalog.html?type=${encodeURIComponent(p.type || p.cat)}">${p.type || p.cat}</a><em>›</em>
+        <span>${n.title}</span>
       </div>
+      <h1 class="pdp__title">${n.title}</h1>
+      ${n.meta ? `<p class="pdp__sub">${n.meta}</p>` : ""}
+      <div class="pdp__status">
+        <span class="pdp__stock">${stockOf(p)}</span>
+        <span class="pdp__stars">${Array(5).fill(ico('ic-star')).join('')}</span>
+        <span class="pdp__revn">${REVIEWS.length} відгуки</span>
+      </div>
+      <div class="pdp__price"><b>${priceText(p)}</b></div>
+      <div class="pdp__actions">
+        <button class="btn btn--red btn--lg" data-order="${n.title}">Купити</button>
+        <button class="btn btn--line btn--lg" data-order="Швидке замовлення — ${n.title}">Швидке замовлення</button>
+      </div>
+      <a class="pdp__call" href="tel:+380938701107">${ico("ic-phone")} +38 093 870 11 07 — відповімо за 30 секунд</a>
+
+      <dl class="facts facts--pdp">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd>${f.href ? `<a href="${f.href}">${f.v}</a>` : f.v}</dd></div>`).join("")}</dl>
+
       <div class="acc">
         <div class="acc__i"><button class="acc__q">Доставка та оплата ${ico("ic-plus")}</button>
           <div class="acc__a"><div><ul>
@@ -281,7 +360,8 @@ function renderProduct() {
   initGallery(gal.length);
   initAcc();
   const rel = document.getElementById('related');
-  if (rel) PRODUCTS.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4).forEach(x => rel.appendChild(el(pcardHtml(x))));
+  if (rel) PRODUCTS.filter(x => (x.type || x.cat) === (p.type || p.cat) && x.id !== p.id).slice(0, 5)
+    .forEach(x => rel.appendChild(el(pcardHtml(x))));
   const rev = document.getElementById('reviews');
   if (rev) REVIEWS.forEach(r => rev.appendChild(el(`
     <div class="rev rv">
@@ -298,26 +378,59 @@ function renderProduct() {
 function initGallery(total) {
   const main = document.getElementById('galMain'), strip = document.getElementById('galStrip');
   if (!main || !strip || total < 1) return;
-  let i = 0, startX = 0, dx = 0, dragging = false;
+  const counter = document.getElementById('galCount');
+  const thumbs = [...document.querySelectorAll('#galThumbs button')];
+  let i = 0, startX = 0, dx = 0, dragging = false, fromBtn = false;
   const w = () => main.clientWidth;
-  const go = (n) => {
-    i = Math.max(0, Math.min(n, total - 1));
-    strip.style.transition = '.6s cubic-bezier(.19,1,.22,1)';
-    strip.style.transform = `translateX(${-i * w()}px)`;
-    document.querySelectorAll('#galThumbs button').forEach((b, k) => b.classList.toggle('active', k === i));
+
+  const go = (nv, animate = true) => {
+    i = (nv + total) % total;                       // зациклюємо: з останнього — на перше
+    strip.style.transition = animate ? '.55s cubic-bezier(.19,1,.22,1)' : 'none';
+    strip.style.transform = 'translateX(' + (-i * w()) + 'px)';
+    thumbs.forEach((b, k) => b.classList.toggle('active', k === i));
+    if (counter) counter.textContent = (i + 1) + ' / ' + total;
+    const act = thumbs[i];
+    if (act && act.parentElement) {                 // підтягуємо активну мініатюру у видиму зону
+      const box = act.parentElement, l = act.offsetLeft, r = l + act.offsetWidth;
+      if (l < box.scrollLeft) box.scrollTo({ left: l - 12, behavior: 'smooth' });
+      else if (r > box.scrollLeft + box.clientWidth) box.scrollTo({ left: r - box.clientWidth + 12, behavior: 'smooth' });
+    }
   };
-  document.getElementById('galPrev')?.addEventListener('click', () => go(i - 1));
-  document.getElementById('galNext')?.addEventListener('click', () => go(i + 1));
-  document.querySelectorAll('#galThumbs button').forEach(b => b.addEventListener('click', () => go(+b.dataset.i)));
-  const down = (x) => { dragging = true; startX = x; dx = 0; main.classList.add('drag'); strip.style.transition = 'none'; };
-  const move = (x) => { if (!dragging) return; dx = x - startX; strip.style.transform = `translateX(${-i * w() + dx}px)`; };
+
+  // стрілки: гасимо pointer-події, щоб клік не з'їдався драгом
+  const arm = (id, delta) => {
+    const b = document.getElementById(id); if (!b) return;
+    ['pointerdown', 'pointermove', 'pointerup'].forEach(ev =>
+      b.addEventListener(ev, e => { e.stopPropagation(); fromBtn = true; }));
+    b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); go(i + delta); });
+  };
+  arm('galPrev', -1); arm('galNext', 1);
+
+  thumbs.forEach(b => {
+    b.addEventListener('pointerdown', e => { e.stopPropagation(); fromBtn = true; });
+    b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); go(+b.dataset.i); });
+  });
+
+  const down = (x) => { if (fromBtn) { fromBtn = false; return; }
+    dragging = true; startX = x; dx = 0; main.classList.add('drag'); strip.style.transition = 'none'; };
+  const move = (x) => { if (!dragging) return; dx = x - startX;
+    strip.style.transform = 'translateX(' + (-i * w() + dx) + 'px)'; };
   const up = () => { if (!dragging) return; dragging = false; main.classList.remove('drag');
-    if (Math.abs(dx) > w() * 0.18) go(dx < 0 ? i + 1 : i - 1); else go(i); };
+    if (Math.abs(dx) > w() * 0.15) go(dx < 0 ? i + 1 : i - 1); else go(i); };
+
   main.addEventListener('pointerdown', e => down(e.clientX));
   main.addEventListener('pointermove', e => move(e.clientX));
-  main.addEventListener('pointerup', up); main.addEventListener('pointerleave', up);
-  window.addEventListener('resize', () => go(i));
-  go(0);
+  main.addEventListener('pointerup', up);
+  main.addEventListener('pointerleave', up);
+  main.addEventListener('dragstart', e => e.preventDefault());
+
+  // клавіатура — стрілками вліво/вправо
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') go(i - 1);
+    if (e.key === 'ArrowRight') go(i + 1);
+  });
+  window.addEventListener('resize', () => go(i, false));
+  go(0, false);
 }
 
 /* --- accordion (product + FAQ) --- */
@@ -362,11 +475,19 @@ function initChrome() {
   }
   const page = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
   document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav === page) a.classList.add('active'); });
-  const curCat = qs('cat');
-  if (curCat) {
+  // підсвічуємо розділ, у який людина перейшла: сам тип і його групу в шапці
+  const curType = qs('type'), curCat = qs('cat');
+  const marks = new Set();
+  if (curType) {
+    marks.add(curType);
+    const g = (window.MM_CATEGORIES || []).find(c => c.name === curType);
+    if (g && g.group) marks.add(g.group);
+  }
+  if (curCat) marks.add(curCat);
+  if (marks.size) {
     let hit = false;
     document.querySelectorAll('[data-nav-cat]').forEach(el => {
-      if (el.dataset.navCat === curCat) { el.classList.add('active'); hit = true; }
+      if (marks.has(el.dataset.navCat)) { el.classList.add('active'); hit = true; }
     });
     if (hit) document.querySelectorAll('[data-nav="catalog"]').forEach(el => el.classList.remove('active'));
   }
