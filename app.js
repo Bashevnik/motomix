@@ -1,168 +1,10 @@
 /* ============ MOTOMIX — app (multi-page) ============ */
 const ORDER_ENDPOINT = 'https://motomix.vercel.app/api/order'; // прод-ендпоінт (працює і з дзеркала на GitHub Pages)
 
-/* ---------------- DATA ---------------- */
-const CATEGORIES = [
-  { name: 'Ендуро',     meta: 'від 250 см³',      img: 'assets/products/enduro.jpg' },
-  { name: 'Пітбайки',   meta: 'старт і спорт',    img: 'assets/products/pitbike.jpg' },
-  { name: 'Мотоцикли',  meta: 'місто · траса',    img: 'assets/hero/moto-dark.jpg' },
-  { name: 'Скутери',    meta: 'щоденні поїздки',  img: 'assets/products/scooter.jpg' },
-  { name: 'Екіпіровка', meta: 'шоломи · захист',  img: 'assets/products/helmet.jpg' },
-];
-
-const PRODUCTS = [
-  { id:'geon-gns-300', price:169900, oldPrice:189000, name:'GEON GNS 300', brand:'GEON', cat:'Ендуро', cc:300, badge:'Хіт', img:'assets/ig/post-1.jpg',
-    gallery:['assets/ig/post-1.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
-    spec:['300 см³','4-такт','з документами'],
-    desc:'Повнорозмірне ендуро для тих, хто вже впевнено тримається в сідлі. Рідинне охолодження тримає температуру на довгих підйомах, 6-ступенева КПП дає запас і для лісу, і для траси. Йде з повним пакетом документів — одразу ставиш на облік.',
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'300 см³', 'Охолодження':'рідинне', 'КПП':'6 ступенів',
-            'Колеса':'21" / 18"', 'Гальма':'дискові', 'Документи':'повний пакет', 'Призначення':'ендуро / оффроуд' },
-    kit:['Передпродажна підготовка','Пакет документів для реєстрації','Базовий набір інструменту','Гарантійний талон'] },
-
-  { id:'kayo-t4-300', price:182500, name:'KAYO T4 300', brand:'KAYO', cat:'Ендуро', cc:300, badge:'', img:'assets/ig/post-3.jpg',
-    gallery:['assets/ig/post-3.jpg','assets/hero/story-2.jpg','assets/products/enduro.jpg'],
-    spec:['300 см³','баланс-вал','оффроуд'],
-    desc:'Ендуро з балансувальним валом — менше вібрації на довгих перегонах, менше втоми в руках. Міцна рама та довгоходова підвіска тримають удар на складному ґрунті.',
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'300 см³', 'Особливість':'балансувальний вал',
-            'КПП':'6 ступенів', 'Колеса':'21" / 18"', 'Гальма':'дискові', 'Призначення':'ендуро' },
-    kit:['Передпродажна підготовка','Гарантійний талон','Консультація з обслуговування'] },
-
-  { id:'kovi-pr50', price:42900, oldPrice:47500, name:'KOVI PR50', brand:'KOVI', cat:'Пітбайки', cc:50, badge:'Новинка', img:'assets/ig/post-2.jpg',
-    gallery:['assets/ig/post-2.jpg','assets/products/pitbike.jpg'],
-    spec:['пітбайк','для старту','легкий'],
-    desc:'Легкий пітбайк для першого досвіду та тренувань на треку. Невелика вага і проста механіка прощають помилки — ідеально, щоб поставити техніку їзди.',
-    specs:{ 'Тип':'пітбайк', 'Охолодження':'повітряне', 'КПП':'механічна', 'Колеса':'14" / 12"',
-            'Гальма':'дискові', 'Призначення':'навчання, трек' },
-    kit:['Передпродажна підготовка','Інструмент','Гарантійний талон'] },
-
-  { id:'shineray-xy250', price:98700, name:'Shineray XY 250GY', brand:'SHINERAY', cat:'Ендуро', cc:250, badge:'Під замовлення', img:'assets/products/enduro.jpg',
-    gallery:['assets/products/enduro.jpg','assets/hero/forest-ride.jpg'],
-    spec:['250 см³','ендуро','під замовлення'],
-    desc:'Універсальне ендуро 250 для щоденних виїздів і подорожей. Повітряне охолодження — простіше в обслуговуванні, менше витрат у сервісі.',
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'250 см³', 'Охолодження':'повітряне',
-            'КПП':'5 ступенів', 'Колеса':'21" / 18"', 'Призначення':'ендуро / туризм' },
-    kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
-
-  { id:'musstang-region-250', price:86400, name:'Musstang Region 250', brand:'MUSSTANG', cat:'Мотоцикли', cc:250, badge:'', img:'assets/hero/moto-dark.jpg',
-    gallery:['assets/hero/moto-dark.jpg','assets/hero/story-1.jpg'],
-    spec:['250 см³','дорожній','надійний'],
-    desc:'Дорожній мотоцикл для міста і траси. Невибагливий до пального, зрозумілий у ремонті, з доступними запчастинами.',
-    specs:{ 'Двигун':'1-циліндровий, 4-такт', "Об'єм":'250 см³', 'КПП':'5 ступенів',
-            'Колеса':'18" / 17"', 'Гальма':'диск / барабан', 'Призначення':'місто + траса' },
-    kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
-
-  { id:'kovi-125', price:49800, name:'Пітбайк KOVI 125', brand:'KOVI', cat:'Пітбайки', cc:125, badge:'', img:'assets/products/pitbike.jpg',
-    gallery:['assets/products/pitbike.jpg','assets/ig/post-2.jpg'],
-    spec:['125 см³','повітр. охол.','для старту'],
-    desc:'Класичний пітбайк 125 — найпопулярніший старт у мото. Достатньо тяги для треку, але без надлишку, який лякає новачка.',
-    specs:{ "Об'єм":'125 см³', 'Охолодження':'повітряне', 'КПП':'механічна, 4 ст.',
-            'Колеса':'14" / 12"', 'Призначення':'старт, трек' },
-    kit:['Передпродажна підготовка','Інструмент','Гарантія'] },
-
-  { id:'yadea-scooter', price:58900, name:'Скутер Yadea', brand:'YADEA', cat:'Скутери', badge:'', img:'assets/products/scooter.jpg',
-    gallery:['assets/products/scooter.jpg'],
-    spec:['місто','економний','щоденний'],
-    desc:'Скутер для щоденних поїздок по місту. Варіатор — рушив і поїхав, без перемикань. Економний і простий в обслуговуванні.',
-    specs:{ 'Тип':'скутер', 'КПП':'варіатор', 'Колеса':'12"', 'Гальма':'диск / барабан', 'Призначення':'місто' },
-    kit:['Передпродажна підготовка','Гарантія'] },
-
-  { id:'helmet-set', price:4850, name:'Шолом + екіпіровка', brand:'MOTO', cat:'Екіпіровка', badge:'', img:'assets/products/helmet.jpg',
-    gallery:['assets/products/helmet.jpg'],
-    spec:['шолом','захист','комплект'],
-    desc:'Базовий комплект захисту: шолом, рукавички та захист корпусу. Підбираємо за розміром — міряти обовʼязково.',
-    specs:{ 'Склад':'шолом, рукавички, захист', 'Розміри':'S–XXL', 'Призначення':'ендуро / крос' },
-    kit:['Підбір розміру','Консультація'] },
-
-  { id:'geon-trail', price:152000, name:'GEON Trail Edition', brand:'GEON', cat:'Ендуро', cc:300, badge:'', img:'assets/hero/forest-ride.jpg',
-    gallery:['assets/hero/forest-ride.jpg','assets/hero/story-2.jpg'],
-    spec:['ендуро','оффроуд','тест-драйв'],
-    desc:'Версія для лісових маршрутів: довгоходова підвіска та захист картера. Для тих, хто їздить там, де закінчується асфальт.',
-    specs:{ 'Тип':'ендуро', 'Призначення':'лісові маршрути', 'Підвіска':'довгоходова' },
-    kit:['Передпродажна підготовка','Гарантія'] },
-
-  { id:'lifan-road', price:79900, name:'LIFAN дорожній', brand:'LIFAN', cat:'Мотоцикли', cc:250, badge:'', img:'assets/hero/rider.jpg',
-    gallery:['assets/hero/rider.jpg','assets/hero/story-1.jpg'],
-    spec:['місто+траса','надійний','сервіс'],
-    desc:'Надійний дорожній мотоцикл із доступним сервісом. Варіант для щоденних поїздок без зайвих витрат.',
-    specs:{ 'Тип':'дорожній', 'КПП':'5 ступенів', 'Призначення':'щоденні поїздки' },
-    kit:['Передпродажна підготовка','Пакет документів','Гарантія'] },
-
-  { id:'kayo-cross', price:63400, name:'KAYO Cross', brand:'KAYO', cat:'Пітбайки', cc:125, badge:'', img:'assets/hero/story-2.jpg',
-    gallery:['assets/hero/story-2.jpg','assets/products/pitbike.jpg'],
-    spec:['крос','спорт','трек'],
-    desc:'Кросовий апарат для треку і змагань. Спортивна підвіска та агресивна геометрія — не для спокійних прогулянок.',
-    specs:{ 'Тип':'кросовий', 'Призначення':'трек, змагання', 'Підвіска':'спортивна' },
-    kit:['Передпродажна підготовка','Консультація'] },
-
-  { id:'enduro-sport', price:112000, name:'Ендуро Sport 250', brand:'BSE', cat:'Ендуро', cc:250, badge:'', img:'assets/hero/enduro-action.jpg',
-    gallery:['assets/hero/enduro-action.jpg','assets/products/enduro.jpg'],
-    spec:['250 см³','спорт','легкий'],
-    desc:'Легке спортивне ендуро 250. Мала вага дає керованість на вузьких стежках і менше втоми за кермом.',
-    specs:{ "Об'єм":'250 см³', 'Тип':'ендуро-спорт', 'Призначення':'оффроуд' },
-    kit:['Передпродажна підготовка','Гарантія'] },
-];
-
-
-/* ---- розширення каталогу: компактні записи + автозаповнення карток ---- */
-const IMGS = ["assets/ig/post-1.jpg","assets/ig/post-2.jpg","assets/ig/post-3.jpg","assets/ig/post-4.jpg",
-  "assets/ig/post-5.jpg","assets/ig/post-6.jpg","assets/products/enduro.jpg","assets/products/pitbike.jpg",
-  "assets/products/scooter.jpg","assets/products/helmet.jpg","assets/hero/story-2.jpg","assets/hero/forest-ride.jpg",
-  "assets/hero/enduro-action.jpg","assets/hero/moto-dark.jpg","assets/hero/rider.jpg","assets/hero/story-1.jpg"];
-
-const EXTRA = [
-  // [id, назва, бренд, категорія, см³, індекс фото, бейдж]
-  ["geon-x-road-250","GEON X-Road 250","GEON","Мотоцикли",250,13,"",92500],
-  ["geon-dakar-250","GEON Dakar 250","GEON","Ендуро",250,11,"Хіт",118900],
-  ["kayo-k2-250","KAYO K2 250","KAYO","Ендуро",250,2,"",124700],
-  ["kayo-tt-140","KAYO TT 140","KAYO","Пітбайки",125,7,"",57200],
-  ["kovi-start-110","KOVI Start 110","KOVI","Пітбайки",110,1,"Для дітей",34900],
-  ["kovi-lite-125","KOVI Lite 125","KOVI","Пітбайки",125,3,"",46300],
-  ["shineray-x-trail-200","Shineray X-Trail 200","SHINERAY","Ендуро",200,6,"",74600],
-  ["shineray-vista-150","Shineray Vista 150","SHINERAY","Скутери",150,8,"",61800],
-  ["musstang-fosti-125","Musstang Fosti 125","MUSSTANG","Мотоцикли",125,15,"",44700],
-  ["musstang-mt-250","Musstang MT 250","MUSSTANG","Мотоцикли",250,13,"Під замовлення",88900],
-  ["spark-sp-150","SPARK SP 150","SPARK","Мотоцикли",150,15,"",52400],
-  ["spark-sp-125","SPARK SP 125","SPARK","Мотоцикли",125,13,"",45900],
-  ["forte-alpha-110","FORTE Alpha 110","FORTE","Скутери",110,8,"Хіт",38600],
-  ["forte-cross-250","FORTE Cross 250","FORTE","Ендуро",250,12,"",96300],
-  ["lifan-kp-150","LIFAN KP 150","LIFAN","Мотоцикли",150,14,"",58200],
-  ["bse-z6-250","BSE Z6 250","BSE","Ендуро",250,0,"",131500],
-  ["bse-ph10-125","BSE PH10 125","BSE","Пітбайки",125,5,"",54900],
-  ["yadea-city-e","YADEA City E","YADEA","Скутери",0,8,"Електро",67400],
-  ["yadea-go-e","YADEA Go E","YADEA","Скутери",0,8,"",54200],
-  ["helmet-cross","Шолом кросовий","MOTO","Екіпіровка",0,9,"",3900],
-  ["helmet-integral","Шолом інтеграл","MOTO","Екіпіровка",0,9,"",5600],
-  ["gear-protect","Захист корпусу","MOTO","Екіпіровка",0,9,"Новинка",2750],
-];
-
-const DESC = {
-  "Ендуро":"Ендуро для бездоріжжя й міста. Довгоходова підвіска тримає удар на ґрунті, посадка зручна для довгих виїздів. Підберемо під зріст і досвід.",
-  "Пітбайки":"Легкий пітбайк для навчання та треку. Проста механіка прощає помилки — ідеально, щоб поставити техніку їзди.",
-  "Мотоцикли":"Дорожній мотоцикл для міста й траси. Невибагливий до пального, зрозумілий у обслуговуванні, запчастини доступні.",
-  "Скутери":"Скутер для щоденних поїздок. Рушив і поїхав — без перемикань. Економний і простий в обслуговуванні.",
-  "Екіпіровка":"Захист, який справді працює. Підбираємо за розміром — міряти обовʼязково.",
-};
-const TYPEWORD = { "Ендуро":"ендуро", "Пітбайки":"пітбайк", "Мотоцикли":"дорожній", "Скутери":"міський", "Екіпіровка":"захист" };
-
-EXTRA.forEach(([id,name,brand,cat,cc,ix,badge,price]) => {
-  const img = IMGS[ix % IMGS.length];
-  const alt = IMGS[(ix + 5) % IMGS.length];
-  PRODUCTS.push({
-    id, name, brand, cat, cc: cc || undefined, badge, img, price,
-    gallery: [img, alt],
-    spec: [cc ? cc + " см³" : TYPEWORD[cat], TYPEWORD[cat], badge === "Під замовлення" ? "під замовлення" : "в наявності"],
-    desc: DESC[cat],
-    specs: Object.assign(
-      { "Тип": cat, "Бренд": brand },
-      cc ? { "Обʼєм": cc + " см³", "Охолодження": cc >= 250 ? "рідинне" : "повітряне", "КПП": cc >= 250 ? "6 ступенів" : "механічна" } : {},
-      { "Призначення": TYPEWORD[cat], "Документи": cat === "Екіпіровка" ? "—" : "повний пакет" }
-    ),
-    kit: cat === "Екіпіровка" ? ["Підбір розміру","Консультація"] : ["Передпродажна підготовка","Пакет документів","Гарантійний талон"],
-  });
-});
-
-const BRANDS = ['GEON','KOVI','KAYO','SHINERAY','MUSSTANG','SPARK','LIFAN','BAJAJ','FORTE','LONCIN',
-  'YADEA','LINHAI','MIKILON','BENELLI','FADA','BSE','CFMOTO','RENEGADE'];
+/* ---------------- DATA (з data.js, згенеровано з OLX) ---------------- */
+const CATEGORIES = window.MM_CATEGORIES || [];
+const PRODUCTS   = window.MM_PRODUCTS   || [];
+const BRANDS     = window.MM_BRANDS     || [];
 
 /* ЗАГЛУШКА: приклади відгуків — замінити на реальні від клієнта */
 const REVIEWS = [
@@ -174,14 +16,14 @@ const REVIEWS = [
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
-const money = (n) => "₴ " + Number(n).toLocaleString("uk-UA").replace(/,/g, " ");
+const priceText = (p) => p.priceRaw || "Ціна за запитом";
+const stockOf = () => "В наявності";
 const factsOf = (p) => {
   const f = [{ k: "Бренд", v: p.brand, href: "catalog.html?brand=" + encodeURIComponent(p.brand) }];
   if (p.cc) f.push({ k: "Обʼєм", v: p.cc + " см³", href: "catalog.html?cc=" + p.cc });
   f.push({ k: "Тип", v: p.cat, href: "catalog.html?cat=" + encodeURIComponent(p.cat) });
   return f;
 };
-const stockOf = (p) => p.badge === "Під замовлення" ? "Під замовлення" : "В наявності";
 const qs = (k) => new URLSearchParams(location.search).get(k);
 
 const pcardHtml = (p) => `
@@ -194,7 +36,7 @@ const pcardHtml = (p) => `
       <h3 class="pcard__name">${p.name}</h3>
       <dl class="facts">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd><a href="${f.href}">${f.v}</a></dd></div>`).join("")}</dl>
       <div class="pcard__foot">
-        <div class="pcard__price">${p.price ? money(p.price) : "Ціна за запитом"}${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}<small class="${p.badge === "Під замовлення" ? "ord" : "in"}">${stockOf(p)}</small></div>
+        <div class="pcard__price">${priceText(p)}<small class="in">${stockOf(p)}</small></div>
         <span class="tlink">Деталі ${ico("ic-arrow")}</span>
       </div>
     </div>
@@ -283,7 +125,7 @@ function renderCatalog() {
   const inPrice = (p, label) => {
     if (label === ALL) return true;
     const r = PRICE_RANGES.find(x => x[0] === label); if (!r) return true;
-    return typeof p.price === "number" && p.price >= r[1] && p.price < r[2];
+    return typeof p.priceUah === "number" && p.priceUah >= r[1] && p.priceUah < r[2];
   };
   const fits = (p, st) => (st.cat === ALL || p.cat === st.cat) && (st.brand === ALL || p.brand === st.brand)
     && (st.cc === ALL || p.cc === st.cc) && inPrice(p, st.price);
@@ -292,11 +134,10 @@ function renderCatalog() {
   const countFor = (g, v) => PRODUCTS.filter(p => fits(p, { ...state, [g]: v })).length;
 
   const CATMETA = {
-    "Ендуро":     { img: "assets/hero/story-2.jpg",      d: "Повнорозмірні ендуро 200–300 см³ для бездоріжжя й міста. Підберемо під зріст, досвід і задачі." },
-    "Пітбайки":   { img: "assets/products/pitbike.jpg",  d: "Легкі пітбайки для старту, навчання і треку — від дитячих 50 см³ до підліткових 125 см³." },
-    "Мотоцикли":  { img: "assets/hero/moto-dark.jpg",    d: "Дорожні мотоцикли для міста й траси: надійні, економні, з доступним сервісом." },
-    "Скутери":    { img: "assets/products/scooter.jpg",  d: "Скутери та електротранспорт для щоденних поїздок по місту." },
-    "Екіпіровка": { img: "assets/products/helmet.jpg",   d: "Шоломи, захист і аксесуари. Підбираємо за розміром." },
+    "Мотоцикли":      { img: "assets/hero/story-2.jpg",     d: "Дорожні, ендуро та мотард від KOVI, LIFAN, GEON, KAYO, SHINERAY. Нові, з документами." },
+    "Квадроцикли":    { img: "assets/hero/forest-ride.jpg", d: "Квадроцикли для дорослих і дітей: KAYO, SOK MOTO, QUADRATERRA. 125-300 см³, 4x4." },
+    "Електроскутери": { img: "assets/hero/moto-dark.jpg",   d: "Електроскутери FADA — для міста, без пального." },
+    "Аксесуари":      { img: "assets/products/helmet.jpg",  d: "Оптика, екіпіровка та аксесуари для мототехніки." },
   };
   const paintHead = () => {
     const h1 = document.getElementById("cat-h1"), desc = document.getElementById("cat-desc");
@@ -305,7 +146,7 @@ function renderCatalog() {
     const c = state.cat;
     if (c === ALL) {
       if (h1) h1.textContent = "Каталог мототехніки";
-      if (desc) desc.textContent = "Ендуро, пітбайки, мотоцикли, скутери та екіпіровка — обери напрям або скористайся фільтром.";
+      if (desc) desc.textContent = "Мотоцикли, квадроцикли, електроскутери та аксесуари — обери напрям або скористайся фільтром.";
       if (tail) tail.innerHTML = "";
       if (link) link.removeAttribute("href");
       document.title = "Каталог мототехніки — MOTOMIX";
@@ -324,8 +165,8 @@ function renderCatalog() {
     const sort = sortSel ? sortSel.value : "default";
     if (sort === "az") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === "za") list = [...list].sort((a, b) => b.name.localeCompare(a.name));
-    if (sort === "cheap") list = [...list].sort((a, b) => (a.price || 1e9) - (b.price || 1e9));
-    if (sort === "exp") list = [...list].sort((a, b) => (b.price || 0) - (a.price || 0));
+    if (sort === "cheap") list = [...list].sort((a, b) => (a.priceUah || 1e9) - (b.priceUah || 1e9));
+    if (sort === "exp") list = [...list].sort((a, b) => (b.priceUah || 0) - (a.priceUah || 0));
     grid.innerHTML = "";
     if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
     else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
@@ -383,43 +224,59 @@ function renderProduct() {
   const h = document.getElementById('pdp-h1'); if (h) h.textContent = p.name;
   const gal = (p.gallery && p.gallery.length) ? p.gallery : [p.img];
 
+  const shortDesc = (p.desc || "").slice(0, 300);
+  const needMore = (p.desc || "").length > 320;
   root.innerHTML = `
-    <div class="gallery">
-      <div class="gallery__main" id="galMain">
-        <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${p.name}" draggable="false">`).join('')}</div>
-        ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" aria-label="Попереднє">${ico('ic-arrow-l')}</button>
-        <button class="gallery__nav gallery__nav--n" id="galNext" aria-label="Наступне">${ico('ic-arrow')}</button>` : ''}
+    <div class="gallery-col">
+      <div class="gallery">
+        <div class="gallery__main" id="galMain">
+          <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${p.name}" draggable="false">`).join("")}</div>
+          ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" aria-label="Попереднє">${ico("ic-arrow-l")}</button>
+          <button class="gallery__nav gallery__nav--n" id="galNext" aria-label="Наступне">${ico("ic-arrow")}</button>` : ""}
+        </div>
+        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button class="${i ? "" : "active"}" data-i="${i}"><img src="${g}" alt=""></button>`).join("")}</div>` : ""}
       </div>
-      ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button class="${i ? '' : 'active'}" data-i="${i}"><img src="${g}" alt=""></button>`).join('')}</div>` : ''}
+      <section class="pdesc" id="pdesc">
+        <h2 class="pdesc__t">Опис</h2>
+        <div class="pdesc__body" id="pdescBody"><p>${p.desc || "Опис уточнюйте у менеджера."}</p></div>
+        ${needMore ? `<button class="pdesc__more" id="pdescMore" type="button">Переглянути більше ${ico("ic-chev")}</button>` : ""}
+      </section>
     </div>
     <div class="pdp__info">
       <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> <a href="catalog.html?brand=${encodeURIComponent(p.brand)}">${p.brand}</a> · <a href="catalog.html?cat=${encodeURIComponent(p.cat)}">${p.cat}</a></span>
       <h2 class="pdp__title">${p.name}</h2>
-      <div class="pdp__price"><b>${p.price ? money(p.price) : "Ціна за запитом"}</b>${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}<span class="${p.badge === "Під замовлення" ? "ord" : "in"}">${stockOf(p)}</span></div>
+      <div class="pdp__price"><b>${priceText(p)}</b><span class="in">${stockOf(p)}</span></div>
+      <dl class="facts facts--pdp">${factsOf(p).map(f => `<div class="facts__r"><dt>${f.k}</dt><dd><a href="${f.href}">${f.v}</a></dd></div>`).join("")}</dl>
       <div class="pdp__actions">
         <button class="btn btn--red btn--lg" data-order="${p.name}">Замовити</button>
-        <a class="btn btn--line btn--lg" href="tel:+380938701107">${ico('ic-phone')} Подзвонити</a>
+        <a class="btn btn--line btn--lg" href="tel:+380938701107">${ico("ic-phone")} Подзвонити</a>
       </div>
       <div class="acc">
-        <div class="acc__i open"><button class="acc__q">Характеристики ${ico('ic-plus')}</button>
-          <div class="acc__a"><div><table class="spec-table">${Object.entries(p.specs || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div></div></div>
-        <div class="acc__i"><button class="acc__q">Опис ${ico('ic-plus')}</button>
-          <div class="acc__a"><div><p>${p.desc || ''}</p></div></div></div>
-        <div class="acc__i"><button class="acc__q">Комплектація ${ico('ic-plus')}</button>
-          <div class="acc__a"><div><ul>${(p.kit || []).map(k => `<li>${k}</li>`).join('')}</ul></div></div></div>
-        <div class="acc__i"><button class="acc__q">Доставка та оплата ${ico('ic-plus')}</button>
+        <div class="acc__i"><button class="acc__q">Доставка та оплата ${ico("ic-plus")}</button>
           <div class="acc__a"><div><ul>
             <li>Доставка по всій Україні, без передоплати</li>
-            <li>Самовивіз у Білій Церкві</li>
+            <li>Самовивіз: вул. Сухоярська, Біла Церква</li>
             <li>Готівка, картка, безготівковий розрахунок</li>
             <li>Повний пакет документів для реєстрації</li></ul></div></div></div>
+        <div class="acc__i"><button class="acc__q">Гарантія та сервіс ${ico("ic-plus")}</button>
+          <div class="acc__a"><div><ul>
+            <li>Передпродажна підготовка кожної одиниці</li>
+            <li>Гарантія виробника</li>
+            <li>Сервіс і запчастини після покупки</li></ul></div></div></div>
       </div>
       <div class="trust">
-        <div>${ico('ic-shield')}<b>Гарантія</b><span>офіційний бренд</span></div>
-        <div>${ico('ic-truck')}<b>Доставка</b><span>по всій Україні</span></div>
-        <div>${ico('ic-wrench')}<b>Сервіс</b><span>після покупки</span></div>
+        <div>${ico("ic-shield")}<b>Гарантія</b><span>офіційний бренд</span></div>
+        <div>${ico("ic-truck")}<b>Доставка</b><span>по всій Україні</span></div>
+        <div>${ico("ic-wrench")}<b>Сервіс</b><span>після покупки</span></div>
       </div>
     </div>`;
+
+  const moreBtn = document.getElementById("pdescMore");
+  moreBtn?.addEventListener("click", () => {
+    const d = document.getElementById("pdesc");
+    const open = d.classList.toggle("open");
+    moreBtn.innerHTML = (open ? "Згорнути " : "Переглянути більше ") + ico("ic-chev");
+  });
 
   initGallery(gal.length);
   initAcc();
