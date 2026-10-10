@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>MOTOMIX — вибір типографіки карточок</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Russo+One&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F1ED; --surface:#FFFFFF; --surface-2:#E9E7E1;
+  --ink:#0B0B0D; --ink-2:#3A3A40; --ash:#76767E;
+  --red:#E01B24; --line:rgba(11,11,13,.11); --line-2:rgba(11,11,13,.22);
+  --cut-s:12px; --cut-m:24px;
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink-2);font-family:"Inter",system-ui,sans-serif;
+  font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1560px;margin-inline:auto;padding-inline:clamp(18px,3.4vw,56px)}
+.cut{clip-path:polygon(var(--c,20px) 0,100% 0,100% calc(100% - var(--c,20px)),calc(100% - var(--c,20px)) 100%,0 100%,0 var(--c,20px))}
+
+/* ---------- lab chrome ---------- */
+.lab-top{background:var(--ink);color:#fff;padding:34px 0 30px}
+.lab-top h1{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;
+  font-size:clamp(1.5rem,3vw,2.4rem);line-height:1.05;letter-spacing:.01em}
+.lab-top p{color:#B6B6BE;max-width:980px;margin-top:12px;font-size:.95rem}
+.lab-top b{color:#fff}
+.diag{margin-top:22px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.diag div{--c:11px;background:rgba(255,255,255,.06);padding:16px 18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.diag span{display:block;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:#8A8A95;margin-bottom:7px}
+.diag p{margin:0;color:#DEDEE4;font-size:.88rem}
+
+section{padding:clamp(40px,5vw,76px) 0}
+section + section{border-top:1px solid var(--line)}
+.vhead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}
+.vhead h2{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;color:var(--ink);
+  font-size:clamp(1.3rem,2.3vw,1.9rem);line-height:1.05}
+.vhead h2 i{font-style:normal;color:var(--red)}
+.vmeta{display:flex;flex-wrap:wrap;gap:8px}
+.vmeta code{--c:8px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);
+  padding:7px 13px;font-size:.74rem;font-family:"Inter",monospace;color:var(--ink-2);letter-spacing:.02em}
+.vnote{background:var(--surface);--c:14px;padding:18px 20px;margin-bottom:26px;
+  box-shadow:inset 0 0 0 1px var(--line);font-size:.9rem;max-width:1100px}
+.vnote b{color:var(--ink)}
+
+.grid{display:grid;gap:clamp(12px,1.3vw,20px);grid-template-columns:repeat(4,1fr)}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+
+/* ---------- shared card skeleton ---------- */
+.card{--c:var(--cut-m);background:var(--surface);display:flex;flex-direction:column;
+  transition:.4s var(--ease);cursor:pointer}
+.card:hover{transform:translateY(-5px)}
+.card__media{position:relative;aspect-ratio:4/3.3;overflow:hidden;background:var(--surface-2)}
+.card__media img{width:100%;height:100%;object-fit:cover;transition:1s var(--ease)}
+.card:hover .card__media img{transform:scale(1.06)}
+.card__body{padding:17px 18px 19px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card__foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;
+  gap:12px;padding-top:13px;border-top:1px solid var(--line)}
+.stock{font-size:.7rem;color:#1C8A3C;font-weight:600;display:flex;align-items:center;gap:6px}
+.stock::before{content:"";width:6px;height:6px;border-radius:50%;background:#1C8A3C}
+.go{--c:7px;background:var(--ink);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:10px 15px;transition:.3s;white-space:nowrap}
+.card:hover .go{background:var(--red)}
+.tagline{position:absolute;top:0;left:0;background:var(--red);color:#fff;font-size:.63rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:7px 15px 7px 12px;
+  clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%)}
+
+/* ---------- PDP mock ---------- */
+.pdp{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(22px,2.6vw,44px);margin-top:34px;
+  background:var(--surface);--c:26px;padding:clamp(20px,2.2vw,32px);box-shadow:inset 0 0 0 1px var(--line)}
+@media (max-width:900px){.pdp{grid-template-columns:1fr}}
+.pdp__ph{--c:20px;aspect-ratio:4/3;overflow:hidden;background:var(--surface-2)}
+.pdp__ph img{width:100%;height:100%;object-fit:cover}
+.pdp__side{display:flex;flex-direction:column}
+.pdp__crumbs{font-size:.76rem;color:#A9A9B2;margin-bottom:12px}
+.pdp__crumbs b{color:var(--ink-2);font-weight:500}
+.pdp__buy{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.b1{--c:9px;background:var(--red);color:#fff;font-weight:700;font-size:.78rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:15px 24px}
+.b2{--c:9px;background:none;color:var(--ink);font-weight:700;font-size:.78rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:15px 24px;box-shadow:inset 0 0 0 1.5px var(--line-2)}
+
+/* =====================================================================
+   ВАРІАНТ 1 — «КАТАЛОГ»   Oswald 600 + Inter
+   ===================================================================== */
+.v1 .card__name{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;
+  color:var(--ink);font-size:1.18rem;line-height:1.14;letter-spacing:.005em}
+.v1 .card__sub{font-size:.8rem;color:var(--ash);line-height:1.45;margin-top:-4px}
+.v1 .card__sub b{color:var(--ink-2);font-weight:600}
+.v1 .facts{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.v1 .facts__r{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:8px 0;border-bottom:1px solid var(--line)}
+.v1 .facts dt{font-size:.73rem;color:var(--ash);white-space:nowrap}
+.v1 .facts dd a{font-size:.83rem;font-weight:600;color:var(--ink);box-shadow:inset 0 -1px 0 transparent;transition:.2s}
+.v1 .facts dd a:hover{color:var(--red);box-shadow:inset 0 -1px 0 var(--red)}
+.v1 .price{font-family:"Oswald",sans-serif;font-weight:600;font-size:1.5rem;color:var(--ink);line-height:1}
+.v1 .price small{display:block;font-family:"Inter",sans-serif;font-weight:400;font-size:.68rem;
+  color:var(--ash);letter-spacing:.04em;margin-top:5px}
+.v1 .pdp__title{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;color:var(--ink);
+  font-size:clamp(1.7rem,3vw,2.5rem);line-height:1.06}
+.v1 .pdp__lead{margin-top:10px;font-size:.98rem;color:var(--ink-2);max-width:620px}
+.v1 .pdp__price{font-family:"Oswald",sans-serif;font-weight:600;font-size:2.4rem;color:var(--ink);
+  line-height:1;margin-top:20px}
+
+/* =====================================================================
+   ВАРІАНТ 2 — «ТЕХНІЧНИЙ»   Inter 700 назви + Russo One цифри
+   ===================================================================== */
+.v2 .card__name{font-family:"Inter",sans-serif;font-weight:700;color:var(--ink);
+  font-size:1.07rem;line-height:1.32;letter-spacing:-.01em}
+.v2 .card__brandline{font-family:"Russo One",sans-serif;font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--red)}
+.v2 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.v2 .chips a{--c:7px;font-size:.74rem;font-weight:500;color:var(--ink-2);padding:6px 11px;
+  background:var(--surface-2);transition:.22s;display:inline-block}
+.v2 .chips a:hover{background:var(--ink);color:#fff}
+.v2 .chips a b{font-family:"Russo One",sans-serif;font-weight:400;color:var(--ink);transition:.22s}
+.v2 .chips a:hover b{color:#fff}
+.v2 .price{font-family:"Russo One",sans-serif;font-size:1.34rem;color:var(--ink);line-height:1.1}
+.v2 .price small{display:block;font-family:"Inter",sans-serif;font-size:.68rem;color:var(--ash);
+  letter-spacing:.04em;margin-top:5px;font-weight:400}
+.v2 .pdp__title{font-family:"Inter",sans-serif;font-weight:800;color:var(--ink);
+  font-size:clamp(1.55rem,2.6vw,2.15rem);line-height:1.18;letter-spacing:-.02em}
+.v2 .pdp__brandline{font-family:"Russo One",sans-serif;font-size:.8rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--red);margin-bottom:9px}
+.v2 .pdp__lead{margin-top:12px;font-size:.98rem;color:var(--ink-2);max-width:620px}
+.v2 .pdp__price{font-family:"Russo One",sans-serif;font-size:2.2rem;color:var(--ink);line-height:1;margin-top:20px}
+
+/* =====================================================================
+   ВАРІАНТ 3 — «ПРЕМІУМ»   Montserrat 800 + Inter
+   ===================================================================== */
+.v3 .card__name{font-family:"Montserrat",sans-serif;font-weight:800;text-transform:uppercase;
+  color:var(--ink);font-size:1rem;line-height:1.24;letter-spacing:-.005em}
+.v3 .card__sub{font-size:.81rem;color:var(--ash);line-height:1.5}
+.v3 .card__sub b{color:var(--ink-2);font-weight:600}
+.v3 .spec{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  margin:2px -18px;padding:1px 0}
+.v3 .spec a{background:var(--surface);padding:11px 8px;text-align:center;transition:.22s}
+.v3 .spec a:hover{background:var(--ink)}
+.v3 .spec span{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ash);margin-bottom:4px;transition:.22s}
+.v3 .spec b{display:block;font-family:"Montserrat",sans-serif;font-weight:700;font-size:.84rem;
+  color:var(--ink);transition:.22s}
+.v3 .spec a:hover span{color:#9A9AA4}
+.v3 .spec a:hover b{color:#fff}
+.v3 .price{font-family:"Montserrat",sans-serif;font-weight:800;font-size:1.3rem;color:var(--ink);line-height:1.1;
+  letter-spacing:-.02em}
+.v3 .price small{display:block;font-family:"Inter",sans-serif;font-weight:400;font-size:.68rem;
+  color:var(--ash);letter-spacing:.04em;margin-top:5px}
+.v3 .pdp__title{font-family:"Montserrat",sans-serif;font-weight:800;text-transform:uppercase;color:var(--ink);
+  font-size:clamp(1.4rem,2.4vw,2rem);line-height:1.16;letter-spacing:-.015em}
+.v3 .pdp__lead{margin-top:12px;font-size:.98rem;color:var(--ink-2);max-width:620px}
+.v3 .pdp__price{font-family:"Montserrat",sans-serif;font-weight:800;font-size:2.1rem;color:var(--ink);
+  line-height:1;margin-top:20px;letter-spacing:-.02em}
+
+/* ---------- «як зараз» ---------- */
+.v0 .card__name{font-family:"Anton",Impact,sans-serif;font-style:italic;text-transform:uppercase;
+  color:var(--ink);font-size:1.22rem;line-height:1.02}
+.v0 .facts{display:flex;flex-direction:column}
+.v0 .facts__r{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:7px 0;border-bottom:1px solid var(--line)}
+.v0 .facts dt{font-size:.74rem;color:var(--ash)}
+.v0 .facts dd a{font-size:.86rem;font-weight:600;color:var(--ink)}
+.v0 .price{font-family:"Anton",Impact,sans-serif;font-style:italic;font-size:.96rem;color:var(--ink);line-height:1.15}
+.v0 .price small{display:block;font-family:"Inter",sans-serif;font-style:normal;font-size:.62rem;color:var(--ash)}
+.v0 .vhead h2{color:var(--ash)}
+
+footer.lab-foot{background:var(--ink);color:#8A8A95;padding:40px 0;font-size:.86rem}
+footer.lab-foot b{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="lab-top">
+  <div class="wrap">
+    <h1>Вибір типографіки — карточка товару та сторінка товару</h1>
+    <p>Три готові варіанти на реальних назвах з каталогу. Подивіться і скажіть номер — я розкочу його на весь сайт.
+       Усі три читабельні; різниця в характері. <b>Головне: нинішній шрифт заголовків фізично не має кирилиці</b> — тому українські назви зараз показуються системним Impact.</p>
+    <div class="diag">
+      <div class="cut"><span>Діагноз</span><p>Шрифт <b>Anton</b> містить тільки latin / latin-ext / vietnamese. Кирилиці в ньому немає.</p></div>
+      <div class="cut"><span>Наслідок</span><p>«Lifan» малюється Anton, «Новий інжектор» — підміною Impact, і курсив браузер підробляє нахилом. В одному заголовку два різні шрифти.</p></div>
+      <div class="cut"><span>Рішення</span><p>Усі три варіанти — на шрифтах з повною кирилицею (Oswald · Russo One · Montserrat), курсив справжній або не використовується.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- як зараз -->
+<section class="v0">
+  <div class="wrap">
+    <div class="vhead">
+      <h2 style="color:var(--ash)">Як зараз <i>(для порівняння)</i></h2>
+      <div class="vmeta"><code>Anton italic UPPERCASE</code><code>немає кирилиці</code><code>line-height 1.02</code></div>
+    </div>
+    <div class="grid" id="g0"></div>
+  </div>
+</section>
+
+<!-- варіант 1 -->
+<section class="v1">
+  <div class="wrap">
+    <div class="vhead">
+      <h2>Варіант 1 — <i>«Каталог»</i></h2>
+      <div class="vmeta"><code>Oswald 600</code><code>Inter</code><code>вузький, UPPERCASE</code></div>
+    </div>
+    <div class="vnote cut">
+      <b>Характер:</b> технічний автомобільний каталог. Oswald вузький — довга назва вкладається у два рядки й не дрібнішає.
+      Назва розділена: <b>модель великим</b> + уточнення сірим під нею. Характеристики — таблицею, кожне значення клікабельне.
+      <b>Найближче до motoshop.ua</b>, зберігає нинішній «швидкий» характер теми.
+    </div>
+    <div class="grid" id="g1"></div>
+    <div class="pdp cut" id="p1"></div>
+  </div>
+</section>
+
+<!-- варіант 2 -->
+<section class="v2">
+  <div class="wrap">
+    <div class="vhead">
+      <h2>Варіант 2 — <i>«Технічний»</i></h2>
+      <div class="vmeta"><code>Inter 700/800</code><code>Russo One — цифри</code><code>без CAPS</code></div>
+    </div>
+    <div class="vnote cut">
+      <b>Характер:</b> максимальна читабельність. Назва — звичайним регістром (як людина її читає, не криком), а спортивний характер
+      тримають <b>ціна й цифри</b> на Russo One. Характеристики — клікабельні плашки. Це найлегший для сканування варіант:
+      око не чіпляється за великі літери, назва зчитується з першого погляду.
+    </div>
+    <div class="grid" id="g2"></div>
+    <div class="pdp cut" id="p2"></div>
+  </div>
+</section>
+
+<!-- варіант 3 -->
+<section class="v3">
+  <div class="wrap">
+    <div class="vhead">
+      <h2>Варіант 3 — <i>«Преміум»</i></h2>
+      <div class="vmeta"><code>Montserrat 800</code><code>Inter</code><code>широкий, UPPERCASE</code></div>
+    </div>
+    <div class="vnote cut">
+      <b>Характер:</b> дорожчий, «салонний». Montserrat широкий і жирний — виглядає солідно, але довгу назву доводиться
+      тримати коротшою, тому тут <b>обовʼязкове скорочення назв</b>. Характеристики — трьома клікабельними комірками
+      на всю ширину карточки, як міні-таблиця ТТХ.
+    </div>
+    <div class="grid" id="g3"></div>
+    <div class="pdp cut" id="p3"></div>
+  </div>
+</section>
+
+<footer class="lab-foot">
+  <div class="wrap">
+    Напишіть <b>«1»</b>, <b>«2»</b> або <b>«3»</b> — і я застосую вибраний варіант до карточок, сторінки товара, каталога
+    та всіх заголовків сайта. Можна й змішати: напр. <b>назви з варіанта 2, ціни з варіанта 1</b>.
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+const P = (window.MM_PRODUCTS || []);
+const PICK = ["Lifan kpt 400 2026 Новий 43 ps інжектор","Квадроцикел сок мото Terra X 250cc 2026р",
+              "Kovi 300 pro motard, kovi 450i pro, kovi max 300, kovi jn250 НОВІ","Дитячі підбайки Exdrive 110 2026"];
+const demo = PICK.map(n => P.find(p => p.name === n)).filter(Boolean);
+const items = demo.length === 4 ? demo : P.slice(0, 4);
+
+/* --- нормалізація «сирої» назви з OLX: БРЕНД МОДЕЛЬ + рядок уточнень --- */
+const TAIL = /^(нов(ий|а|і|е|ые|ый)|new|інжектор|инжектор|карбюратор|р|року|рік|випуску|шт|за|грн|стан|продам|терміново|наявності|продажу|в|у|\d{2,4}(cc|см3|куб))$/i;
+const LEADW = /^(в|у|є|нов[а-яіїєґ]*|new|наявності|продажу|продам|мотоцик[а-яіїєґ]*|квадроцик[а-яіїєґ]*|квадрик|скутер|електро[а-яіїєґ]*|питбайк|підбайк[а-яіїєґ]*|пітбайк|бюджетний|топовий|дитяч[а-яіїєґ]*|детск[а-яіїєґ]*)$/i;
+const TRMAP = {а:'a',б:'b',в:'v',г:'g',ґ:'g',д:'d',е:'e',є:'ie',ж:'zh',з:'z',и:'y',і:'i',ї:'i',й:'i',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'sch',ь:'',ю:'iu',я:'ia',ы:'y',э:'e',ё:'e',ъ:''};
+const tr = s => s.toLowerCase().split("").map(c => TRMAP[c] !== undefined ? TRMAP[c] : c).join("");
+function lev(a, b) { const m = []; for (let i = 0; i <= b.length; i++) m[i] = [i];
+  for (let j = 0; j <= a.length; j++) m[0][j] = j;
+  for (let i = 1; i <= b.length; i++) for (let j = 1; j <= a.length; j++)
+    m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1], m[i][j-1], m[i-1][j]) + 1;
+  return m[b.length][a.length]; }
+const near = (a, b) => { if (!a || !b) return false; a = a.toLowerCase(); b = b.toLowerCase();
+  return a === b || lev(a, b) <= (Math.max(a.length, b.length) >= 6 ? 2 : 1); };
+const capWord = t => t.includes("-")
+  ? t.split("-").map(s => s.length <= 2 ? s.toUpperCase() : s[0].toUpperCase() + s.slice(1).toLowerCase()).join("-")
+  : (t.length <= 4 || /\d/.test(t)) ? t.toUpperCase() : t[0].toUpperCase() + t.slice(1).toLowerCase();
+
+function parseName(p) {
+  let s = (p.name || "")
+    .replace(/[‍⁠️]/g, "")
+    .replace(/[‼❗❕⁉❣\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, " ")
+    .replace(/\s*[,.]\s*$/, "").replace(/\s+/g, " ").trim();
+
+  const year = (s.match(/\b(20\d{2})\b/) || [])[1] || "";
+  const hp   = (s.match(/(\d{2,3})\s*(?:ps|к\.?\s?с\.?|лс|hp)\b/i) || [])[1] || "";
+  const kw   = (s.match(/(\d{3,4})\s*w\b/i) || [])[1] || "";
+  const inj  = /інжектор|инжектор/i.test(s);
+  const isNew = /\bнов|\bnew\b/i.test(s);
+  const kids = /дитяч|детск/i.test(s);
+
+  let toks = s.split(" ");
+  const yt = toks.findIndex(t => /^20\d{2}/.test(t));
+  if (yt >= 1) toks = toks.slice(0, yt);
+  const ci = toks.findIndex(t => t.endsWith(","));
+  if (ci >= 1 && ci < toks.length - 1) toks = toks.slice(0, ci + 1);
+  toks = toks.map(t => t.replace(/,/g, "").replace(/\.$/, "")).filter(Boolean);
+  while (toks.length > 1 && TAIL.test(toks[toks.length - 1])) toks.pop();
+  while (toks.length > 1 && LEADW.test(toks[0])) toks.shift();
+
+  const B = p.brand || "", bw = B.split(/\s+/).filter(Boolean);
+  toks = toks.filter(t => !bw.some(w => near(t, w) || near(tr(t), w.toLowerCase())));
+  while (toks.join(" ").length > 26 && toks.length > 2) toks.pop();
+
+  let out = toks.map((t, i) => /^\d/.test(t) ? t
+    : /[a-z]/i.test(t) ? capWord(t)
+    : i === 0 ? t[0].toUpperCase() + t.slice(1).toLowerCase() : t.toLowerCase());
+  if (B && B !== "MOTOMIX") out.unshift(B);
+  out = out.filter((t, i) => i === 0 || t.toLowerCase() !== out[i - 1].toLowerCase());
+
+  const head = out.join(" ").replace(/\s*[-–—/]\s*$/, "").replace(/\b(\d+)\s+в\b/g, "$1 В").trim();
+  const meta = [];
+  if (year) meta.push(year + " р.");
+  if (p.cc) meta.push(p.cc + " см³");
+  if (hp) meta.push(hp + " к.с.");
+  if (kw) meta.push(kw + " Вт");
+  if (inj) meta.push("інжектор");
+  if (kids) meta.push("дитячий");
+  if (isNew) meta.push("новий");
+  let model = head;
+  if (B && head.toLowerCase().startsWith(B.toLowerCase())) {
+    const rest = head.slice(B.length).trim();
+    // бренд знімаємо тільки якщо лишається осмислена назва моделі
+    if (rest.length >= 5 && /[a-zA-Zа-яА-ЯіїєґІЇЄҐ]/.test(rest)) model = rest;
+  }
+  return { head, model, tail: "", meta: meta.join(" · "), full: s };
+}
+
+const price = p => p.priceRaw || "Ціна за запитом";
+const img = p => p.img || (p.gallery && p.gallery[0]) || "";
+const catUrl = v => "catalog.html?cat=" + encodeURIComponent(v);
+const brUrl  = v => "catalog.html?brand=" + encodeURIComponent(v);
+
+/* ---------- як зараз ---------- */
+const c0 = p => `<article class="card cut">
+  <div class="card__media"><img src="${img(p)}" alt=""><span class="tagline">В наявності</span></div>
+  <div class="card__body">
+    <h3 class="card__name">${p.name}</h3>
+    <dl class="facts">
+      <div class="facts__r"><dt>Бренд</dt><dd><a href="${brUrl(p.brand)}">${p.brand}</a></dd></div>
+      ${p.cc ? `<div class="facts__r"><dt>Обʼєм</dt><dd><a href="#">${p.cc} см³</a></dd></div>` : ""}
+      <div class="facts__r"><dt>Тип</dt><dd><a href="${catUrl(p.cat)}">${p.cat}</a></dd></div>
+    </dl>
+    <div class="card__foot"><div class="price">${price(p)}<small>В наявності</small></div></div>
+  </div></article>`;
+
+/* ---------- варіант 1 ---------- */
+const c1 = p => { const n = parseName(p); return `<article class="card cut">
+  <div class="card__media"><img src="${img(p)}" alt=""><span class="tagline">В наявності</span></div>
+  <div class="card__body">
+    <h3 class="card__name">${n.head}</h3>
+    ${n.meta ? `<p class="card__sub">${n.meta}</p>` : ""}
+    <dl class="facts">
+      <div class="facts__r"><dt>Бренд</dt><dd><a href="${brUrl(p.brand)}">${p.brand}</a></dd></div>
+      ${p.cc ? `<div class="facts__r"><dt>Обʼєм двигуна</dt><dd><a href="#">${p.cc} см³</a></dd></div>` : ""}
+      <div class="facts__r"><dt>Тип</dt><dd><a href="${catUrl(p.cat)}">${p.cat}</a></dd></div>
+    </dl>
+    <div class="card__foot">
+      <div class="price">${price(p)}<small>ціна актуальна</small></div>
+      <span class="go cut" style="--c:7px">Детальніше</span>
+    </div>
+  </div></article>`; };
+
+/* ---------- варіант 2 ---------- */
+const c2 = p => { const n = parseName(p); return `<article class="card cut">
+  <div class="card__media"><img src="${img(p)}" alt=""><span class="tagline">В наявності</span></div>
+  <div class="card__body">
+    <div class="card__brandline">${p.brand}</div>
+    <h3 class="card__name">${n.model}</h3>
+    <div class="chips">
+      ${p.cc ? `<a href="#"><b>${p.cc}</b> см³</a>` : ""}
+      <a href="${catUrl(p.cat)}">${p.cat}</a>
+      <a href="${brUrl(p.brand)}">${p.brand}</a>
+    </div>
+    <div class="card__foot">
+      <div class="price">${price(p)}<small>ціна актуальна</small></div>
+      <span class="stock">В наявності</span>
+    </div>
+  </div></article>`; };
+
+/* ---------- варіант 3 ---------- */
+const c3 = p => { const n = parseName(p); return `<article class="card cut">
+  <div class="card__media"><img src="${img(p)}" alt=""><span class="tagline">В наявності</span></div>
+  <div class="card__body">
+    <h3 class="card__name">${n.head}</h3>
+    ${n.meta ? `<p class="card__sub">${n.meta}</p>` : ""}
+    <div class="spec">
+      <a href="${brUrl(p.brand)}"><span>Бренд</span><b>${p.brand}</b></a>
+      <a href="#"><span>Обʼєм</span><b>${p.cc ? p.cc + " см³" : "—"}</b></a>
+      <a href="${catUrl(p.cat)}"><span>Тип</span><b>${(p.cat || "").split(" ")[0]}</b></a>
+    </div>
+    <div class="card__foot">
+      <div class="price">${price(p)}<small>ціна актуальна</small></div>
+      <span class="go cut" style="--c:7px">Детальніше</span>
+    </div>
+  </div></article>`; };
+
+/* ---------- PDP ---------- */
+const LEAD = "Мотоцикл у наявності в Білій Церкві. Підготовка, передпродажне обслуговування та оформлення — наші. Можливий обмін за Trade-in і доставка по Україні.";
+const pdp = (p, v) => { const n = parseName(p); return `
+  <div class="pdp__ph cut"><img src="${img(p)}" alt=""></div>
+  <div class="pdp__side">
+    <div class="pdp__crumbs">Головна · ${p.cat} · <b>${p.brand}</b></div>
+    ${v === 2 ? `<div class="pdp__brandline">${p.brand}</div>` : ""}
+    <h2 class="pdp__title">${v === 2 ? n.model : n.head}</h2>
+    ${n.meta ? `<p class="card__sub" style="margin-top:9px;color:var(--ash);font-size:.9rem">${n.meta}</p>` : ""}
+    <p class="pdp__lead">${LEAD}</p>
+    <div class="pdp__price">${price(p)}</div>
+    <div class="pdp__buy">
+      <button class="b1 cut" style="--c:9px">Купити в 1 клік</button>
+      <button class="b2 cut" style="--c:9px">Дзвінок за 30 секунд</button>
+    </div>
+  </div>`; };
+
+const put = (id, fn) => { const n = document.getElementById(id); if (n) n.innerHTML = items.map(fn).join(""); };
+put("g0", c0); put("g1", c1); put("g2", c2); put("g3", c3);
+[1, 2, 3].forEach(v => { const n = document.getElementById("p" + v); if (n) n.innerHTML = pdp(items[0], v); });
+</script>
+</body>
+</html>
