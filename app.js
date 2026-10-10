@@ -362,6 +362,14 @@ function initChrome() {
   }
   const page = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
   document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav === page) a.classList.add('active'); });
+  const curCat = qs('cat');
+  if (curCat) {
+    let hit = false;
+    document.querySelectorAll('[data-nav-cat]').forEach(el => {
+      if (el.dataset.navCat === curCat) { el.classList.add('active'); hit = true; }
+    });
+    if (hit) document.querySelectorAll('[data-nav="catalog"]').forEach(el => el.classList.remove('active'));
+  }
   const s = document.getElementById('siteSearch');
   s?.closest('form')?.addEventListener('submit', () => {
     const v = s.value.trim(); if (v) location.href = `catalog.html?q=${encodeURIComponent(v)}`;

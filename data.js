@@ -18,7 +18,7 @@ window.MM_CATEGORIES = [
  {
   "name": "Аксесуари",
   "meta": "1 позиція",
-  "img": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-1.jpg"
+  "img": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-1.jpg"
  }
 ];
 window.MM_BRANDS = ["KOVI","LIFAN","GEON","KAYO","SHINERAY","MUSTANG","FADA","MOTOMIX","SOK MOTO","KAWASAKI","EXDRIVE","TEKKEN","QUADRATERRA","MORBIDELLI"];
@@ -43,19 +43,19 @@ window.MM_PRODUCTS = [
   "olx": "https://www.olx.ua/d/uk/obyavlenie/lifan-kpt-400-2026-noviy-43-ps-nzhektor-ID10OEhR.html"
  },
  {
-  "id": "protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor",
+  "id": "protyvotumanky-dlya-moto-12-v-try-riznykh-kolor",
   "name": "Противотуманки для мото 12 В три різних кольори нові.",
   "brand": "MOTOMIX",
   "cat": "Аксесуари",
   "priceRaw": "1 000 грн. / за 1 шт.",
   "priceUah": 1000,
   "cur": "UAH",
-  "img": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-1.jpg",
+  "img": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-1.jpg",
   "gallery": [
-   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-1.jpg",
-   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-2.jpg",
-   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-3.jpg",
-   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolьor-4.jpg"
+   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-1.jpg",
+   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-2.jpg",
+   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-3.jpg",
+   "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-4.jpg"
   ],
   "desc": "Нові противотуманки для мотоциклів мопедів автомобілів LED одна коробка 1000 грн відправляємо наложеним платежем. СПЕЦИФИКАЦИЯ: Яркость: 5500 лм Напряжение постоянного тока 12-60 В Срок службы: 30000 часов Область применения: Мотоцикл/электровелосипед автомобілі будь-що. Чотири різних режими. 1 червоний 2 жовтий 3 ярко-білий 4 білий жовтим.",
   "olx": "https://www.olx.ua/d/uk/obyavlenie/protivotumanki-dlya-moto-12-v-tri-rznih-kolori-nov-IDZBnZh.html"
