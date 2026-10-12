@@ -97,7 +97,7 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
   <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
-      <img src="${p.img}" alt="${n.title}" loading="lazy">
+      <img src="${p.img}" alt="${n.title}" loading="lazy" decoding="async" width="450" height="600">
     </div>
     <div class="pcard__body">
       <h3 class="pcard__name">${n.title}</h3>
@@ -109,6 +109,113 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
       </div>
     </div>
   </article>`; };
+
+/* ---------------- опис товару: стіна тексту → читабельні блоки ----------------
+   OLX віддає опис одним суцільним рядком без переносів:
+   «Масо-габаритні характеристики Довжина, мм 2120 Ширина, мм 820 …».
+   Розбираємо на секції, таблицю характеристик, списки та абзаци.
+   Правило просте: у таблицю йде тільки те, що впевнено схоже на пару
+   «назва, одиниця → коротке значення». Все інше лишається текстом — краще
+   абзац, ніж покалічений рядок таблиці. */
+
+const DS_HEAD = /(Масо[-\s]?габаритні характеристики|Основні характеристики|Загальні характеристики|Технічні характеристики|Параметри двигуна|Характеристики|Переваги|Комплектація|Обладнання|Документи для реєстрації)/g;
+
+// одиниці, після яких іде саме значення, а не проза
+const DS_UNIT = /^(мм|см|м|кг|г|л|см3|см³|куб\.см|градусів|град|шт|тип|вид|В|Вт|кВт|А|А·год|год|км|км\/год|об\/хв|к\.с\.|мм\.|%)$/i;
+
+const dsEsc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const dsTrim = (s) => String(s).replace(/\s+/g, ' ').trim().replace(/^[·•*\-–—:;,\s]+|[·•*\-–—:;,\s]+$/g, '');
+
+/* довгий текст → абзаци по 2–3 речення, щоб очі не губили рядок */
+function dsParas(text) {
+  const t = dsTrim(text);
+  if (!t) return '';
+  const sentences = t.match(/[^.!?]+[.!?]+|\S[^.!?]*$/g) || [t];
+  const out = [];
+  let buf = '';
+  for (const s of sentences) {
+    buf += (buf ? ' ' : '') + s.trim();
+    if (buf.length > 240) { out.push(buf); buf = ''; }
+  }
+  if (buf) out.push(buf);
+  return out.map((p) => `<p>${dsEsc(p)}</p>`).join('');
+}
+
+function dsRows(chunk) {
+  const RE = /([А-ЯҐЄІЇA-Z][А-Яа-яҐґЄєІіЇїA-Za-z'’\s\-\(\)\.\/]{2,46}?),\s*([^\s,]{1,10})\s+/g;
+  const marks = [];
+  let m;
+  while ((m = RE.exec(chunk))) {
+    if (!DS_UNIT.test(dsTrim(m[2]))) continue;             // не одиниця — не характеристика
+    marks.push({ at: m.index, end: RE.lastIndex, label: dsTrim(m[1]), unit: dsTrim(m[2]) });
+  }
+  if (!marks.length) return { rows: [], rest: chunk };
+
+  const rows = [];
+  const tail = [];
+  const head = dsTrim(chunk.slice(0, marks[0].at));
+
+  marks.forEach((mk, i) => {
+    const stop = i + 1 < marks.length ? marks[i + 1].at : chunk.length;
+    let val = dsTrim(chunk.slice(mk.end, stop));
+    const isWordUnit = /^(тип|вид)$/i.test(mk.unit);
+
+    // значення має бути коротким; довге — це проза, її в таблицю не тягнемо
+    if (val.length > 64) {
+      const cut = val.search(/(?<=[.;])\s/);
+      if (cut > 0 && cut <= 64) { tail.push(val.slice(cut).trim()); val = val.slice(0, cut).trim(); }
+      else { tail.push(val); return; }
+    }
+    if (!isWordUnit && !/\d/.test(val)) { tail.push(val); return; }   // без числа — теж не характеристика
+    if (!val) val = mk.unit;
+    // одиниця вже є у значенні («119 кг») — не дублюємо
+    else if (!isWordUnit && val.toLowerCase().indexOf(mk.unit.toLowerCase()) === -1) val = val + ' ' + mk.unit;
+    if (mk.label.length > 44) return;
+    rows.push([mk.label, val]);
+  });
+
+  return { rows, rest: dsTrim([head, ...tail].join(' ')) };
+}
+
+function dsBullets(text) {
+  const parts = text.split(/\s*[*•]\s*/).map(dsTrim).filter((x) => x.length > 1);
+  return parts.length > 2 ? parts : null;
+}
+
+function formatDesc(raw) {
+  const src = String(raw || '').replace(/\s+/g, ' ').trim();
+  if (!src) return '<p>Опис уточнюйте у менеджера.</p>';
+
+  const cuts = [];
+  let m;
+  DS_HEAD.lastIndex = 0;
+  while ((m = DS_HEAD.exec(src))) cuts.push({ at: m.index, title: m[1], end: DS_HEAD.lastIndex });
+
+  const blocks = [];
+  if (!cuts.length || cuts[0].at > 0) blocks.push({ title: '', body: src.slice(0, cuts.length ? cuts[0].at : src.length) });
+  cuts.forEach((c, i) => blocks.push({ title: c.title, body: src.slice(c.end, i + 1 < cuts.length ? cuts[i + 1].at : src.length) }));
+
+  let html = '';
+  for (const b of blocks) {
+    const body = dsTrim(b.body);
+    if (!body) continue;
+    const title = b.title ? `<h4 class="pdesc__h">${dsEsc(b.title)}</h4>` : '';
+
+    const bul = dsBullets(body);
+    if (bul) { html += title + `<ul class="pdesc__ul">${bul.map((x) => `<li>${dsEsc(x)}</li>`).join('')}</ul>`; continue; }
+
+    const { rows, rest } = dsRows(body);
+    if (rows.length >= 3) {
+      html += title;
+      html += `<dl class="spec">${rows.map(([k, v]) =>
+        `<div class="spec__r"><dt>${dsEsc(k)}</dt><dd>${dsEsc(v)}</dd></div>`).join('')}</dl>`;
+      if (rest && rest.length > 40) html += dsParas(rest);
+    } else {
+      html += title + dsParas(body);
+    }
+  }
+  return html || dsParas(src);
+}
 
 /* ---------------- renders ---------------- */
 function renderCats() {
@@ -279,6 +386,19 @@ function renderCatalog() {
   document.getElementById("f-reset")?.addEventListener("click", () => { state.type = ALL; state.brand = ALL; state.cc = ALL; state.price = ALL; draw(); });
   sortSel?.addEventListener("change", draw);
   draw();
+
+  // прийшли в розділ — одразу листаємо до товарів, банер лишається вище
+  if (qs("type") || qs("cat") || qs("q") || qs("brand")) {
+    const jump = () => {
+      const bar = document.getElementById("fbar") || grid;
+      if (!bar) return;
+      const hh = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--hh"), 10) || 110;
+      const y = window.scrollY + bar.getBoundingClientRect().top - hh - 18;
+      if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1 });
+      else window.scrollTo({ top: y, behavior: "smooth" });
+    };
+    setTimeout(jump, 420);
+  }
 }
 
 /* --- product page: swipe gallery + accordions + reviews --- */
@@ -303,7 +423,7 @@ function renderProduct() {
       </div>
       <section class="pdesc" id="pdesc">
         <h2 class="pdesc__t">Опис</h2>
-        <div class="pdesc__body" id="pdescBody"><p>${p.desc || "Опис уточнюйте у менеджера."}</p></div>
+        <div class="pdesc__body" id="pdescBody">${formatDesc(p.desc)}</div>
         ${needMore ? `<button class="pdesc__more" id="pdescMore" type="button">Переглянути більше ${ico("ic-chev")}</button>` : ""}
       </section>
     </div>
@@ -359,6 +479,7 @@ function renderProduct() {
   });
 
   initGallery(gal.length);
+  fitGallery(gal);
   initAcc();
   const rel = document.getElementById('related');
   if (rel) PRODUCTS.filter(x => (x.type || x.cat) === (p.type || p.cat) && x.id !== p.id).slice(0, 5)
@@ -373,6 +494,29 @@ function renderProduct() {
       <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
       <p>${r.t}</p>
     </div>`)));
+}
+
+/* кадр галереї під реальні пропорції знімків цього товару */
+function fitGallery(gal) {
+  const main = document.getElementById('galMain'); if (!main || !gal || !gal.length) return;
+  const ratios = [];
+  let left = gal.length;
+  const apply = () => {
+    if (!ratios.length) return;
+    ratios.sort((a, b) => a - b);
+    const med = ratios[Math.floor(ratios.length / 2)];
+    // тримаємо в розумних межах, щоб верстка не стрибала на крайніх знімках
+    const r = Math.max(0.7, Math.min(1.6, med));
+    main.style.setProperty('--galr', String(r));
+  };
+  gal.forEach(src => {
+    const im = new Image();
+    im.onload = im.onerror = () => {
+      if (im.naturalWidth && im.naturalHeight) ratios.push(im.naturalWidth / im.naturalHeight);
+      if (--left === 0) apply();
+    };
+    im.src = src;
+  });
 }
 
 /* --- swipeable gallery (drag + arrows + thumbs) --- */
@@ -743,7 +887,7 @@ function initSmooth() {
   s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js';
   s.onload = () => {
     try {
-      const lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      const lenis = window.__lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
       lenis.scrollTo(0, { immediate: true });
       const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
       requestAnimationFrame(raf);

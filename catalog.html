@@ -18,7 +18,29 @@
     <div data-include="components/header.html"></div>
 
     <section class="phero phero--compact">
-        <div class="phero__media"><img src="assets/hero/story-2.jpg" alt="" id="cat-img"></div>
+        <div class="phero__media"><img alt="" id="cat-img" fetchpriority="high" decoding="async"></div>
+        <script>
+        /* Банер ставимо ДО першої відмальовки: інакше встигає з'явитися дефолтне
+           фото, а потім підмінитися на потрібне — те саме «мерехтіння». */
+        (function () {
+          var MAP = {
+                    "Ендуро": "assets/olx/kovi-adt-300-r-2026-novyy-1.jpg",
+                    "Мотарди": "assets/olx/kovi-300-pro-motard-2026-novyy-1.jpg",
+                    "Дорожні": "assets/olx/kavasaki-vulkan-900-2013-kavasaki-vulkan-1.jpg",
+                    "Спортбайки": "assets/olx/lifan-kpr-250-2026-28-ls-inzhektor-1.jpg",
+                    "Пітбайки": "assets/olx/v-nayavnosti-novyy-kovi-pit-150-2026-1.jpg",
+                    "Квадроцикли": "assets/olx/quadraterra-300-4x4-2026-novyy-1.jpg",
+                    "Електроскутери": "assets/olx/fada-stilo-1500w-nova-1.jpg",
+                    "Аксесуари": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-1.jpg",
+                    "Мотоцикли": "assets/olx/kovi-adt-300-r-2026-novyy-1.jpg"
+          };
+          var DEF = 'assets/hero/moto-dark.jpg';
+          var q = new URLSearchParams(location.search);
+          var key = q.get('type') || q.get('cat');
+          var img = document.getElementById('cat-img');
+          if (img) img.src = (key && MAP[key]) || DEF;
+        })();
+        </script>
         <div class="wrap phero__in">
             <div class="crumbs"><a href="index.html">Головна</a><em>›</em><a href="catalog.html" id="cat-crumb-link">Каталог</a><span id="cat-crumb-tail"></span></div>
             <h1 id="cat-h1">Каталог мототехніки</h1>
@@ -53,7 +75,7 @@
     </section>
 
     <section class="cta">
-        <img class="cta__bg" src="assets/hero/forest-ride.jpg" alt="">
+        <img class="cta__bg" src="assets/olx/kovi-300-pro-motard-2026-novyy-3.jpg" alt="">
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">
