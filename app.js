@@ -1006,6 +1006,7 @@ function initSmooth() {
   window.scrollTo(0, 0);
   await Promise.all([...document.querySelectorAll('[data-include]')].map(async n => {
     try { n.innerHTML = await (await fetch(n.getAttribute('data-include'))).text(); } catch {}
+    n.classList.add('filled');
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
@@ -1013,8 +1014,6 @@ function initSmooth() {
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();
 
-  // сторінка зібрана — показуємо її одним рухом, далі блоки проявляються по черзі
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.documentElement.classList.remove('booting');
-  }));
+  // прибираємо позначку завантаження: далі все вже на місці
+  requestAnimationFrame(() => document.documentElement.classList.remove('booting'));
 })();

@@ -1279,10 +1279,16 @@ html,body{max-width:100%;overflow-x:hidden}
    сторінка спершу блимає напівзібраною. Ховаємо до складання, потім
    проявляємо. Страхування: якщо JS не відпрацював — покажемо все одно.
    ===================================================================== */
-html.booting body{opacity:0}
-html.booting body{animation:bootFallback .01s 1.4s forwards}
-@keyframes bootFallback{to{opacity:1}}
-body{opacity:1;transition:opacity .34s ease}
+/* Ховати всю сторінку до складання не можна: на повільному зв'язку це
+   білий екран на дві секунди, а це гірше за «мерехтіння». Тому показуємо
+   одразу, а блоки, які приходять окремими запитами, проявляємо плавно. */
+[data-include]{opacity:0;transition:opacity .34s ease}
+[data-include].filled{opacity:1}
+html:not(.booting) [data-include]{opacity:1}
+
+/* шапка не схлопується, поки вантажиться — місце під неї зарезервовано */
+body.inner{padding-top:var(--hh)}
+.header{min-height:var(--hh)}
 
 /* блоки проявляються по черзі, а не всі разом */
 .rv{opacity:0;transform:translateY(16px);transition:opacity .62s var(--ease),transform .62s var(--ease)}
