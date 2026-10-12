@@ -217,6 +217,82 @@ function formatDesc(raw) {
   return html || dsParas(src);
 }
 
+/* ---------------- фільтр ціни: двосторонній повзунок ----------------
+   Замість чотирьох фіксованих діапазонів — живий діапазон від найдешевшої
+   до найдорожчої позиції. Тягнеш — список оновлюється одразу. */
+function initPriceSlider(box, state, onChange) {
+  if (!box) return null;
+  const panel = box.querySelector('.fdd__p');
+  const btn = box.querySelector('.fdd__b');
+  if (!panel || !btn) return null;
+
+  const prices = PRODUCTS.map(p => p.priceUah).filter(v => typeof v === 'number' && v > 0);
+  if (!prices.length) return null;
+  const LO = Math.floor(Math.min(...prices) / 1000) * 1000;
+  const HI = Math.ceil(Math.max(...prices) / 1000) * 1000;
+  const STEP = 1000;
+
+  state.priceMin = LO; state.priceMax = HI;
+
+  panel.classList.add('fdd__p--price');
+  panel.innerHTML = `
+    <div class="prng">
+      <div class="prng__vals">
+        <label class="prng__f">від<input type="text" inputmode="numeric" id="prFrom" value="${fmtUah(LO)}"></label>
+        <span class="prng__dash"></span>
+        <label class="prng__f">до<input type="text" inputmode="numeric" id="prTo" value="${fmtUah(HI)}"></label>
+      </div>
+      <div class="prng__rail">
+        <div class="prng__fill" id="prFill"></div>
+        <input type="range" id="prA" min="${LO}" max="${HI}" step="${STEP}" value="${LO}" aria-label="Мінімальна ціна">
+        <input type="range" id="prB" min="${LO}" max="${HI}" step="${STEP}" value="${HI}" aria-label="Максимальна ціна">
+      </div>
+      <div class="prng__ends"><span>${fmtUah(LO)} ₴</span><span>${fmtUah(HI)} ₴</span></div>
+      <button type="button" class="prng__reset" id="prReset">Будь-яка ціна</button>
+    </div>`;
+
+  const A = panel.querySelector('#prA'), B = panel.querySelector('#prB');
+  const fill = panel.querySelector('#prFill');
+  const fIn = panel.querySelector('#prFrom'), tIn = panel.querySelector('#prTo');
+
+  const paint = () => {
+    const a = Math.min(+A.value, +B.value), b = Math.max(+A.value, +B.value);
+    fill.style.left = ((a - LO) / (HI - LO) * 100) + '%';
+    fill.style.right = (100 - (b - LO) / (HI - LO) * 100) + '%';
+    fIn.value = fmtUah(a); tIn.value = fmtUah(b);
+    state.priceMin = a; state.priceMax = b;
+    const full = a <= LO && b >= HI;
+    btn.innerHTML = (full ? 'Ціна, ₴' : `${fmtUah(a)} – ${fmtUah(b)} ₴`) + ico('ic-chev');
+    btn.classList.toggle('on', !full);
+  };
+
+  // перемальовуємо одразу, а перелік товарів — з невеликою паузою, щоб не смикалось
+  let t = null;
+  const live = () => { paint(); clearTimeout(t); t = setTimeout(onChange, 140); };
+  A.addEventListener('input', live);
+  B.addEventListener('input', live);
+
+  const fromText = (inp, which) => {
+    const v = parseInt(String(inp.value).replace(/\D/g, ''), 10);
+    if (!Number.isFinite(v)) { paint(); return; }
+    const clamped = Math.max(LO, Math.min(HI, Math.round(v / STEP) * STEP));
+    if (which === 'a') A.value = Math.min(clamped, +B.value);
+    else B.value = Math.max(clamped, +A.value);
+    paint(); onChange();
+  };
+  fIn.addEventListener('change', () => fromText(fIn, 'a'));
+  tIn.addEventListener('change', () => fromText(tIn, 'b'));
+  panel.querySelector('#prReset').addEventListener('click', () => {
+    A.value = LO; B.value = HI; paint(); onChange();
+  });
+  panel.addEventListener('click', (e) => e.stopPropagation());
+
+  paint();
+  return { reset: () => { A.value = LO; B.value = HI; paint(); }, LO, HI };
+}
+
+const fmtUah = (n) => Math.round(n).toLocaleString('uk-UA').replace(/,/g, ' ');
+
 /* ---------------- renders ---------------- */
 function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
@@ -288,10 +364,7 @@ function renderCatalog() {
     brand: { label: "Бренд",      values: [ALL, ...[...new Set(PRODUCTS.map(p => p.brand))]] },
     cc:    { label: "Об’єм, см³", values: [ALL, ...[...new Set(PRODUCTS.map(p => p.cc).filter(Boolean))].sort((a,b)=>a-b)] },
   };
-  const PRICE_RANGES = [["до 50 000",0,50000],["50 000 – 100 000",50000,100000],
-    ["100 000 – 150 000",100000,150000],["від 150 000",150000,Infinity]];
-  groups.price = { label: "Ціна, ₴", values: [ALL, ...PRICE_RANGES.map(r => r[0])] };
-  const state = { type: ALL, brand: ALL, cc: ALL, price: ALL };
+  const state = { type: ALL, brand: ALL, cc: ALL, priceMin: 0, priceMax: Infinity };
   const q = (qs("q") || "").toLowerCase();
   if (groups.type.values.includes(qs("type"))) state.type = qs("type");
   // ?cat= (група верхнього рівня) теж працює — лишаємо старі посилання робочими
@@ -299,13 +372,13 @@ function renderCatalog() {
   if (qs("cc") && groups.cc.values.map(String).includes(qs("cc"))) state.cc = Number(qs("cc"));
   if (groups.brand.values.includes(qs("brand"))) state.brand = qs("brand");
 
-  const inPrice = (p, label) => {
-    if (label === ALL) return true;
-    const r = PRICE_RANGES.find(x => x[0] === label); if (!r) return true;
-    return typeof p.priceUah === "number" && p.priceUah >= r[1] && p.priceUah < r[2];
+  const inPrice = (p, st) => {
+    if (!(st.priceMin > 0) && !isFinite(st.priceMax)) return true;
+    if (typeof p.priceUah !== "number") return true;      // «ціна за запитом» не ховаємо
+    return p.priceUah >= st.priceMin && p.priceUah <= st.priceMax;
   };
   const fits = (p, st) => (st.type === ALL || p.type === st.type) && (st.brand === ALL || p.brand === st.brand)
-    && (st.cc === ALL || p.cc === st.cc) && inPrice(p, st.price)
+    && (st.cc === ALL || p.cc === st.cc) && inPrice(p, st)
     && (!grp || p.cat === grp);
   const match = (p) => fits(p, state)
     && (!q || (p.name + " " + p.brand + " " + p.type + " " + p.cat).toLowerCase().includes(q));
@@ -349,6 +422,7 @@ function renderCatalog() {
 
   const paintBars = () => {
     Object.entries(groups).forEach(([g, cfg]) => {
+      if (g === "price") return;
       const box = document.querySelector(`.fdd[data-g="${g}"]`); if (!box) return;
       const btn = box.querySelector(".fdd__b"), panel = box.querySelector(".fdd__p");
       const sel = state[g];
@@ -367,8 +441,13 @@ function renderCatalog() {
   const paintChips = () => {
     if (!chipsBox) return;
     chipsBox.innerHTML = "";
+    if (priceUI && (state.priceMin > priceUI.LO || state.priceMax < priceUI.HI)) {
+      const c = el(`<button type="button" class="fchip">Ціна: <b>${fmtUah(state.priceMin)} – ${fmtUah(state.priceMax)} ₴</b> ×</button>`);
+      c.addEventListener("click", () => { priceUI.reset(); draw(); });
+      chipsBox.appendChild(c);
+    }
     Object.entries(groups).forEach(([g, cfg]) => {
-      if (state[g] === ALL) return;
+      if (g === "price" || state[g] === ALL) return;
       const c = el(`<button type="button" class="fchip">${cfg.label}: <b>${state[g]}</b> ×</button>`);
       c.addEventListener("click", () => { state[g] = ALL; draw(); });
       chipsBox.appendChild(c);
@@ -380,11 +459,29 @@ function renderCatalog() {
     e.stopPropagation();
     const box = b.closest(".fdd"), was = box.classList.contains("open");
     document.querySelectorAll(".fdd.open").forEach(x => x.classList.remove("open"));
-    if (!was) box.classList.add("open");
+    if (was) return;
+    box.classList.add("open");
+
+    // Довгий список брендів відкривався на «Усі» — потрібного не видно без скролу.
+    // Докручуємо до вибраного, а якщо вибору нема — до першого, що є в наявності.
+    const panel = box.querySelector(".fdd__p");
+    if (!panel || panel.classList.contains("fdd__p--price")) return;
+    requestAnimationFrame(() => {
+      const target = panel.querySelector("button.sel:not([disabled])")
+        || [...panel.querySelectorAll("button:not([disabled])")].find(x => !/^Усі/.test(x.textContent));
+      if (!target) return;
+      const top = target.offsetTop - panel.clientHeight / 2 + target.offsetHeight / 2;
+      panel.scrollTop = Math.max(0, top);
+    });
   }));
   document.addEventListener("click", () => document.querySelectorAll(".fdd.open").forEach(x => x.classList.remove("open")));
-  document.getElementById("f-reset")?.addEventListener("click", () => { state.type = ALL; state.brand = ALL; state.cc = ALL; state.price = ALL; draw(); });
+  document.getElementById("f-reset")?.addEventListener("click", () => {
+    state.type = ALL; state.brand = ALL; state.cc = ALL;
+    if (priceUI) priceUI.reset();
+    draw();
+  });
   sortSel?.addEventListener("change", draw);
+  const priceUI = initPriceSlider(document.querySelector('.fdd[data-g="price"]'), state, draw);
   draw();
 
   // прийшли в розділ — одразу листаємо до товарів, банер лишається вище
@@ -841,6 +938,13 @@ function revealInit() {
     if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); }
   }), { threshold: 0.1, rootMargin: '0px 0px -60px' });
   document.querySelectorAll('.rv:not(.in)').forEach((n, i) => { n.style.transitionDelay = `${(i % 5) * 70}ms`; io.observe(n); });
+  // те, що вже у видимій частині, проявляємо одразу — інакше перший екран стоїть порожнім
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.rv:not(.in)').forEach(n => {
+      const r = n.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) n.classList.add('in');
+    });
+  });
 }
 
 function initModal() {
@@ -908,4 +1012,9 @@ function initSmooth() {
   initChrome(); initModal(); initCards(); initCart();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();
+
+  // сторінка зібрана — показуємо її одним рухом, далі блоки проявляються по черзі
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.documentElement.classList.remove('booting');
+  }));
 })();

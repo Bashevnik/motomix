@@ -27,7 +27,8 @@ module.exports = async (req, res) => {
   const subject = clean(body.subject, 120) || 'Заявка з сайту';
   const page = clean(body.page, 200);
 
-  if (!name || !phone) return res.status(400).json({ error: 'Name and phone are required' });
+  // Имя необязательно: меньше полей — больше заявок. Телефон остаётся.
+  if (!phone) return res.status(400).json({ error: 'Phone is required' });
   if (!/[0-9]{6,}/.test(phone.replace(/\D/g, ''))) return res.status(400).json({ error: 'Invalid phone' });
 
   // ---- состав заказа (приходит только из корзины) ----
@@ -63,7 +64,7 @@ module.exports = async (req, res) => {
     text =
       `🛒 НОВЕ ЗАМОВЛЕННЯ — MOTOMIX\n` +
       `────────────────────\n` +
-      `Ім'я: ${name}\n` +
+      (name ? `Ім'я: ${name}\n` : '') +
       `Телефон: ${phone}\n` +
       `────────────────────\n` +
       `ТОВАРИ (${items.length} поз., ${totalQty} шт):\n${lines}\n` +
@@ -76,8 +77,7 @@ module.exports = async (req, res) => {
     text =
       `🏍 НОВА ЗАЯВКА — MOTOMIX\n` +
       `────────────────────\n` +
-      `Тема: ${subject}\n` +
-      `Ім'я: ${name}\n` +
+      (name ? `Ім'я: ${name}\n` : '') +
       `Телефон: ${phone}\n` +
       (comment ? `Коментар: ${comment}\n` : '') +
       (page ? `Сторінка: ${page}\n` : '') +

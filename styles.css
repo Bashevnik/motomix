@@ -1228,3 +1228,69 @@ html,body{max-width:100%;overflow-x:hidden}
 .eyebrow{color:var(--ink-2)}
 .hero .eyebrow,.phero .eyebrow,.cta .eyebrow,.footer .eyebrow,.stats .eyebrow{color:rgba(255,255,255,.8)}
 .gallery__thumbs button.active{box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* =====================================================================
+   v18 — фільтри: прокрутка списків, повзунок ціни
+   ===================================================================== */
+
+/* списки атрибутів крутяться самі (data-lenis-prevent не дає плавному
+   скролу сторінки перехопити колесо) */
+.fdd__p{max-height:min(54vh,340px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.fdd__p::-webkit-scrollbar{width:8px}
+.fdd__p::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+.fdd__p::-webkit-scrollbar-thumb:hover{background:var(--ash)}
+.fdd__p button{flex:0 0 auto}
+
+/* підказка «не обов'язково» біля полів */
+.form label .opt,.cart__form label .opt{font-size:.72rem;color:var(--ash);font-weight:400;letter-spacing:.02em}
+
+/* ---- повзунок ціни ---- */
+.fdd__p--price{min-width:308px;padding:18px 17px 15px;overflow:visible;max-height:none;display:block}
+.prng__vals{display:flex;align-items:flex-end;gap:10px}
+.prng__f{flex:1;display:flex;flex-direction:column;gap:5px;font-size:.72rem;color:var(--ash);
+  letter-spacing:.04em;text-transform:uppercase}
+.prng__f input{width:100%;padding:9px 11px;font-family:var(--disp);font-weight:600;font-size:1rem;
+  color:var(--ink);background:var(--surface-2);border:1px solid var(--line);outline:0;transition:.2s}
+.prng__f input:focus{border-color:var(--ink);background:#fff}
+.prng__dash{width:12px;height:1px;background:var(--line-2,#C9C9C3);margin-bottom:18px;flex:0 0 auto}
+
+.prng__rail{position:relative;height:30px;margin:16px 2px 2px}
+.prng__rail::before{content:"";position:absolute;left:0;right:0;top:13px;height:4px;background:var(--line)}
+.prng__fill{position:absolute;top:13px;height:4px;background:var(--ink)}
+.prng__rail input[type=range]{position:absolute;left:0;width:100%;top:0;height:30px;margin:0;
+  background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.prng__rail input[type=range]:focus{outline:0}
+.prng__rail input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;
+  width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);cursor:grab;
+  box-shadow:0 2px 8px rgba(11,11,13,.22);transition:transform .15s}
+.prng__rail input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.12)}
+.prng__rail input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;
+  background:#fff;border:2px solid var(--ink);cursor:grab;box-shadow:0 2px 8px rgba(11,11,13,.22)}
+.prng__ends{display:flex;justify-content:space-between;font-size:.7rem;color:var(--ash);margin-top:4px}
+.prng__reset{width:100%;margin-top:13px;padding:9px;font-size:.8rem;color:var(--ash);background:transparent;
+  border:1px solid var(--line);cursor:pointer;transition:.2s;font-family:var(--body)}
+.prng__reset:hover{color:var(--ink);border-color:var(--ink)}
+
+@media(max-width:900px){ .fdd__p--price{min-width:0;width:100%} }
+
+/* =====================================================================
+   v18 — м'яка поява сторінки замість різкого «склеювання»
+   Шапка й підвал підвантажуються окремими запитами, тож без цього
+   сторінка спершу блимає напівзібраною. Ховаємо до складання, потім
+   проявляємо. Страхування: якщо JS не відпрацював — покажемо все одно.
+   ===================================================================== */
+html.booting body{opacity:0}
+html.booting body{animation:bootFallback .01s 1.4s forwards}
+@keyframes bootFallback{to{opacity:1}}
+body{opacity:1;transition:opacity .34s ease}
+
+/* блоки проявляються по черзі, а не всі разом */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .62s var(--ease),transform .62s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  body{transition:none}
+}
+
+/* картинки не смикають верстку, поки вантажаться */
+.pcard__media,.cat,.gallery__main{background:var(--surface-2)}

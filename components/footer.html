@@ -33,7 +33,7 @@
       <button class="cart__x" data-cart-close type="button" aria-label="Закрити"><svg class="icon"><use href="#ic-x"></use></svg></button>
     </header>
 
-    <div class="cart__scroll" id="cartBody"></div>
+    <div class="cart__scroll" id="cartBody" data-lenis-prevent></div>
 
     <footer class="cart__foot" id="cartFoot" hidden>
       <div class="cart__sum">
@@ -45,12 +45,12 @@
       <button class="cart__clear" id="cartClear" type="button">Очистити кошик</button>
     </footer>
 
-    <form class="cart__form" id="cartForm" hidden>
+    <form class="cart__form" id="cartForm" hidden data-lenis-prevent>
       <h4 class="cart__fh">Куди надіслати підтвердження</h4>
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-      <label>Ім'я<input type="text" name="name" required placeholder="Як до вас звертатися"></label>
+      <label>Ім'я <span class="opt">не обов'язково</span><input type="text" name="name" placeholder="Як до вас звертатися"></label>
       <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
-      <label>Коментар<textarea name="comment" rows="2" placeholder="Зручний час дзвінка, питання по доставці"></textarea></label>
+      <label>Коментар <span class="opt">не обов'язково</span><textarea name="comment" rows="2" placeholder="Зручний час дзвінка, питання по доставці"></textarea></label>
       <div class="cart__sum cart__sum--form"><span>До сплати</span><b id="cartTotal2">0 ₴</b></div>
       <button type="submit" class="btn btn--red btn--block btn--lg" id="cartSend">Підтвердити замовлення</button>
       <button class="cart__clear" id="cartBack" type="button">← Назад до кошика</button>
@@ -78,9 +78,9 @@
     <form id="orderForm" class="form">
       <input type="hidden" name="subject" id="orderSubject" value="">
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-      <label>Ім'я<input type="text" name="name" required placeholder="Як до вас звертатися"></label>
+      <label>Ім'я <span class="opt">не обов'язково</span><input type="text" name="name" placeholder="Як до вас звертатися"></label>
       <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
-      <label>Коментар<textarea name="comment" rows="3" placeholder="Модель, питання, зручний час дзвінка"></textarea></label>
+      <label>Коментар <span class="opt">не обов'язково</span><textarea name="comment" rows="3" placeholder="Модель, питання, зручний час дзвінка"></textarea></label>
       <button type="submit" class="btn btn--red btn--block btn--lg">Відправити</button>
       <div class="form__note" id="formNote"></div>
     </form>
