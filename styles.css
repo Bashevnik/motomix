@@ -871,3 +871,224 @@ body.inner{padding-top:var(--hh)}
 .footer__info .icon{width:17px;height:17px;color:var(--red)}
 .footer__info a:hover{color:#fff}
 .footer__info b{color:#fff;font-weight:600}
+
+/* =====================================================================
+   v15 — КОШИК, компактніша шапка, мобільні правки
+   ===================================================================== */
+
+/* ---- шапка нижча ---- */
+:root{--htop:66px;--hnav:40px;--hh:106px}
+.brand img,.header.scrolled .brand img{height:46px}
+.header__soc a{width:30px;height:30px}
+.header__soc .icon{width:15px;height:15px}
+.search input{height:38px}
+.header__phone{font-size:.86rem}
+.meganav{padding-block:5px}
+.meganav a{padding:7px 14px;font-size:.84rem}
+.header__util .btn{padding:.78em 1.5em;font-size:.82rem}
+
+/* ---- кнопка кошика в шапці ---- */
+.hcart{position:relative;width:38px;height:38px;display:grid;place-items:center;flex:0 0 auto;
+  color:#E8E8EE;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+  cursor:pointer;transition:.25s var(--ease)}
+.hcart:hover{background:var(--red);color:#fff;box-shadow:none}
+.hcart .icon{width:19px;height:19px}
+.hcart__n{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 5px;
+  display:grid;place-items:center;background:var(--red);color:#fff;border-radius:999px;
+  font-size:.68rem;font-weight:700;font-family:var(--body);line-height:1}
+.hcart.pop{animation:cartPop .45s var(--ease)}
+@keyframes cartPop{0%{transform:scale(1)}35%{transform:scale(1.22)}100%{transform:scale(1)}}
+
+/* ---- кнопка «В кошик» у карточці ---- */
+.pcard__foot{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.pcard__price{flex:1 1 auto}
+.pcard__stock{flex:0 0 auto;margin-top:0}
+.pcard__add{--c:7px;flex:1 1 100%;margin-top:11px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 14px;background:var(--ink);color:#fff;font-size:.8rem;font-weight:600;letter-spacing:.04em;
+  text-transform:uppercase;cursor:pointer;transition:.25s var(--ease);font-family:var(--body);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.pcard__add:hover{background:var(--red)}
+.pcard__add .icon{width:16px;height:16px}
+.pdp__actions .btn .icon{width:18px;height:18px;margin-right:9px}
+
+/* ---- панель кошика ---- */
+.cart{position:fixed;inset:0;z-index:120;visibility:hidden;pointer-events:none}
+.cart.open{visibility:visible;pointer-events:auto}
+.cart__bd{position:absolute;inset:0;background:rgba(11,11,13,.56);opacity:0;transition:.4s var(--ease);
+  backdrop-filter:blur(3px)}
+.cart.open .cart__bd{opacity:1}
+.cart__box{position:absolute;top:0;right:0;height:100%;width:min(440px,100%);background:var(--surface);
+  display:flex;flex-direction:column;transform:translateX(102%);transition:.45s var(--ease);
+  box-shadow:-20px 0 60px rgba(11,11,13,.22)}
+.cart.open .cart__box{transform:none}
+.cart__head{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:19px clamp(16px,2.4vw,26px);border-bottom:1px solid var(--line);flex:0 0 auto}
+.cart__title{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:1.3rem;color:var(--ink)}
+.cart__x{width:36px;height:36px;display:grid;place-items:center;color:var(--ash);cursor:pointer;transition:.25s}
+.cart__x:hover{color:var(--red)}
+.cart__x .icon{width:19px;height:19px}
+.cart__scroll{flex:1 1 auto;overflow-y:auto;padding:clamp(12px,1.8vw,18px) clamp(16px,2.4vw,26px)}
+
+/* порожній кошик */
+.cart__empty{text-align:center;padding:52px 10px;color:var(--ash)}
+.cart__empty .icon{width:46px;height:46px;color:var(--line-2,#CFCFC9);margin-bottom:16px}
+.cart__empty b{display:block;font-family:var(--disp);font-weight:600;text-transform:uppercase;
+  font-size:1.12rem;color:var(--ink);margin-bottom:8px}
+.cart__empty p{font-size:.88rem;margin-bottom:20px;line-height:1.5}
+
+/* позиція в кошику */
+.ci{display:grid;grid-template-columns:78px 1fr auto;gap:13px;padding:15px 0;border-bottom:1px solid var(--line)}
+.ci:first-child{padding-top:2px}
+.ci:last-child{border-bottom:0}
+.ci__img{--c:6px;width:78px;height:62px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 1px var(--line);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.ci__img img{width:100%;height:100%;object-fit:cover}
+.ci__main{min-width:0}
+.ci__name{display:block;font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:.94rem;
+  line-height:1.18;color:var(--ink);transition:.2s}
+.ci__name:hover{color:var(--red)}
+.ci__price{font-size:.78rem;color:var(--ash);margin-top:4px}
+.ci__row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.ci__del{width:30px;height:30px;display:grid;place-items:center;color:var(--ash);cursor:pointer;transition:.22s}
+.ci__del:hover{color:var(--red)}
+.ci__del .icon{width:16px;height:16px}
+.ci__sum{font-family:var(--disp);font-weight:600;font-size:1rem;color:var(--ink);white-space:nowrap;align-self:center}
+
+/* лічильник кількості */
+.qty{display:inline-flex;align-items:center;box-shadow:inset 0 0 0 1px var(--line)}
+.qty__b{width:30px;height:30px;display:grid;place-items:center;color:var(--ink);cursor:pointer;transition:.2s}
+.qty__b:hover{background:var(--ink);color:#fff}
+.qty__b .icon{width:13px;height:13px}
+.qty__i{width:34px;height:30px;text-align:center;border:0;background:transparent;font-size:.88rem;
+  font-weight:600;color:var(--ink);font-family:var(--body);-moz-appearance:textfield}
+
+/* підвал кошика */
+.cart__foot,.cart__form,.cart__done{flex:0 0 auto;padding:clamp(16px,2.2vw,22px) clamp(16px,2.4vw,26px);
+  border-top:1px solid var(--line);background:var(--surface-2)}
+.cart__sum{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:8px}
+.cart__sum span{font-size:.86rem;color:var(--ash);letter-spacing:.04em;text-transform:uppercase}
+.cart__sum b{font-family:var(--disp);font-weight:600;font-size:1.72rem;color:var(--ink);line-height:1}
+.cart__note{font-size:.72rem;color:var(--ash);line-height:1.45;margin-bottom:15px}
+.cart__clear{display:block;width:100%;margin-top:11px;padding:7px;font-size:.8rem;color:var(--ash);
+  cursor:pointer;transition:.2s;background:transparent;border:0;font-family:var(--body)}
+.cart__clear:hover{color:var(--red)}
+
+/* форма оформлення */
+.cart__form{overflow-y:auto}
+.cart__fh{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:1.04rem;
+  color:var(--ink);margin-bottom:14px}
+.cart__form label{display:block;margin-bottom:11px;font-size:.8rem;color:var(--ash)}
+.cart__form input,.cart__form textarea{width:100%;margin-top:6px;padding:11px 13px;font-size:.92rem;
+  font-family:var(--body);color:var(--ink);background:#fff;border:1px solid var(--line);outline:0;transition:.2s}
+.cart__form input:focus,.cart__form textarea:focus{border-color:var(--red)}
+.cart__sum--form{margin:16px 0 13px;padding-top:14px;border-top:1px solid var(--line)}
+
+/* підтвердження */
+.cart__done{text-align:center;padding-top:40px;padding-bottom:40px}
+.cart__done-ic{width:62px;height:62px;margin:0 auto 18px;display:grid;place-items:center;
+  background:#E7F5EC;border-radius:50%}
+.cart__done-ic .icon{width:28px;height:28px;color:#1C8A3C}
+.cart__done h4{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:1.26rem;
+  color:var(--ink);margin-bottom:11px}
+.cart__done p{font-size:.88rem;color:var(--ash);line-height:1.55;margin-bottom:22px}
+
+/* ---- відгуки з фото ---- */
+.rev__av{overflow:hidden;background:var(--surface-2)}
+.rev__av img{width:100%;height:100%;object-fit:cover;display:block}
+
+@media(max-width:980px){
+  :root{--htop:56px;--hh:56px}
+  .brand img,.header.scrolled .brand img{height:36px}
+  .hcart{width:34px;height:34px}
+  .hcart .icon{width:17px;height:17px}
+  .cart__box{width:100%}
+}
+
+/* =====================================================================
+   v16 — галерея по пропорції + мобільний адаптив
+   ===================================================================== */
+
+/* ---- ГАЛЕРЕЯ: фото вписане в пропорцію, фон добирає розмитою копією ----
+   Фото з OLX різних пропорцій. Фіксована висота давала широкі білі поля,
+   тож тримаємо сталу пропорцію, а порожнечу закриває розмита копія кадру. */
+.gallery__main{height:auto;aspect-ratio:4/3;background:#F4F3EF}
+.gallery__slide{position:relative;min-width:100%;width:100%;height:100%;overflow:hidden}
+.gallery__slide::before{content:"";position:absolute;inset:0;
+  background-image:var(--bg);background-size:cover;background-position:center;
+  filter:blur(26px) saturate(.75) brightness(1.06);transform:scale(1.18);opacity:.5}
+.gallery__slide img{position:relative;width:100%;height:100%;object-fit:contain;padding:10px;
+  user-select:none;-webkit-user-drag:none}
+.gallery__strip img{min-width:0}
+
+/* ---- КАТАЛОГ: фільтри не ламаються на вузькому екрані ---- */
+@media(max-width:900px){
+  .fbar{flex-wrap:wrap;gap:8px}
+  .fbar__t{width:100%;margin-bottom:2px}
+  .fdd{flex:1 1 calc(50% - 4px)}
+  .fdd__b{width:100%;justify-content:space-between}
+  .fdd__p{width:100%;min-width:0}
+  .fdd__reset{flex:1 1 100%;text-align:left}
+}
+
+@media(max-width:980px){
+  /* шапка: лого · кошик · бургер. Телефон — іконкою, «Заявка» переїхала в меню */
+  .header__util{gap:9px}
+  .header__util .btn{display:none}
+  .header__phone{width:34px;height:34px;display:grid;place-items:center;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  .header__phone .icon{width:17px;height:17px;margin:0}
+
+  /* сторінка товару в одну колонку, нічого не виїжджає за екран */
+  /* порядок на телефоні: фото → назва й ціна → опис.
+     display:contents піднімає вміст лівої колонки в саму сітку, щоб їх переставити */
+  .pdp{grid-template-columns:1fr;gap:22px}
+  .gallery-col{display:contents}
+  .gallery{order:1}
+  .pdp__info{order:2}
+  .pdesc{order:3}
+  .gallery,.pdp__info,.pdesc,.pdp{min-width:0;max-width:100%}
+  .facts--pdp{max-width:none}
+
+  /* стрілки на телефоні прибрані — гортається пальцем */
+  .gallery__nav{display:none}
+  .gallery__main{aspect-ratio:4/3;cursor:default}
+  .gallery__count{right:10px;bottom:10px;font-size:.7rem;padding:5px 10px}
+  .gallery__thumbs{gap:7px;margin-top:8px}
+  .gallery__thumbs button{flex:0 0 68px;height:54px}
+
+  /* заголовок і ціна під мобільну ширину */
+  .pdp__title{font-size:clamp(1.42rem,6.2vw,1.95rem)}
+  .pdp__price b{font-size:1.9rem}
+  .pdp__actions{gap:9px}
+  .pdp__actions .btn{flex:1 1 100%}
+  .crumbs--pdp{font-size:.76rem;row-gap:3px}
+  .section--pdp{padding-top:16px}
+}
+
+/* ---- телефон: дві карточки в ряд, як у великих магазинів ---- */
+@media(max-width:900px){ .pgrid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:480px){
+  .pgrid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .pcard__body{padding:12px 12px 14px}
+  .pcard__name{font-size:.92rem;min-height:2.32em}
+  .pcard__sub{font-size:.72rem}
+  .pcard__price{font-size:1.16rem}
+  .pcard__stock{font-size:.72rem}
+  .pcard__add{margin-top:9px;padding:9px 10px;font-size:.72rem;gap:6px}
+  .pcard__add .icon{width:14px;height:14px}
+  .cats,.icards,.revs{grid-template-columns:1fr 1fr}
+}
+@media(max-width:430px){
+  .cats,.icards{grid-template-columns:1fr 1fr}
+  .revs{grid-template-columns:1fr}
+}
+
+/* опис товару не вилазить за край */
+.pdesc,.pdesc__body{min-width:0;max-width:100%}
+.pdesc__body p{overflow-wrap:anywhere}
+
+/* ніщо не створює горизонтальний скрол */
+html,body{max-width:100%;overflow-x:hidden}
+
+/* форма й підтвердження заповнюють панель, а не висять смугою */
+.cart__form,.cart__done{flex:1 1 auto}

@@ -8,9 +8,9 @@ const BRANDS     = window.MM_BRANDS     || [];
 
 /* ЗАГЛУШКА: приклади відгуків — замінити на реальні від клієнта */
 const REVIEWS = [
-  { n:'Андрій', c:'Біла Церква', t:'Брав ендуро — підібрали під мій зріст, не нав\'язували дорожче. Підготували, пояснили по обслуговуванню. Катаю другий сезон, питань нема.' },
-  { n:'Олег', c:'Київ', t:'Привезли в Київ без передоплати, як і домовлялись. Документи всі на місці, поставив на облік без проблем.' },
-  { n:'Віталій', c:'Фастів', t:'Здав старий мопед по Trade-in, доплатив різницю. Оцінили нормально, без заниження. Рекомендую.' },
+  { n:'Андрій', c:'Біла Церква', av:'assets/reviews/r1.jpg', t:'Брав ендуро — підібрали під мій зріст, не нав\'язували дорожче. Підготували, пояснили по обслуговуванню. Катаю другий сезон, питань нема.' },
+  { n:'Олег', c:'Київ', av:'assets/reviews/r2.jpg', t:'Привезли в Київ без передоплати, як і домовлялись. Документи всі на місці, поставив на облік без проблем.' },
+  { n:'Віталій', c:'Фастів', av:'assets/reviews/r3.jpg', t:'Здав старий мопед по Trade-in, доплатив різницю. Оцінили нормально, без заниження. Рекомендую.' },
 ];
 
 /* ---------------- helpers ---------------- */
@@ -105,6 +105,7 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
       <div class="pcard__foot">
         <div class="pcard__price">${priceText(p)}</div>
         <span class="pcard__stock">${stockOf(p)}</span>
+        <button class="pcard__add" type="button" data-cart-add="${p.id}">${ico("ic-cart")} В кошик</button>
       </div>
     </div>
   </article>`; };
@@ -293,7 +294,7 @@ function renderProduct() {
     <div class="gallery-col">
       <div class="gallery">
         <div class="gallery__main" id="galMain">
-          <div class="gallery__strip" id="galStrip">${gal.map(g => `<img src="${g}" alt="${n.title}" draggable="false">`).join("")}</div>
+          <div class="gallery__strip" id="galStrip">${gal.map(g => `<div class="gallery__slide" style="--bg:url('${g}')"><img src="${g}" alt="${n.title}" draggable="false"></div>`).join("")}</div>
           ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" type="button" aria-label="Попереднє фото">${ico("ic-arrow-l")}</button>
           <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
           <span class="gallery__count" id="galCount">1 / ${gal.length}</span>` : ""}
@@ -323,8 +324,8 @@ function renderProduct() {
       </div>
       <div class="pdp__price"><b>${priceText(p)}</b></div>
       <div class="pdp__actions">
-        <button class="btn btn--red btn--lg" data-order="${n.title}">Купити</button>
-        <button class="btn btn--line btn--lg" data-order="Швидке замовлення — ${n.title}">Швидке замовлення</button>
+        <button class="btn btn--red btn--lg" type="button" data-cart-add="${p.id}" data-cart-open>${ico("ic-cart")} Додати в кошик</button>
+        <button class="btn btn--line btn--lg" type="button" data-order="Швидке замовлення — ${n.title}">Купити в 1 клік</button>
       </div>
       <a class="pdp__call" href="tel:+380938701107">${ico("ic-phone")} +38 093 870 11 07 — відповімо за 30 секунд</a>
 
@@ -366,7 +367,7 @@ function renderProduct() {
   if (rev) REVIEWS.forEach(r => rev.appendChild(el(`
     <div class="rev rv">
       <div class="rev__top">
-        <div class="rev__av">${r.n[0]}</div>
+        <div class="rev__av">${r.av ? `<img src="${r.av}" alt="" loading="lazy">` : r.n[0]}</div>
         <div class="rev__who"><b>${r.n}</b><span>${r.c}</span></div>
       </div>
       <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
@@ -445,6 +446,200 @@ function initAcc() {
     });
   });
   document.querySelectorAll('.acc__i.open .acc__a').forEach(a => { a.style.maxHeight = a.scrollHeight + 'px'; });
+}
+
+/* =====================================================================
+   КОШИК — зберігається в localStorage, живе на всіх сторінках
+   ===================================================================== */
+const CART_KEY = 'motomix_cart_v1';
+
+const cartRead = () => {
+  try { const v = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(v) ? v : []; }
+  catch { return []; }
+};
+const cartWrite = (items) => {
+  try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch {}
+  cartPaintBadge(); cartPaintBody();
+};
+const cartQty = () => cartRead().reduce((s, i) => s + i.q, 0);
+const cartList = () => cartRead()
+  .map(i => ({ ...i, p: PRODUCTS.find(x => x.id === i.id) }))
+  .filter(i => i.p);                                  // товар зник з каталогу — тихо прибираємо
+const cartTotal = () => cartList().reduce((s, i) => s + (i.p.priceUah || 0) * i.q, 0);
+const uah = (n) => n.toLocaleString('uk-UA').replace(/,/g, ' ') + ' ₴';
+
+function cartAdd(id, q = 1) {
+  const items = cartRead();
+  const hit = items.find(i => i.id === id);
+  if (hit) hit.q = Math.min(99, hit.q + q); else items.push({ id, q });
+  cartWrite(items);
+  cartFlash();
+}
+function cartSetQty(id, q) {
+  let items = cartRead();
+  if (q <= 0) items = items.filter(i => i.id !== id);
+  else { const hit = items.find(i => i.id === id); if (hit) hit.q = Math.min(99, q); }
+  cartWrite(items);
+}
+const cartRemove = (id) => cartSetQty(id, 0);
+const cartClear = () => cartWrite([]);
+
+function cartPaintBadge() {
+  const n = cartQty(), b = document.getElementById('cartCount');
+  if (!b) return;
+  b.textContent = n;
+  b.hidden = n === 0;
+}
+
+/* коротка підсвітка кнопки кошика — видно, що товар долетів */
+function cartFlash() {
+  const b = document.getElementById('cartBtn'); if (!b) return;
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+}
+
+function cartPaintBody() {
+  const box = document.getElementById('cartBody'); if (!box) return;
+  const foot = document.getElementById('cartFoot');
+  const list = cartList();
+
+  if (!list.length) {
+    box.innerHTML = '<div class="cart__empty">' +
+      '<svg class="icon"><use href="#ic-cart"></use></svg>' +
+      '<b>Кошик порожній</b>' +
+      '<p>Додай техніку з каталогу — і оформимо замовлення в пару кліків.</p>' +
+      '<a class="btn btn--line" href="catalog.html">Перейти до каталогу</a></div>';
+    if (foot) foot.hidden = true;
+    return;
+  }
+
+  box.innerHTML = list.map(i => {
+    const n = nameOf(i.p);
+    return `<article class="ci" data-id="${i.p.id}">
+      <a class="ci__img" href="product.html?id=${i.p.id}"><img src="${i.p.img}" alt="${n.title}" loading="lazy"></a>
+      <div class="ci__main">
+        <a class="ci__name" href="product.html?id=${i.p.id}">${n.title}</a>
+        <div class="ci__price">${priceText(i.p)}</div>
+        <div class="ci__row">
+          <div class="qty">
+            <button type="button" class="qty__b" data-q="-1" aria-label="Менше"><svg class="icon"><use href="#ic-minus"></use></svg></button>
+            <input class="qty__i" type="text" inputmode="numeric" value="${i.q}" aria-label="Кількість">
+            <button type="button" class="qty__b" data-q="1" aria-label="Більше"><svg class="icon"><use href="#ic-plus"></use></svg></button>
+          </div>
+          <button type="button" class="ci__del" aria-label="Прибрати"><svg class="icon"><use href="#ic-trash"></use></svg></button>
+        </div>
+      </div>
+      <div class="ci__sum">${i.p.priceUah ? uah(i.p.priceUah * i.q) : "—"}</div>
+    </article>`;
+  }).join('');
+
+  if (foot) foot.hidden = false;
+  const t = uah(cartTotal());
+  const t1 = document.getElementById('cartTotal'), t2 = document.getElementById('cartTotal2');
+  if (t1) t1.textContent = t;
+  if (t2) t2.textContent = t;
+}
+
+const cartOpen = () => {
+  const p = document.getElementById('cartPanel'); if (!p) return;
+  cartStep('list');
+  p.classList.add('open'); p.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+};
+const cartClose = () => {
+  const p = document.getElementById('cartPanel'); if (!p) return;
+  p.classList.remove('open'); p.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+};
+
+/* три стани панелі: список → форма → підтвердження */
+function cartStep(step) {
+  const body = document.getElementById('cartBody'), foot = document.getElementById('cartFoot');
+  const form = document.getElementById('cartForm'), done = document.getElementById('cartDone');
+  if (!body) return;
+  const show = (n, on) => { if (n) n.hidden = !on; };
+  show(body, step === 'list'); show(form, step === 'form'); show(done, step === 'done');
+  show(foot, step === 'list' && cartList().length > 0);
+}
+
+function initCart() {
+  cartPaintBadge(); cartPaintBody();
+
+  document.getElementById('cartBtn')?.addEventListener('click', cartOpen);
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-cart-close]')) { cartClose(); return; }
+
+    // «В кошик» з карточки або зі сторінки товару
+    const add = e.target.closest('[data-cart-add]');
+    if (add) {
+      e.preventDefault(); e.stopPropagation();
+      cartAdd(add.getAttribute('data-cart-add'));
+      if (add.hasAttribute('data-cart-open')) cartOpen();
+      return;
+    }
+
+    const row = e.target.closest('.ci'); if (!row) return;
+    const id = row.dataset.id;
+    const q = e.target.closest('.qty__b');
+    if (q) { const cur = cartRead().find(i => i.id === id); cartSetQty(id, (cur ? cur.q : 0) + Number(q.dataset.q)); return; }
+    if (e.target.closest('.ci__del')) cartRemove(id);
+  });
+
+  // ручне введення кількості
+  document.addEventListener('change', (e) => {
+    const inp = e.target.closest('.qty__i'); if (!inp) return;
+    const id = inp.closest('.ci')?.dataset.id; if (!id) return;
+    const v = parseInt(String(inp.value).replace(/\D/g, ''), 10);
+    cartSetQty(id, Number.isFinite(v) ? v : 1);
+  });
+
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cartClose(); });
+  document.getElementById('cartClear')?.addEventListener('click', () => { if (confirm('Очистити кошик?')) cartClear(); });
+  document.getElementById('cartCheckout')?.addEventListener('click', () => cartStep('form'));
+  document.getElementById('cartBack')?.addEventListener('click', () => cartStep('list'));
+
+  // кошик спільний для вкладок
+  window.addEventListener('storage', (e) => { if (e.key === CART_KEY) { cartPaintBadge(); cartPaintBody(); } });
+
+  const form = document.getElementById('cartForm');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const note = document.getElementById('cartNote'), btn = document.getElementById('cartSend');
+    const list = cartList();
+    if (!list.length) { cartStep('list'); return; }
+
+    const fd = new FormData(form);
+    const sum = cartTotal();
+    const payload = {
+      kind: 'order',
+      subject: 'Замовлення з кошика',
+      name: fd.get('name'), phone: fd.get('phone'), comment: fd.get('comment'), company: fd.get('company'),
+      page: location.pathname + location.search,
+      total: sum,
+      items: list.map(i => ({
+        id: i.p.id, name: nameOf(i.p).title, qty: i.q,
+        price: priceText(i.p), sum: (i.p.priceUah || 0) * i.q,
+      })),
+    };
+
+    note.textContent = 'Відправляємо…'; note.className = 'form__note';
+    btn.disabled = true;
+    try {
+      const r = await fetch(ORDER_ENDPOINT || '/api/order', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      if (!r.ok) throw new Error('bad status');
+      const sub = document.getElementById('cartDoneSub');
+      const word = list.length === 1 ? 'позицію' : 'позиції';
+      if (sub) sub.textContent = 'Замовлення на ' + list.length + ' ' + word + ' на суму ' + uah(sum) +
+        ' прийнято. Менеджер передзвонить на ' + fd.get('phone') + ' і підтвердить наявність та доставку.';
+      cartClear(); form.reset();
+      cartStep('done');
+      note.textContent = '';
+    } catch {
+      note.textContent = '⚠️ Не вдалось відправити. Подзвоніть: +38 093 870 11 07';
+      note.className = 'form__note err';
+    } finally { btn.disabled = false; }
+  });
 }
 
 /* ---------------- chrome ---------------- */
@@ -566,7 +761,7 @@ function initSmooth() {
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
-  initChrome(); initModal(); initCards();
+  initChrome(); initModal(); initCards(); initCart();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();
 })();
