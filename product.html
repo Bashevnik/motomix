@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Товар — MOTOMIX</title>
     <meta name="description" content="Характеристики, опис, комплектація та відгуки. Замовлення мототехніки MOTOMIX, Біла Церква.">
-    <link rel="preload" href="components/header.html" as="fetch" crossorigin>
-    <link rel="preload" href="components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-cyrillic.woff2" crossorigin>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
-    <link rel="icon" href="assets/favicon.png" sizes="64x64">
+    <link rel="icon" href="/assets/favicon.png" sizes="64x64">
     <meta name="theme-color" content="#F2F1ED">
 </head>
 
 <body class="inner">
-    <div data-include="components/header.html"></div>
+    <div data-include="/components/header.html"></div>
 
     <section class="section section--pdp">
         <div class="wrap">
@@ -53,15 +53,15 @@
                     <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Схоже</span>
                     <h2 class="stitle">Схожі моделі</h2>
                 </div>
-                <a href="catalog.html" class="tlink">Весь каталог <svg class="icon"><use href="#ic-arrow"></use></svg></a>
+                <a href="/catalog" class="tlink">Весь каталог <svg class="icon"><use href="#ic-arrow"></use></svg></a>
             </div>
             <div class="pgrid" id="related"></div>
         </div>
     </section>
 
-    <div data-include="components/footer.html"></div>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <div data-include="/components/footer.html"></div>
+    <script src="/data.js"></script>
+    <script src="/app.js"></script>
 </body>
 
 </html>

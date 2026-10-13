@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Замовлення прийнято — MOTOMIX</title>
+    <meta name="description" content="Дякуємо за замовлення в MOTOMIX. Менеджер зв'яжеться найближчим часом.">
+    <meta name="robots" content="noindex">
+    <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css">
+    <script>document.documentElement.classList.add('booting');</script>
+    <link rel="icon" href="/assets/favicon.png" sizes="64x64">
+    <meta name="theme-color" content="#F2F1ED">
+</head>
+
+<body class="inner">
+    <div data-include="/components/header.html"></div>
+
+    <section class="section section--pdp">
+        <div class="wrap">
+            <div class="thx">
+                <div class="thx__ic"><svg class="icon"><use href="#ic-check"></use></svg></div>
+                <h1 class="thx__h1">Замовлення прийнято</h1>
+                <p class="thx__sub" id="thxSub">Менеджер зателефонує найближчим часом — підтвердить наявність, суму та доставку.</p>
+
+                <div class="thx__box" id="thxOrder" hidden>
+                    <div class="thx__row"><span>Номер для звʼязку</span><b id="thxPhone">—</b></div>
+                    <div class="thx__row"><span>Доставка</span><b id="thxDlv">—</b></div>
+                    <div class="thx__row thx__row--sum"><span>Сума</span><b id="thxSum">—</b></div>
+                </div>
+
+                <div class="thx__steps">
+                    <div class="thx__step"><b>1</b><span>Передзвонимо та підтвердимо наявність</span></div>
+                    <div class="thx__step"><b>2</b><span>Узгодимо оплату й доставку</span></div>
+                    <div class="thx__step"><b>3</b><span>Відправимо з повним пакетом документів</span></div>
+                </div>
+
+                <div class="thx__cta">
+                    <a class="btn btn--red btn--lg" href="/catalog">Повернутись до каталогу</a>
+                    <a class="btn btn--line btn--lg" href="tel:+380938701107">Подзвонити нам</a>
+                </div>
+                <p class="thx__hint">Не дочекались дзвінка? Телефонуйте: <a href="tel:+380938701107">+38 093 870 11 07</a></p>
+            </div>
+        </div>
+    </section>
+
+    <div data-include="/components/footer.html"></div>
+    <script src="/data.js"></script>
+    <script src="/app.js"></script>
+</body>
+
+</html>

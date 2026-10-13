@@ -45,48 +45,12 @@
       <button class="cart__clear" id="cartClear" type="button">Очистити кошик</button>
     </footer>
 
-    <form class="cart__form" id="cartForm" hidden data-lenis-prevent>
-      <h4 class="cart__fh">Куди надіслати підтвердження</h4>
-      <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-      <label>Ім'я <span class="opt">не обов'язково</span><input type="text" name="name" placeholder="Як до вас звертатися"></label>
-      <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
-      <label>Коментар <span class="opt">не обов'язково</span><textarea name="comment" rows="2" placeholder="Зручний час дзвінка, питання по доставці"></textarea></label>
-      <div class="dlv">
-        <div class="dlv__tabs" role="tablist">
-          <button type="button" class="dlv__tab is-on" data-dlv="np">Нова Пошта</button>
-          <button type="button" class="dlv__tab" data-dlv="up">Укрпошта</button>
-          <button type="button" class="dlv__tab" data-dlv="mist">Міст Експрес</button>
-          <button type="button" class="dlv__tab" data-dlv="pickup">Самовивіз</button>
-        </div>
-
-        <div class="dlv__body" id="dlvFields">
-          <label class="dlv__f">Місто або село
-            <input type="text" id="npCity" autocomplete="address-level2" placeholder="Почніть вводити: Біла Церква">
-            <div class="dlv__list" id="npCityList" hidden data-lenis-prevent></div>
-          </label>
-          <label class="dlv__f" id="npWhWrap">Відділення
-            <input type="text" id="npWh" autocomplete="off" placeholder="Номер або адреса відділення">
-            <div class="dlv__list" id="npWhList" hidden data-lenis-prevent></div>
-          </label>
-          <p class="dlv__hint" id="npHint" hidden></p>
-        </div>
-
-        <div class="dlv__pickup" id="dlvPickup" hidden>
-          <p>Забрати можна в салоні: <b>вул. Сухоярська, Біла Церква</b><br>щодня 9:00–20:00.</p>
-        </div>
-      </div>
-
-      <div class="cart__sum cart__sum--form"><span>До сплати</span><b id="cartTotal2">0 ₴</b></div>
-      <button type="submit" class="btn btn--red btn--block btn--lg" id="cartSend">Підтвердити замовлення</button>
-      <button class="cart__clear" id="cartBack" type="button">← Назад до кошика</button>
-      <div class="form__note" id="cartNote"></div>
-    </form>
 
     <div class="cart__done" id="cartDone" hidden>
       <div class="cart__done-ic"><svg class="icon"><use href="#ic-check"></use></svg></div>
       <h4>Замовлення прийнято</h4>
       <p id="cartDoneSub">Ми вже отримали заявку. Менеджер передзвонить найближчим часом і підтвердить наявність, суму та доставку.</p>
-      <a class="btn btn--line btn--block" href="catalog.html">Повернутись до каталогу</a>
+      <a class="btn btn--line btn--block" href="/catalog">Повернутись до каталогу</a>
       <button class="cart__clear" data-cart-close type="button">Закрити</button>
     </div>
   </aside>
@@ -104,8 +68,9 @@
       <input type="hidden" name="subject" id="orderSubject" value="">
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label>Ім'я <span class="opt">не обов'язково</span><input type="text" name="name" placeholder="Як до вас звертатися"></label>
-      <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
+      <label>Телефон <i class="req">*</i><input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
       <label>Коментар <span class="opt">не обов'язково</span><textarea name="comment" rows="3" placeholder="Модель, питання, зручний час дзвінка"></textarea></label>
+      <p class="co__req-note"><i class="req">*</i> — обовʼязкове поле</p>
       <button type="submit" class="btn btn--red btn--block btn--lg">Відправити</button>
       <div class="form__note" id="formNote"></div>
     </form>

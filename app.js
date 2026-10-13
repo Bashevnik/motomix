@@ -42,26 +42,53 @@ const REVIEWS = [
 /* усі стрічки на сайті гортаються самі: одна комірка раз на 3 секунди */
 const SWIPE_MS = 3000;
 
+/* ---------------- людські адреси ----------------
+   /catalog/enduro замість catalog.html?type=%D0%95%D0%BD%D0%B4%D1%83%D1%80%D0%BE
+   і /product/lifan-kpt-400 замість product.html?id=…
+   Параметри зі старих посилань теж читаємо — щоб нічого не зламалось. */
+const slugOf = (name) => (CATEGORIES.find((c) => c.name === name) || {}).slug || '';
+const typeOfSlug = (slug) => (CATEGORIES.find((c) => c.slug === slug) || {}).name || '';
+
+const urlType = (name) => { const s = slugOf(name); return s ? '/catalog/' + s : '/catalog'; };
+const urlProduct = (id) => '/product/' + id;
+const urlBrand = (b) => '/catalog?brand=' + encodeURIComponent(b);
+
+/* що просять у поточній адресі */
+function routeParams() {
+  const parts = location.pathname.replace(/^\/|\/$/g, '').split('/');
+  const q = new URLSearchParams(location.search);
+  const out = { type: q.get('type') || '', id: q.get('id') || '', brand: q.get('brand') || '', cat: q.get('cat') || '' };
+  if (parts[0] === 'catalog' && parts[1]) out.type = typeOfSlug(decodeURIComponent(parts[1])) || out.type;
+  if (parts[0] === 'product' && parts[1]) out.id = decodeURIComponent(parts[1]) || out.id;
+  return out;
+}
+
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
 /* webp легший за jpeg приблизно на чверть; <picture> сам обирає формат,
    а старий браузер отримає звичайний jpg із src */
-const webpOf = (s) => String(s || '').replace(/.(jpe?g|png)$/i, '.webp');
-/* для карточок і плиток браузер сам обирає менший файл: на телефоні
-   картинка показується ~470px, тягнути 900 немає сенсу */
-const picCard = (src, attrs, sizes) => {
+/* Шляхи з data.js відносні, а сторінки тепер живуть на /catalog/enduro
+   і /product/xxx — без провідного слеша браузер шукав би їх у підпапці. */
+const abs = (p) => (!p || /^(https?:|\/|data:)/.test(p)) ? p : '/' + p;
+const webpOf = (s) => abs(String(s || '')).replace(/\.(jpe?g|png)$/i, '.webp');
+
+const pic = (src0, attrs) => {
+  const src = abs(src0);
+  return `<picture><source srcset="${webpOf(src)}" type="image/webp"><img src="${src}" ${attrs || ''}></picture>`;
+};
+
+/* для карточок і плиток браузер сам обирає менший файл */
+const picCard = (src0, attrs, sizes) => {
+  const src = abs(src0);
   const w = webpOf(src);
   const sm = w.replace('/olx/', '/olx/sm/');
   return `<picture><source type="image/webp" srcset="${sm} 600w, ${w} 900w" sizes="${sizes || '(max-width:620px) 50vw, (max-width:1180px) 33vw, 20vw'}"><img src="${src}" ${attrs || ''}></picture>`;
 };
 
-const pic = (src, attrs) =>
-  `<picture><source srcset="${webpOf(src)}" type="image/webp"><img src="${src}" ${attrs || ''}></picture>`;
-
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const priceText = (p) => p.priceRaw || "Ціна за запитом";
 const stockOf = () => "В наявності";
-const qs = (k) => new URLSearchParams(location.search).get(k);
+const qs = (k) => { const r = routeParams(); return (r[k] !== undefined && r[k] !== '') ? r[k] : new URLSearchParams(location.search).get(k); };
 
 /* ---------------- нормалізація назв з OLX ----------------
    Сирий заголовок оголошення → «БРЕНД МОДЕЛЬ» + окремий рядок уточнень.
@@ -128,16 +155,16 @@ function nameOf(p) {
 }
 
 const factsOf = (p) => {
-  const f = [{ k: "Бренд", v: p.brand, href: "catalog.html?brand=" + encodeURIComponent(p.brand) }];
-  if (p.cc) f.push({ k: "Обʼєм двигуна", v: p.cc + " см³", href: "catalog.html?cc=" + p.cc });
-  f.push({ k: "Тип", v: p.type || p.cat, href: "catalog.html?type=" + encodeURIComponent(p.type || p.cat) });
+  const f = [{ k: "Бренд", v: p.brand, href: urlBrand(p.brand) }];
+  if (p.cc) f.push({ k: "Обʼєм двигуна", v: p.cc + " см³", href: "/catalog?cc=" + p.cc });
+  f.push({ k: "Тип", v: p.type || p.cat, href: urlType(p.type || p.cat) });
   f.push({ k: "Стан", v: "Новий", href: null });
   return f;
 };
 
 /* карточка: фото → назва → уточнення → ціна → наявність */
 const pcardHtml = (p) => { const n = nameOf(p); return `
-  <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
+  <article class="pcard rv" data-href="${urlProduct(p.id)}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
       ${picCard(p.img, `alt="${n.title}" loading="lazy" decoding="async" width="450" height="600"`)}
@@ -419,7 +446,7 @@ function initLoopRail(track, opts) {
 function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach((c, i) => box.appendChild(el(`
-    <a class="cat rv" href="catalog.html?type=${encodeURIComponent(c.name)}">
+    <a class="cat rv" href="${urlType(c.name)}">
       ${picCard(c.img, `alt="${c.name}" loading="lazy" decoding="async"`, "(max-width:640px) 50vw, 25vw")}
       <span class="cat__n num-out">0${i + 1}</span>
       <div class="cat__body">
@@ -436,7 +463,7 @@ function renderBrands() {
   const track = el(`<div class="marquee__track"></div>`);
   // клік по марці веде в каталог, уже відфільтрований цим брендом
   [...BRANDS, ...BRANDS].forEach(b => track.appendChild(el(
-    `<a class="bchip" href="catalog.html?brand=${encodeURIComponent(b)}">${b}</a>`)));
+    `<a class="bchip" href="${urlBrand(b)}">${b}</a>`)));
   box.appendChild(track);
 }
 
@@ -520,8 +547,8 @@ function renderCatalog() {
       if (h1) h1.innerHTML = (meta && meta.icon ? `<svg class="h1ico"><use href="#${meta.icon}"></use></svg>` : "") + c;
       if (desc) desc.textContent = meta ? meta.d : "";
       if (tail) tail.innerHTML = `<em>›</em><span>${c}</span>`;
-      if (link) link.setAttribute("href", "catalog.html");
-      if (img && meta && meta.img) img.src = meta.img;
+      if (link) link.setAttribute("href", "/catalog");
+      if (img && meta && meta.img) img.src = webpOf(meta.img);
       document.title = `${c} — купити у Білій Церкві | MOTOMIX`;
     }
   };
@@ -650,8 +677,8 @@ function renderProduct() {
     <div class="pdp__info">
       <div class="crumbs crumbs--pdp">
         <a href="index.html">Головна</a><em>›</em>
-        <a href="catalog.html">Каталог</a><em>›</em>
-        <a href="catalog.html?type=${encodeURIComponent(p.type || p.cat)}">${p.type || p.cat}</a><em>›</em>
+        <a href="/catalog">Каталог</a><em>›</em>
+        <a href="${urlType(p.type || p.cat)}">${p.type || p.cat}</a><em>›</em>
         <span>${n.title}</span>
       </div>
       <h1 class="pdp__title">${n.title}</h1>
@@ -876,6 +903,7 @@ const cartRead = () => {
 const cartWrite = (items) => {
   try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch {}
   cartPaintBadge(); cartPaintBody();
+  try { window.dispatchEvent(new Event('mm:cart')); } catch {}
 };
 const cartQty = () => cartRead().reduce((s, i) => s + i.q, 0);
 const cartList = () => cartRead()
@@ -923,7 +951,7 @@ function cartPaintBody() {
       '<svg class="icon"><use href="#ic-cart"></use></svg>' +
       '<b>Кошик порожній</b>' +
       '<p>Додай техніку з каталогу — і оформимо замовлення в пару кліків.</p>' +
-      '<a class="btn btn--line" href="catalog.html">Перейти до каталогу</a></div>';
+      '<a class="btn btn--line" href="/catalog">Перейти до каталогу</a></div>';
     if (foot) foot.hidden = true;
     return;
   }
@@ -931,9 +959,9 @@ function cartPaintBody() {
   box.innerHTML = list.map(i => {
     const n = nameOf(i.p);
     return `<article class="ci" data-id="${i.p.id}">
-      <a class="ci__img" href="product.html?id=${i.p.id}">${picCard(i.p.img, `alt="${n.title}" loading="lazy" decoding="async"`, "90px")}</a>
+      <a class="ci__img" href="${urlProduct(i.p.id)}">${picCard(i.p.img, `alt="${n.title}" loading="lazy" decoding="async"`, "90px")}</a>
       <div class="ci__main">
-        <a class="ci__name" href="product.html?id=${i.p.id}">${n.title}</a>
+        <a class="ci__name" href="${urlProduct(i.p.id)}">${n.title}</a>
         <div class="ci__price">${priceText(i.p)}</div>
         <div class="ci__row">
           <div class="qty">
@@ -1120,7 +1148,7 @@ function initCart() {
 
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cartClose(); });
   document.getElementById('cartClear')?.addEventListener('click', () => { if (confirm('Очистити кошик?')) cartClear(); });
-  document.getElementById('cartCheckout')?.addEventListener('click', () => cartStep('form'));
+  document.getElementById('cartCheckout')?.addEventListener('click', () => { location.href = '/checkout'; });
   document.getElementById('cartBack')?.addEventListener('click', () => cartStep('list'));
 
   // кошик спільний для вкладок
@@ -1206,6 +1234,113 @@ function restoreScroll() {
   return true;
 }
 
+/* ---------------- сторінка оформлення ----------------
+   Форма переїхала з панелі кошика на окрему адресу /checkout: на вузькій
+   панелі вона не вміщалась, а тепер її ще й видно в історії браузера,
+   можна поділитись і відстежити в рекламі. */
+function renderCheckout() {
+  const box = document.getElementById('checkout'); if (!box) return;
+  const itemsBox = document.getElementById('coItems');
+  const totalEl = document.getElementById('coTotal');
+  const form = document.getElementById('coForm');
+  const note = document.getElementById('coNote');
+  const btn = document.getElementById('coSend');
+
+  const draw = () => {
+    const list = cartList();
+    if (!list.length) {
+      box.innerHTML = `<div class="co__empty">
+          <svg class="icon"><use href="#ic-cart"></use></svg>
+          <b>Кошик порожній</b>
+          <p>Додайте техніку з каталогу — і повертайтесь оформити замовлення.</p>
+          <a class="btn btn--red btn--lg" href="/catalog">Перейти до каталогу</a>
+        </div>`;
+      return;
+    }
+    itemsBox.innerHTML = list.map((i) => {
+      const n = nameOf(i.p);
+      return `<article class="coi">
+        <a class="coi__img" href="${urlProduct(i.p.id)}">${picCard(i.p.img, 'alt="" loading="lazy" decoding="async"', '110px')}</a>
+        <div class="coi__main">
+          <a class="coi__name" href="${urlProduct(i.p.id)}">${n.title}</a>
+          <div class="coi__price">${priceText(i.p)} × ${i.q} шт</div>
+          <div class="coi__row">
+            <div class="qty">
+              <button type="button" class="qty__b" data-q="-1" aria-label="Менше">${ico('ic-minus')}</button>
+              <input class="qty__i" type="text" inputmode="numeric" value="${i.q}" aria-label="Кількість">
+              <button type="button" class="qty__b" data-q="1" aria-label="Більше">${ico('ic-plus')}</button>
+            </div>
+            <button type="button" class="ci__del" aria-label="Прибрати">${ico('ic-trash')}</button>
+          </div>
+        </div>
+        <div class="coi__sum">${i.p.priceUah ? uah(i.p.priceUah * i.q) : '—'}</div>
+      </article>`;
+    }).join('');
+    // рядки керуються тим самим кодом, що й у панелі кошика
+    itemsBox.querySelectorAll('.coi').forEach((row, k) => { row.classList.add('ci'); row.dataset.id = list[k].p.id; });
+    totalEl.textContent = uah(cartTotal());
+  };
+
+  draw();
+  window.addEventListener('mm:cart', draw);
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const list = cartList();
+    if (!list.length) { location.href = '/catalog'; return; }
+
+    const fd = new FormData(form);
+    const phone = String(fd.get('phone') || '').trim();
+    if (!/[0-9]{6,}/.test(phone.replace(/\D/g, ''))) {
+      note.textContent = '⚠️ Вкажіть номер телефону — без нього ми не зможемо передзвонити.';
+      note.className = 'form__note err';
+      form.querySelector('[name=phone]').focus();
+      return;
+    }
+
+    const sum = cartTotal();
+    const delivery = window.__deliveryValue ? window.__deliveryValue() : '';
+    const payload = {
+      kind: 'order', subject: 'Замовлення з сайту',
+      name: fd.get('name'), phone, comment: fd.get('comment'), company: fd.get('company'),
+      page: location.pathname, delivery, total: sum,
+      items: list.map((i) => ({ id: i.p.id, name: nameOf(i.p).title, qty: i.q, price: priceText(i.p), sum: (i.p.priceUah || 0) * i.q })),
+    };
+
+    note.textContent = 'Відправляємо…'; note.className = 'form__note';
+    btn.disabled = true;
+    try {
+      const r = await fetch(ORDER_ENDPOINT || '/api/order', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      if (!r.ok) throw new Error('bad status');
+      try {
+        sessionStorage.setItem('mm:last', JSON.stringify({ phone, delivery, sum }));
+      } catch {}
+      cartClear();
+      location.href = '/thanks';
+    } catch {
+      note.textContent = '⚠️ Не вдалось відправити. Подзвоніть: +38 093 870 11 07';
+      note.className = 'form__note err';
+    } finally { btn.disabled = false; }
+  });
+}
+
+/* сторінка подяки — показує, що саме прийняли */
+function renderThanks() {
+  const box = document.getElementById('thxOrder'); if (!box) return;
+  let d = null;
+  try { d = JSON.parse(sessionStorage.getItem('mm:last') || 'null'); } catch {}
+  if (!d) return;
+  box.hidden = false;
+  const set = (id, v) => { const n = document.getElementById(id); if (n) n.textContent = v || '—'; };
+  set('thxPhone', d.phone);
+  set('thxDlv', d.delivery || 'узгодимо по телефону');
+  set('thxSum', d.sum ? uah(d.sum) : '—');
+  const sub = document.getElementById('thxSub');
+  if (sub && d.phone) sub.textContent = 'Менеджер зателефонує на ' + d.phone + ' — підтвердить наявність, суму та доставку.';
+}
+
 /* ---------------- chrome ---------------- */
 function initCards() {
   document.addEventListener("click", (e) => {
@@ -1252,7 +1387,7 @@ function initChrome() {
   }
   const s = document.getElementById('siteSearch');
   s?.closest('form')?.addEventListener('submit', () => {
-    const v = s.value.trim(); if (v) location.href = `catalog.html?q=${encodeURIComponent(v)}`;
+    const v = s.value.trim(); if (v) location.href = `/catalog?q=${encodeURIComponent(v)}`;
   });
 }
 
@@ -1377,7 +1512,7 @@ function initSmooth() {
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
   initChrome(); initModal(); initCards(); initCart(); initInlineForms(); initFabHide(); initDelivery();
-  renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct(); renderReviews();
+  renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct(); renderReviews(); renderCheckout(); renderThanks();
   initAcc(); revealInit(); initSmooth();
 
   // прибираємо позначку завантаження: далі все вже на місці

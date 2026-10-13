@@ -6,24 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Доставка та оплата — MOTOMIX</title>
     <meta name="description" content="Доставка мототехніки по всій Україні без передоплати. Оплата готівкою, карткою, безготівково. Гарантія та сервіс MOTOMIX.">
-    <link rel="preload" href="components/header.html" as="fetch" crossorigin>
-    <link rel="preload" href="components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-cyrillic.woff2" crossorigin>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
-    <link rel="icon" href="assets/favicon.png" sizes="64x64">
+    <link rel="icon" href="/assets/favicon.png" sizes="64x64">
     <meta name="theme-color" content="#F2F1ED">
 </head>
 
 <body class="inner">
-    <div data-include="components/header.html"></div>
+    <div data-include="/components/header.html"></div>
 
     <section class="phero">
-        <div class="phero__media"><picture><source srcset="assets/hero/forest-ride.webp" type="image/webp"><img src="assets/hero/forest-ride.jpg" alt=""></picture></div>
+        <div class="phero__media"><picture><source srcset="/assets/hero/forest-ride.webp" type="image/webp"><img src="/assets/hero/forest-ride.jpg" alt=""></picture></div>
         <div class="wrap phero__in">
-            <div class="crumbs"><a href="index.html">Головна</a><em>›</em><span>Доставка та оплата</span></div>
+            <div class="crumbs"><a href="/">Головна</a><em>›</em><span>Доставка та оплата</span></div>
             <h1>Доставка<br>та оплата</h1>
             <p>Привозимо техніку по всій Україні без передоплати. Зручні способи оплати та повний пакет документів.</p>
         </div>
@@ -95,7 +95,7 @@
     </section>
 
     <section class="cta">
-        <picture><source srcset="assets/olx/kayo-t2-250-2026-nova-2.webp" type="image/webp"><img class="cta__bg" src="assets/olx/kayo-t2-250-2026-nova-2.jpg" alt="" loading="lazy" decoding="async"></picture>
+        <picture><source srcset="/assets/olx/kayo-t2-250-2026-nova-2.webp" type="image/webp"><img class="cta__bg" src="/assets/olx/kayo-t2-250-2026-nova-2.jpg" alt="" loading="lazy" decoding="async"></picture>
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">
@@ -107,9 +107,9 @@
         </div>
     </section>
 
-    <div data-include="components/footer.html"></div>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <div data-include="/components/footer.html"></div>
+    <script src="/data.js"></script>
+    <script src="/app.js"></script>
 </body>
 
 </html>

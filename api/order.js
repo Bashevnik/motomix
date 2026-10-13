@@ -56,25 +56,29 @@ module.exports = async (req, res) => {
   let text;
 
   if (isOrder) {
+    // Спочатку — хто і куди. Менеджер бере трубку, маючи все під рукою,
+    // і лише потім дивиться склад замовлення.
+    const who =
+      `👤 ${name || 'Імʼя не вказали'}\n` +
+      `📞 ${phone}\n` +
+      (delivery ? `🚚 ${delivery}\n` : `🚚 Спосіб доставки не обрано\n`) +
+      (comment ? `💬 ${comment}\n` : '');
+
     const lines = items.map((it, i) =>
       `${i + 1}. ${it.name}\n` +
-      `   ${it.qty} шт × ${it.price || '—'}` + (it.sum ? `  =  ${money(it.sum)}` : '') +
+      `   ${it.price || '—'} × ${it.qty} шт` + (it.sum ? `  =  ${money(it.sum)}` : '') +
       (it.id ? `\n   ${site}/product.html?id=${it.id}` : '')
-    ).join('\n');
+    ).join('\n\n');
 
     text =
       `🛒 НОВЕ ЗАМОВЛЕННЯ — MOTOMIX\n` +
       `────────────────────\n` +
-      (name ? `Ім'я: ${name}\n` : '') +
-      `Телефон: ${phone}\n` +
+      who +
       `────────────────────\n` +
-      `ТОВАРИ (${items.length} поз., ${totalQty} шт):\n${lines}\n` +
+      `🏍 ЗАМОВЛЕНО (${items.length} поз., ${totalQty} шт)\n\n${lines}\n` +
       `────────────────────\n` +
-      `РАЗОМ: ${money(total)}\n` +
-      (delivery ? `Доставка: ${delivery}\n` : '') +
-      (comment ? `Коментар: ${comment}\n` : '') +
-      (page ? `Сторінка: ${page}\n` : '') +
-      `Час: ${when} (Київ)`;
+      `💰 РАЗОМ: ${money(total)}\n` +
+      `🕒 ${when} (Київ)`;
   } else {
     text =
       `🏍 НОВА ЗАЯВКА — MOTOMIX\n` +

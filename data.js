@@ -5,6 +5,7 @@
 window.MM_CATEGORIES = [
   {
    "name": "Ендуро",
+   "slug": "enduro",
    "group": "Мотоцикли",
    "icon": "ic-t-enduro",
    "short": "Ґрунт і бездоріжжя",
@@ -13,6 +14,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Мотарди",
+   "slug": "motard",
    "group": "Мотоцикли",
    "icon": "ic-t-motard",
    "short": "Асфальт, колеса 17\"",
@@ -21,6 +23,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Дорожні",
+   "slug": "road",
    "group": "Мотоцикли",
    "icon": "ic-t-road",
    "short": "Місто і траса щодня",
@@ -29,6 +32,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Спортбайки",
+   "slug": "sport",
    "group": "Мотоцикли",
    "icon": "ic-t-sport",
    "short": "Динаміка на асфальті",
@@ -37,6 +41,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Пітбайки",
+   "slug": "pitbike",
    "group": "Мотоцикли",
    "icon": "ic-t-pit",
    "short": "Перший мотоцикл і трюки",
@@ -45,6 +50,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Квадроцикли",
+   "slug": "quad",
    "group": "Квадроцикли",
    "icon": "ic-t-quad",
    "short": "Бездоріжжя, дача, діти",
@@ -53,6 +59,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Електроскутери",
+   "slug": "escooter",
    "group": "Електроскутери",
    "icon": "ic-t-escooter",
    "short": "Місто без пального",
@@ -61,6 +68,7 @@ window.MM_CATEGORIES = [
   },
   {
    "name": "Аксесуари",
+   "slug": "accessories",
    "group": "Аксесуари",
    "icon": "ic-t-gear",
    "short": "Оптика та екіпіровка",

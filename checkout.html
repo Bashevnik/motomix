@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Оформлення замовлення — MOTOMIX</title>
+    <meta name="description" content="Оформлення замовлення MOTOMIX: доставка Новою Поштою, Укрпоштою, Міст Експрес або самовивіз у Білій Церкві.">
+    <meta name="robots" content="noindex">
+    <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css">
+    <script>document.documentElement.classList.add('booting');</script>
+    <link rel="icon" href="/assets/favicon.png" sizes="64x64">
+    <meta name="theme-color" content="#F2F1ED">
+</head>
+
+<body class="inner">
+    <div data-include="/components/header.html"></div>
+
+    <section class="section section--pdp">
+        <div class="wrap">
+            <div class="crumbs crumbs--pdp">
+                <a href="/">Головна</a><em>›</em>
+                <a href="/catalog">Каталог</a><em>›</em>
+                <span>Оформлення</span>
+            </div>
+            <h1 class="co__h1">Оформлення замовлення</h1>
+
+            <div class="co" id="checkout">
+                <div class="co__left">
+                    <h2 class="co__sec">1. Контакти</h2>
+                    <form class="co__form" id="coForm" novalidate>
+                        <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+                        <label class="co__f">Телефон <i class="req">*</i>
+                            <input type="tel" name="phone" required placeholder="+38 0__ ___ __ __" autocomplete="tel">
+                        </label>
+                        <label class="co__f">Ім'я <span class="opt">не обов'язково</span>
+                            <input type="text" name="name" placeholder="Як до вас звертатися" autocomplete="name">
+                        </label>
+
+                        <h2 class="co__sec">2. Доставка</h2>
+                        <div class="dlv">
+                            <div class="dlv__tabs" role="tablist">
+                                <button type="button" class="dlv__tab is-on" data-dlv="np">Нова Пошта</button>
+                                <button type="button" class="dlv__tab" data-dlv="up">Укрпошта</button>
+                                <button type="button" class="dlv__tab" data-dlv="mist">Міст Експрес</button>
+                                <button type="button" class="dlv__tab" data-dlv="pickup">Самовивіз</button>
+                            </div>
+                            <div class="dlv__body" id="dlvFields">
+                                <label class="dlv__f">Місто або село <i class="req">*</i>
+                                    <input type="text" id="npCity" autocomplete="address-level2" placeholder="Почніть вводити: Біла Церква">
+                                    <div class="dlv__list" id="npCityList" hidden data-lenis-prevent></div>
+                                </label>
+                                <label class="dlv__f">Відділення <i class="req">*</i>
+                                    <input type="text" id="npWh" autocomplete="off" placeholder="Номер або адреса відділення">
+                                    <div class="dlv__list" id="npWhList" hidden data-lenis-prevent></div>
+                                </label>
+                                <p class="dlv__hint" id="npHint" hidden></p>
+                            </div>
+                            <div class="dlv__pickup" id="dlvPickup" hidden>
+                                <p>Забрати можна в салоні: <b>вул. Сухоярська, Біла Церква</b><br>щодня 9:00–20:00.</p>
+                            </div>
+                        </div>
+
+                        <h2 class="co__sec">3. Коментар</h2>
+                        <label class="co__f">Побажання <span class="opt">не обов'язково</span>
+                            <textarea name="comment" rows="3" placeholder="Зручний час дзвінка, питання по комплектації"></textarea>
+                        </label>
+
+                        <p class="co__req-note"><i class="req">*</i> — поля, без яких не вийде оформити</p>
+                        <button type="submit" class="btn btn--red btn--lg co__send" id="coSend">Підтвердити замовлення</button>
+                        <div class="form__note" id="coNote"></div>
+                    </form>
+                </div>
+
+                <aside class="co__right">
+                    <div class="co__card">
+                        <h2 class="co__sec co__sec--first">Ваше замовлення</h2>
+                        <div id="coItems"></div>
+                        <div class="co__total"><span>Разом</span><b id="coTotal">0 ₴</b></div>
+                        <p class="co__note">Ціни у валюті перераховані за орієнтовним курсом. Фінальну суму підтвердить менеджер.</p>
+                        <a class="co__back" href="/catalog">← Продовжити покупки</a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <div data-include="/components/footer.html"></div>
+    <script src="/data.js"></script>
+    <script src="/app.js"></script>
+</body>
+
+</html>
