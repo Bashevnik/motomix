@@ -25,14 +25,23 @@ module.exports = async (req, res) => {
 
   const q = String((req.query && req.query.q) || '').trim().slice(0, 60);
   const city = String((req.query && req.query.city) || '').trim().slice(0, 60);
+  const name = String((req.query && req.query.name) || '').trim().slice(0, 60);
 
   try {
     // Отделения выбранного города
     if (city) {
-      const d = await np({
+      let d = await np({
         apiKey, modelName: 'AddressGeneral', calledMethod: 'getWarehouses',
         methodProperties: { SettlementRef: city, FindByString: q, Limit: '50', Page: '1' },
       });
+      // Запасний шлях: у деяких населених пунктів відділення віддаються
+      // лише за назвою міста, а не за довідником.
+      if (d.success && (!d.data || !d.data.length) && name) {
+        d = await np({
+          apiKey, modelName: 'AddressGeneral', calledMethod: 'getWarehouses',
+          methodProperties: { CityName: name, FindByString: q, Limit: '50', Page: '1' },
+        });
+      }
       if (!d.success) return res.status(502).json({ error: 'np_error', manual: true });
       const items = (d.data || []).map((w) => ({
         ref: w.Ref,
@@ -52,7 +61,7 @@ module.exports = async (req, res) => {
     });
     if (!d.success) return res.status(502).json({ error: 'np_error', manual: true });
     const addrs = ((d.data && d.data[0] && d.data[0].Addresses) || []).map((a) => ({
-      ref: a.DeliveryCity || a.Ref,
+      ref: a.Ref,                       // довідник відділень працює саме з цим Ref
       name: a.MainDescription,
       area: [a.Area, a.Region].filter(Boolean).join(', '),
     }));

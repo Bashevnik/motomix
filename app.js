@@ -1063,7 +1063,7 @@ function initDelivery() {
     clearTimeout(t2);
     if (!CARRIERS[mode].auto || manual || !cityRef) { whList.hidden = true; return; }
     t2 = setTimeout(async () => {
-      const d = await ask({ city: cityRef, q: wh.value.trim() });
+      const d = await ask({ city: cityRef, name: city.value.trim(), q: wh.value.trim() });
       if (!d || !d.items) return;
       paint(whList, d.items, (it) => { wh.value = it.name; });
     }, 260);
