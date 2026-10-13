@@ -85,8 +85,21 @@ module.exports = async (req, res) => {
   }
 
   const token = process.env.TELEGRAM_ORDER_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
-  const chatIds = String(process.env.TELEGRAM_ORDER_CHAT_ID || process.env.TELEGRAM_CHAT_ID || '')
-    .split(',').map((s) => s.trim()).filter(Boolean);
+  // Список получателей ведётся в панели бота, а не только в переменных окружения:
+  // добавили человека через /start — заказы сразу идут и ему.
+  let chatIds;
+  try {
+    const { loadCfg } = require('./_store.js');
+    const cfg = await loadCfg();
+    chatIds = (cfg.recipients || []).map(String).filter(Boolean);
+  } catch (e) {
+    console.error('config read failed, falling back to env:', e);
+    chatIds = [];
+  }
+  if (!chatIds.length) {
+    chatIds = String(process.env.TELEGRAM_ORDER_CHAT_ID || process.env.TELEGRAM_CHAT_ID || '')
+      .split(',').map((s) => s.trim()).filter(Boolean);
+  }
 
   if (!token || !chatIds.length) {
     console.error('Telegram credentials are not configured');

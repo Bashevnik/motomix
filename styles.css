@@ -1444,3 +1444,52 @@ body.inner{padding-top:var(--hh)}
 /* підказка, що знімок можна відкрити більше */
 .gallery__main{cursor:zoom-in}
 .gallery__main.drag{cursor:grabbing}
+
+/* =====================================================================
+   v21 — усі типи техніки в шапці, з іконками
+   Третій рівень не робимо: шапка і так займає місце. Замість цього
+   типи стали основним рядком, а сторінки-довідники зібрані під «Ще».
+   ===================================================================== */
+.meganav__in{display:flex;align-items:stretch;gap:5px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.meganav__in::-webkit-scrollbar{display:none}
+.tnav{--c:9px;flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:9px 12px;min-width:0;white-space:nowrap;
+  font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:.8rem;letter-spacing:.03em;
+  background:rgba(11,11,13,.055);box-shadow:inset 0 0 0 1px rgba(11,11,13,.06);color:var(--ink-2);
+  transition:.24s var(--ease);
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.tnav__i{width:30px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ease)}
+.tnav:hover{background:var(--ink);color:#fff;box-shadow:none}
+.tnav:hover .tnav__i{transform:translateX(3px)}
+.tnav.active{background:var(--ink);color:#fff;box-shadow:none}
+.tnav span{overflow:hidden;text-overflow:ellipsis}
+
+.mi--more{flex:0 0 auto}
+.mi--more>a{display:flex;align-items:center;gap:7px}
+.mi--more .icon{width:14px;height:14px}
+
+@media(max-width:1500px){
+  .tnav{padding:9px 9px;font-size:.74rem;gap:7px}
+  .tnav__i{width:26px;height:18px}
+}
+@media(max-width:1320px){
+  .tnav span{display:none}            /* лишаються самі іконки — ряд не ламається */
+  .tnav{padding:10px 8px;flex:1 1 auto}
+  .tnav__i{width:30px;height:20px}
+  .mi--more>a{font-size:.78rem}
+}
+
+/* список усередині інформаційної картки */
+.icard__ul{list-style:none;margin:0;padding:0}
+.icard__ul li{position:relative;padding-left:18px;margin-bottom:9px;color:var(--ash);font-size:.94rem;
+  font-weight:300;line-height:1.55}
+.icard__ul li:last-child{margin-bottom:0}
+.icard__ul li::before{content:"";position:absolute;left:0;top:.66em;width:7px;height:1px;background:var(--ink-2)}
+.icard__ic{color:var(--ink-2)}
+
+/* Меню не робимо скрол-контейнером: він обрізав би випадайку «Ще».
+   Замість цього дозволяємо перенос, а саму випадайку відкриваємо вліво,
+   щоб вона не розтягувала ряд праворуч. */
+.meganav__in{overflow:visible;flex-wrap:wrap}
+.mi--more .mi__drop{left:auto;right:0;min-width:236px}

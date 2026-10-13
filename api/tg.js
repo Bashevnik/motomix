@@ -1,109 +1,207 @@
 // MOTOMIX — вебхук Telegram-бота заявок (t.me/Motomixbc_bot).
 //
-// Зачем он нужен: Telegram не умеет писать человеку по @username — боту нужен
-// числовой chat_id, и получить его можно только после того, как человек сам
-// напишет боту. Этот вебхук закрывает оба конца:
-//   1) допуск проверяется ПО ЮЗЕРНЕЙМУ из TELEGRAM_ALLOWED;
-//   2) допущенному бот сразу отдаёт его chat_id, чтобы добавить в рассылку.
+// Что умеет:
+//   • принимает заказы с сайта (их шлёт /api/order) и рассылает получателям;
+//   • панель администратора на кнопках: список получателей, выдача доступа,
+//     статус, тестовое сообщение;
+//   • доступ выдаётся ПО ЮЗЕРНЕЙМУ — админ добавляет @username, человек
+//     жмёт Start, и бот сам прописывает его chat_id в рассылку.
 //
-// ENV:
-//   TELEGRAM_ORDER_BOT_TOKEN  — токен бота
-//   TELEGRAM_ALLOWED          — кому можно: @username и/или id, через запятую
-//   TELEGRAM_ORDER_CHAT_ID    — кто уже получает заказы, через запятую
-//   TELEGRAM_WEBHOOK_SECRET   — произвольная строка, Telegram шлёт её в заголовке
+// ENV: TELEGRAM_ORDER_BOT_TOKEN, TELEGRAM_ORDER_CHAT_ID (первый = админ),
+//      TELEGRAM_ALLOWED (стартовый список), TELEGRAM_WEBHOOK_SECRET.
 
-const norm = (s) => String(s || '').trim().replace(/^@/, '').toLowerCase();
+const { tg, loadCfg, saveCfg, norm, adminChat } = require('./_store.js');
 
-const parseList = (v) => String(v || '').split(',').map((s) => s.trim()).filter(Boolean);
+const SITE = 'https://motomix.vercel.app';
 
-function isAllowed(from) {
-  const allowed = parseList(process.env.TELEGRAM_ALLOWED).map(norm);
-  const recipients = parseList(process.env.TELEGRAM_ORDER_CHAT_ID).map(norm);
-  if (!allowed.length && !recipients.length) return true;      // ещё не настроено — не запираемся
-  const uname = norm(from && from.username);
-  const id = norm(from && from.id);
-  return allowed.includes(uname) || allowed.includes(id) || recipients.includes(id);
-}
+const isAdmin = (id) => String(id) === String(adminChat());
 
-async function reply(token, chatId, text) {
-  return fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
-  }).then((r) => r.json()).catch((e) => ({ ok: false, error: String(e) }));
+const panelText = (cfg) =>
+  '🏍 <b>MOTOMIX</b> — панель замовлень\n' +
+  '────────────────────\n' +
+  `👥 Отримувачів: <b>${cfg.recipients.length}</b>\n` +
+  `🔑 Доступ за юзернеймом: <b>${cfg.allowed.length ? cfg.allowed.map((u) => '@' + u).join(', ') : 'нікого'}</b>\n\n` +
+  'Сюди падають замовлення з кошика і заявки з сайту.';
+
+const panelKb = () => ({
+  inline_keyboard: [
+    [{ text: '👥 Отримувачі', callback_data: 'list' }, { text: '➕ Додати доступ', callback_data: 'add' }],
+    [{ text: '📊 Статус', callback_data: 'stat' }, { text: '🧾 Тестове замовлення', callback_data: 'demo' }],
+    [{ text: '🌐 Відкрити сайт', url: SITE }],
+  ],
+});
+
+const backKb = () => ({ inline_keyboard: [[{ text: '‹ Назад', callback_data: 'home' }]] });
+
+const send = (chat_id, text, reply_markup) =>
+  tg('sendMessage', { chat_id, text, parse_mode: 'HTML', disable_web_page_preview: true, reply_markup });
+
+const edit = (chat_id, message_id, text, reply_markup) =>
+  tg('editMessageText', { chat_id, message_id, text, parse_mode: 'HTML', disable_web_page_preview: true, reply_markup });
+
+async function listKb(cfg) {
+  const rows = [];
+  for (const id of cfg.recipients) {
+    let name = String(id);
+    const r = await tg('getChat', { chat_id: id });
+    if (r && r.ok && r.result) {
+      const c = r.result;
+      name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.title || String(id);
+      if (c.username) name += ' · @' + c.username;
+    }
+    rows.push([{ text: '❌ ' + name.slice(0, 40), callback_data: 'del:' + id }]);
+  }
+  rows.push([{ text: '‹ Назад', callback_data: 'home' }]);
+  return { inline_keyboard: rows };
 }
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const token = process.env.TELEGRAM_ORDER_BOT_TOKEN;
-  if (!token) return res.status(500).json({ error: 'Bot token not configured' });
-
-  // Telegram возвращает секрет в заголовке — отсекаем посторонние POST-ы.
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (secret && req.headers['x-telegram-bot-api-secret-token'] !== secret) {
     return res.status(401).json({ error: 'Bad secret' });
   }
 
   const upd = req.body || {};
-  const msg = upd.message || upd.edited_message || upd.channel_post;
-  // Всегда отвечаем 200: на любую ошибку Telegram начнёт долбить ретраями.
-  if (!msg) return res.status(200).json({ ok: true });
-
-  const chatId = msg.chat && msg.chat.id;
-  const isGroup = msg.chat && (msg.chat.type === 'group' || msg.chat.type === 'supergroup');
-  const from = msg.from || {};
-  const text = String(msg.text || '').trim();
-  const cmd = text.split(/[\s@]/)[0].toLowerCase();
-
-  const recipients = parseList(process.env.TELEGRAM_ORDER_CHAT_ID);
-  const already = recipients.includes(String(chatId));
+  // Всегда 200: на ошибку Telegram начнёт долбить ретраями.
+  const done = () => res.status(200).json({ ok: true });
 
   try {
-    // В группе важен id самой группы: добавил бота в чат — чат и получает заказы,
-    // а раздача доступа дальше идёт через участников группы, то есть по юзернейму.
-    if (isGroup && (cmd === '/start' || cmd === '/id' || cmd === '/help')) {
-      await reply(token, chatId,
-        `Чат: ${msg.chat.title || '—'}\n` +
-        `ID цього чату: ${chatId}\n\n` +
-        (already
-          ? 'Цей чат уже отримує замовлення з сайту.'
-          : 'Щоб замовлення падали сюди — додай цей ID у змінну TELEGRAM_ORDER_CHAT_ID.\n' +
-            'Далі доступ роздається просто: кого додав у цей чат, той і бачить замовлення.'));
-      return res.status(200).json({ ok: true });
+    const cfg = await loadCfg();
+
+    /* ---------- нажатия кнопок ---------- */
+    if (upd.callback_query) {
+      const q = upd.callback_query;
+      const chat = q.message.chat.id, mid = q.message.message_id;
+      const data = String(q.data || '');
+      await tg('answerCallbackQuery', { callback_query_id: q.id });
+
+      if (!isAdmin(q.from.id)) {
+        await edit(chat, mid, '⛔ Панель доступна лише адміністратору.');
+        return done();
+      }
+
+      if (data === 'home') { cfg.await = null; await saveCfg(cfg); await edit(chat, mid, panelText(cfg), panelKb()); return done(); }
+
+      if (data === 'list') {
+        if (!cfg.recipients.length) { await edit(chat, mid, '👥 Отримувачів поки нема.', backKb()); return done(); }
+        await edit(chat, mid, '👥 <b>Хто отримує замовлення</b>\n\nНатисніть, щоб прибрати:', await listKb(cfg));
+        return done();
+      }
+
+      if (data.startsWith('del:')) {
+        const id = data.slice(4);
+        cfg.recipients = cfg.recipients.filter((x) => String(x) !== id);
+        await saveCfg(cfg);
+        await edit(chat, mid, '👥 <b>Хто отримує замовлення</b>\n\nНатисніть, щоб прибрати:', await listKb(cfg));
+        return done();
+      }
+
+      if (data === 'add') {
+        cfg.await = 'user';
+        await saveCfg(cfg);
+        await edit(chat, mid,
+          '➕ <b>Видати доступ</b>\n\nНадішліть юзернейм у форматі <code>@username</code>.\n\n' +
+          'Далі людина відкриває @Motomixbc_bot і тисне <b>Старт</b> — після цього замовлення почнуть приходити і їй.\n\n' +
+          '<i>Telegram не дозволяє боту написати першим, тому крок зі «Старт» обовʼязковий.</i>', backKb());
+        return done();
+      }
+
+      if (data === 'stat') {
+        const me = await tg('getMe', {});
+        const wh = await tg('getWebhookInfo', {});
+        await edit(chat, mid,
+          '📊 <b>Статус</b>\n────────────────────\n' +
+          `Бот: ${me.ok ? '@' + me.result.username + ' ✅' : '❌'}\n` +
+          `Вебхук: ${wh.ok && wh.result.url ? '✅ підключено' : '❌ немає'}\n` +
+          `У черзі: ${wh.ok ? wh.result.pending_update_count : '?'}\n` +
+          `Отримувачів: ${cfg.recipients.length}\n` +
+          `Доступ мають: ${cfg.allowed.length ? cfg.allowed.map((u) => '@' + u).join(', ') : '—'}`, backKb());
+        return done();
+      }
+
+      if (data === 'demo') {
+        await send(chat,
+          '🛒 НОВЕ ЗАМОВЛЕННЯ — MOTOMIX\n────────────────────\n' +
+          "Ім'я: Тестовий Покупець\nТелефон: +38 093 000 00 00\n────────────────────\n" +
+          'ТОВАРИ (1 поз., 1 шт):\n1. KOVI 300 PRO Motard\n   1 шт × 3 300 $  =  138 600 грн\n' +
+          `   ${SITE}/product.html?id=kovi-300-pro-motard-2026-novyy\n` +
+          '────────────────────\nРАЗОМ: 138 600 грн\nЧас: приклад');
+        await edit(chat, mid, panelText(cfg) + '\n\n🧾 Приклад надіслано вище.', panelKb());
+        return done();
+      }
+
+      return done();
     }
 
-    if (!isAllowed(from)) {
-      await reply(token, chatId,
-        '⛔ Доступу немає.\n\n' +
-        `Твій ID: ${from.id}\n` +
-        (from.username ? `Юзернейм: @${from.username}\n` : 'Юзернейма нема — постав його в налаштуваннях Telegram.\n') +
-        '\nПопроси адміністратора додати тебе — достатньо юзернейма.');
-      return res.status(200).json({ ok: true });
+    /* ---------- обычные сообщения ---------- */
+    const msg = upd.message || upd.edited_message;
+    if (!msg) return done();
+
+    const chat = msg.chat.id;
+    const isGroup = msg.chat.type === 'group' || msg.chat.type === 'supergroup';
+    const from = msg.from || {};
+    const text = String(msg.text || '').trim();
+    const cmd = text.split(/[\s@]/)[0].toLowerCase();
+
+    // В группе: сам чат становится получателем — дальше доступ раздаётся
+    // добавлением людей в этот чат.
+    if (isGroup) {
+      if (cmd === '/start' || cmd === '/id' || cmd === '/help') {
+        const already = cfg.recipients.map(String).includes(String(chat));
+        if (!already && isAdmin(from.id)) {
+          cfg.recipients.push(String(chat));
+          await saveCfg(cfg);
+        }
+        await send(chat,
+          `Чат: ${msg.chat.title || '—'}\nID: <code>${chat}</code>\n\n` +
+          (already ? 'Цей чат уже отримує замовлення.'
+            : isAdmin(from.id) ? '✅ Готово — замовлення тепер приходять у цей чат.\nКого додасте в чат, той і бачитиме заявки.'
+              : 'Щоб підключити цей чат, команду має надіслати адміністратор.'));
+      }
+      return done();
     }
 
-    if (cmd === '/start' || cmd === '/help') {
-      await reply(token, chatId,
-        '🏍 MOTOMIX — бот заявок\n' +
-        '────────────────────\n' +
-        'Сюди падають замовлення з кошика і заявки з сайту:\n' +
-        'що замовили, скільки, на яку суму і куди передзвонити.\n\n' +
-        `Твій chat_id: ${chatId}\n` +
-        (already ? '✅ Ти вже в розсилці.' : '⚠️ Тебе ще нема в розсилці — передай цей ID адміну.') +
-        '\n\nКоманди:\n/id — показати свій ID\n/help — ця довідка');
-      return res.status(200).json({ ok: true });
+    // Админ ввёл юзернейм после кнопки «Добавить доступ»
+    if (isAdmin(from.id) && cfg.await === 'user' && /^@?[A-Za-z0-9_]{4,32}$/.test(text)) {
+      const u = norm(text);
+      if (!cfg.allowed.includes(u)) cfg.allowed.push(u);
+      cfg.await = null;
+      await saveCfg(cfg);
+      await send(chat,
+        `✅ Доступ видано: <b>@${u}</b>\n\n` +
+        'Залишилось: людина відкриває @Motomixbc_bot і тисне <b>Старт</b>. ' +
+        'Після цього замовлення приходитимуть і їй.', panelKb());
+      return done();
     }
 
-    if (cmd === '/id') {
-      await reply(token, chatId,
-        `chat_id: ${chatId}\n` +
-        `user_id: ${from.id}\n` +
-        (from.username ? `username: @${from.username}` : 'username: не заданий'));
-      return res.status(200).json({ ok: true });
+    if (isAdmin(from.id)) {
+      if (cmd === '/start' || cmd === '/help' || cmd === '/menu') { await send(chat, panelText(cfg), panelKb()); return done(); }
+      if (cmd === '/id') { await send(chat, `chat_id: <code>${chat}</code>`); return done(); }
+      await send(chat, panelText(cfg), panelKb());
+      return done();
     }
 
-    await reply(token, chatId, 'Я приймаю замовлення з сайту. /help — що вмію.');
-    return res.status(200).json({ ok: true });
+    // Не админ: пускаем, если юзернейм в списке — и сразу подписываем на заказы
+    const uname = norm(from.username);
+    const allowed = uname && cfg.allowed.includes(uname);
+    if (allowed) {
+      const already = cfg.recipients.map(String).includes(String(chat));
+      if (!already) { cfg.recipients.push(String(chat)); await saveCfg(cfg); }
+      await send(chat,
+        '🏍 <b>MOTOMIX</b>\n────────────────────\n' +
+        (already ? 'Ви вже отримуєте замовлення з сайту.' : '✅ Готово! Тепер замовлення з сайту приходитимуть сюди.') +
+        '\n\nУ повідомленні буде: що замовили, скільки, на яку суму і номер покупця.');
+      return done();
+    }
+
+    await send(chat,
+      '⛔ Доступу немає.\n\n' +
+      `Ваш ID: <code>${from.id}</code>\n` +
+      (from.username ? `Юзернейм: @${from.username}` : 'Юзернейма нема — задайте його в налаштуваннях Telegram.') +
+      '\n\nПопросіть адміністратора видати доступ — достатньо юзернейма.');
+    return done();
   } catch (e) {
     console.error('tg webhook error:', e);
     return res.status(200).json({ ok: true });

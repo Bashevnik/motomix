@@ -39,6 +39,9 @@ const REVIEWS = [
   { n:'Дарина', c:'Київ', av:'assets/reviews/r28.jpg', t:'Нормальні хлопці, самі катають. Це видно по питаннях, які ставлять при підборі. Не продавці, а мотоциклісти.' },
 ];
 
+/* усі стрічки на сайті гортаються самі: одна комірка раз на 3 секунди */
+const SWIPE_MS = 3000;
+
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
@@ -371,7 +374,7 @@ function renderRail() {
   };
   let timer = null;
   const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
-  const restart = () => { clearInterval(timer); timer = setInterval(tick, 3000); };
+  const restart = () => { clearInterval(timer); timer = setInterval(tick, SWIPE_MS); };
   document.getElementById('rail-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
   document.getElementById('rail-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
   view.addEventListener('mouseenter', () => clearInterval(timer));
@@ -409,7 +412,7 @@ function renderReviews() {
     if (bar) bar.style.width = `${((idx + 1) / (maxIdx() + 1)) * 100}%`;
   };
   const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
-  const restart = () => { clearInterval(timer); timer = setInterval(tick, 4200); };
+  const restart = () => { clearInterval(timer); timer = setInterval(tick, SWIPE_MS); };
   document.getElementById('rev-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
   document.getElementById('rev-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
   view.addEventListener('mouseenter', () => clearInterval(timer));
