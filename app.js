@@ -52,7 +52,7 @@ const webpOf = (s) => String(s || '').replace(/.(jpe?g|png)$/i, '.webp');
 const picCard = (src, attrs, sizes) => {
   const w = webpOf(src);
   const sm = w.replace('/olx/', '/olx/sm/');
-  return `<picture><source type="image/webp" srcset="${sm} 480w, ${w} 900w" sizes="${sizes || '(max-width:620px) 50vw, (max-width:1180px) 33vw, 20vw'}"><img src="${src}" ${attrs || ''}></picture>`;
+  return `<picture><source type="image/webp" srcset="${sm} 400w, ${w} 900w" sizes="${sizes || '(max-width:620px) 50vw, (max-width:1180px) 33vw, 20vw'}"><img src="${src}" ${attrs || ''}></picture>`;
 };
 
 const pic = (src, attrs) =>
