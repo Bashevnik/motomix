@@ -1137,6 +1137,17 @@ function initChrome() {
   });
 }
 
+/* ховаємо плаваючу кнопку, коли дійшли до підвалу — вона перекривала
+   нижній рядок із посиланнями */
+function initFabHide() {
+  const fab = document.querySelector('.callback-fab');
+  const foot = document.querySelector('.footer__base');
+  if (!fab || !foot) return;
+  new IntersectionObserver((e) => {
+    fab.classList.toggle('tucked', e[0].isIntersecting);
+  }, { rootMargin: '0px 0px -10px 0px' }).observe(foot);
+}
+
 function revealInit() {
   const io = new IntersectionObserver((e) => e.forEach(x => {
     if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); }
@@ -1246,7 +1257,7 @@ function initSmooth() {
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
-  initChrome(); initModal(); initCards(); initCart(); initInlineForms();
+  initChrome(); initModal(); initCards(); initCart(); initInlineForms(); initFabHide();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct(); renderReviews();
   initAcc(); revealInit(); initSmooth();
 

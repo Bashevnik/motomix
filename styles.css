@@ -1617,3 +1617,12 @@ picture{display:contents}
 /* тонкий контур віддаляє літери від чорного тла, як кант на баку */
 .footer__mark{position:relative}
 .footer__rule{background:linear-gradient(90deg,transparent,rgba(224,27,36,.55),rgba(255,255,255,.5),rgba(224,27,36,.55),transparent)}
+
+/* логотип по максимуму в межах верхнього рядка */
+.brand img,.header.scrolled .brand img{height:76px}
+@media(max-width:980px){ .brand img,.header.scrolled .brand img{height:46px} }
+
+/* Коли видно підвал, плаваюча кнопка ховається: там і так є телефон,
+   а так вона перекривала нижній рядок із підписом студії. */
+.callback-fab{transition:.4s var(--ease),opacity .3s,visibility .3s}
+.callback-fab.tucked{opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);pointer-events:none}
