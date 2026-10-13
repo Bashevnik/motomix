@@ -1522,3 +1522,25 @@ body.inner{padding-top:var(--hh)}
 /* Торгові марки — клікабельні: ведуть у каталог із цим брендом */
 .bchip{text-decoration:none;transition:.26s var(--ease)}
 a.bchip:hover{background:var(--ink);color:#fff;box-shadow:none}
+
+/* =====================================================================
+   v23 — зони натискання під палець
+   Дрібна кнопка на телефоні — це промахи й роздратування. Усе, по чому
+   реально тиснуть, доводимо мінімум до 44px у висоту.
+   ===================================================================== */
+@media(max-width:980px){
+  .pcard__add{min-height:44px;padding:12px 10px}
+  .hcart,.header__phone{width:42px;height:42px}
+  .burger{width:44px;height:44px}
+  .fdd__b{min-height:44px}
+  .fdd__reset{min-height:44px;display:inline-flex;align-items:center}
+  .fsort{min-height:44px}
+  .fdd__p button{min-height:44px}
+  .qty__b{width:40px;height:40px}
+  .qty__i{height:40px;width:40px}
+  .ci__del{width:40px;height:40px}
+  .cart__x{width:44px;height:44px}
+  .pdesc__more{min-height:44px}
+  .gallery__thumbs button{height:58px}
+  .cart__clear{min-height:44px}
+}
