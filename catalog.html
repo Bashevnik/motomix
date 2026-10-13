@@ -8,9 +8,10 @@
     <meta name="description" content="Каталог MOTOMIX: 45 позицій — мотоцикли, квадроцикли, електроскутери, аксесуари. KOVI, LIFAN, GEON, KAYO, SHINERAY. Біла Церква.">
     <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
     <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
@@ -42,11 +43,7 @@
           var key = q.get('type') || q.get('cat');
           var img = document.getElementById('cat-img');
           var src = (key && MAP[key]) || DEF;
-          if (img) {
-            // webp легший на чверть; якщо браузер не вміє — тихо вертаємось на jpg
-            img.onerror = function () { img.onerror = null; img.src = src; };
-            img.src = src.replace(/.jpe?g$/i, '.webp');
-          }
+          if (img) img.src = src;
         })();
         </script>
         <div class="wrap phero__in">
@@ -83,7 +80,7 @@
     </section>
 
     <section class="cta">
-        <picture><source srcset="/assets/olx/kovi-300-pro-motard-2026-novyy-3.webp" type="image/webp"><img class="cta__bg" src="/assets/olx/kovi-300-pro-motard-2026-novyy-3.jpg" alt="" loading="lazy" decoding="async"></picture>
+        <img class="cta__bg" src="/assets/olx/kovi-300-pro-motard-2026-novyy-3.jpg" alt="" loading="lazy" decoding="async">
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">

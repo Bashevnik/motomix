@@ -65,25 +65,14 @@ function routeParams() {
 
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
-/* webp легший за jpeg приблизно на чверть; <picture> сам обирає формат,
-   а старий браузер отримає звичайний jpg із src */
-/* Шляхи з data.js відносні, а сторінки тепер живуть на /catalog/enduro
-   і /product/xxx — без провідного слеша браузер шукав би їх у підпапці. */
+/* Повертаємо просте <img> з оригінальним файлом.
+   WebP-перекодування давало другий прохід втратного стиснення поверх
+   того, що вже зробив OLX, і на дрібних деталях це було видно. Швидкість
+   тут важить менше за те, як техніка виглядає на фото. */
 const abs = (p) => (!p || /^(https?:|\/|data:)/.test(p)) ? p : '/' + p;
-const webpOf = (s) => abs(String(s || '')).replace(/\.(jpe?g|png)$/i, '.webp');
-
-const pic = (src0, attrs) => {
-  const src = abs(src0);
-  return `<picture><source srcset="${webpOf(src)}" type="image/webp"><img src="${src}" ${attrs || ''}></picture>`;
-};
-
-/* для карточок і плиток браузер сам обирає менший файл */
-const picCard = (src0, attrs, sizes) => {
-  const src = abs(src0);
-  const w = webpOf(src);
-  const sm = w.replace('/olx/', '/olx/sm/');
-  return `<picture><source type="image/webp" srcset="${sm} 600w, ${w} 900w" sizes="${sizes || '(max-width:620px) 50vw, (max-width:1180px) 33vw, 20vw'}"><img src="${src}" ${attrs || ''}></picture>`;
-};
+const pic = (src0, attrs) => `<img src="${abs(src0)}" ${attrs || ''}>`;
+const picCard = (src0, attrs) => `<img src="${abs(src0)}" ${attrs || ''}>`;
+const webpOf = (s) => abs(s);
 
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const priceText = (p) => p.priceRaw || "Ціна за запитом";
@@ -1026,7 +1015,7 @@ function initDelivery() {
   const city = document.getElementById('npCity'), wh = document.getElementById('npWh');
   const cityList = document.getElementById('npCityList'), whList = document.getElementById('npWhList');
   const hint = document.getElementById('npHint');
-  let mode = 'np', cityRef = '', manual = false;
+  let mode = '', cityRef = '', manual = false;
 
   const showHint = (t) => { if (!hint) return; hint.hidden = !t; hint.textContent = t || ''; };
 
@@ -1110,9 +1099,23 @@ function initDelivery() {
     if (!e.target.closest('#npWhList') && e.target !== wh) whList.hidden = true;
   });
 
-  setMode('np');
+  // Нічого не вибираємо за людину: спосіб доставки має бути свідомим вибором,
+  // інакше половина замовлень приїде з порожнім «Нова Пошта».
+  fields.hidden = true;
+  pickBox.hidden = true;
+  showHint('Оберіть спосіб доставки');
+
+  // Повертає текст помилки або порожньо, якщо все заповнено
+  window.__deliveryError = () => {
+    if (!mode) return { msg: 'Оберіть спосіб доставки', focus: null };
+    if (mode === 'pickup') return null;
+    if (!city.value.trim()) return { msg: 'Вкажіть місто доставки', focus: city };
+    if (!wh.value.trim()) return { msg: 'Вкажіть відділення', focus: wh };
+    return null;
+  };
 
   window.__deliveryValue = () => {
+    if (!mode) return '';
     if (mode === 'pickup') return 'Самовивіз — вул. Сухоярська, Біла Церква';
     const c = city.value.trim(), w = wh.value.trim();
     if (!c && !w) return '';
@@ -1300,6 +1303,22 @@ function renderCheckout() {
       note.textContent = '⚠️ Вкажіть номер телефону — без нього ми не зможемо передзвонити.';
       note.className = 'form__note err';
       form.querySelector('[name=phone]').focus();
+      return;
+    }
+
+    const dErr = window.__deliveryError ? window.__deliveryError() : null;
+    if (dErr) {
+      const block = document.querySelector('.dlv');
+      if (block) {
+        block.classList.add('dlv--bad');
+        const y = window.scrollY + block.getBoundingClientRect().top - 140;
+        if (window.__lenis) window.__lenis.scrollTo(y, { duration: .6 });
+        else window.scrollTo({ top: y, behavior: 'smooth' });
+        setTimeout(() => { if (dErr.focus) dErr.focus.focus(); }, 480);
+        setTimeout(() => block.classList.remove('dlv--bad'), 2600);
+      }
+      note.textContent = '⚠️ ' + dErr.msg;
+      note.className = 'form__note err';
       return;
     }
 

@@ -8,9 +8,10 @@
     <meta name="description" content="Доставка мототехніки по всій Україні без передоплати. Оплата готівкою, карткою, безготівково. Гарантія та сервіс MOTOMIX.">
     <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
     <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
@@ -21,7 +22,7 @@
     <div data-include="/components/header.html"></div>
 
     <section class="phero">
-        <div class="phero__media"><picture><source srcset="/assets/hero/forest-ride.webp" type="image/webp"><img src="/assets/hero/forest-ride.jpg" alt=""></picture></div>
+        <div class="phero__media"><img src="/assets/hero/forest-ride.jpg" alt=""></div>
         <div class="wrap phero__in">
             <div class="crumbs"><a href="/">Головна</a><em>›</em><span>Доставка та оплата</span></div>
             <h1>Доставка<br>та оплата</h1>
@@ -95,7 +96,7 @@
     </section>
 
     <section class="cta">
-        <picture><source srcset="/assets/olx/kayo-t2-250-2026-nova-2.webp" type="image/webp"><img class="cta__bg" src="/assets/olx/kayo-t2-250-2026-nova-2.jpg" alt="" loading="lazy" decoding="async"></picture>
+        <img class="cta__bg" src="/assets/olx/kayo-t2-250-2026-nova-2.jpg" alt="" loading="lazy" decoding="async">
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">

@@ -8,9 +8,10 @@
     <meta name="description" content="MOTOMIX — мототехніка у Білій Церкві: мотоцикли, ендуро, пітбайки, квадроцикли, електроскутери. KOVI, LIFAN, GEON, KAYO, SHINERAY. Доставка по Україні без передоплати.">
     <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
     <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
@@ -22,7 +23,7 @@
 
     <!-- 01 · HERO -->
     <section class="hero">
-        <div class="hero__media"><picture><source srcset="/assets/hero/hero-main.webp" type="image/webp"><img src="/assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></picture></div>
+        <div class="hero__media"><img src="/assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></div>
         <div class="wrap hero__inner">
             <div class="hero__copy">
                 <span class="eyebrow hero__eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Мототехніка · Біла Церква</span>
@@ -87,7 +88,7 @@
         <div class="wrap">
             <div class="story">
                 <div class="story__media rv">
-                    <picture><source srcset="/assets/hero/story-2.webp" type="image/webp"><img src="/assets/hero/story-2.jpg" alt="Ендуро в русі" loading="lazy" decoding="async"></picture>
+                    <img src="/assets/hero/story-2.jpg" alt="Ендуро в русі" loading="lazy" decoding="async">
                     <span class="story__tag">Ендуро</span>
                 </div>
                 <div class="story__text rv">
@@ -122,7 +123,7 @@
         <div class="wrap">
             <div class="story story--rev">
                 <div class="story__media rv">
-                    <picture><source srcset="/assets/hero/story-1.webp" type="image/webp"><img src="/assets/hero/story-1.jpg" alt="Мотоцикл на дорозі" loading="lazy" decoding="async"></picture>
+                    <img src="/assets/hero/story-1.jpg" alt="Мотоцикл на дорозі" loading="lazy" decoding="async">
                     <span class="story__tag">Сервіс</span>
                 </div>
                 <div class="story__text rv">
@@ -158,7 +159,7 @@
 
     <!-- 09 · TRADE-IN CTA -->
     <section class="cta">
-        <picture><source srcset="/assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.webp" type="image/webp"><img class="cta__bg" src="/assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.jpg" alt="" loading="lazy" decoding="async"></picture>
+        <img class="cta__bg" src="/assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.jpg" alt="" loading="lazy" decoding="async">
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">

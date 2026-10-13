@@ -9,9 +9,10 @@
     <meta name="robots" content="noindex">
     <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
     <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
-    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-cyrillic.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-cyrillic.woff2" crossorigin>
+    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
@@ -45,7 +46,7 @@
                         <h2 class="co__sec">2. Доставка</h2>
                         <div class="dlv">
                             <div class="dlv__tabs" role="tablist">
-                                <button type="button" class="dlv__tab is-on" data-dlv="np">Нова Пошта</button>
+                                <button type="button" class="dlv__tab" data-dlv="np">Нова Пошта</button>
                                 <button type="button" class="dlv__tab" data-dlv="up">Укрпошта</button>
                                 <button type="button" class="dlv__tab" data-dlv="mist">Міст Експрес</button>
                                 <button type="button" class="dlv__tab" data-dlv="pickup">Самовивіз</button>
