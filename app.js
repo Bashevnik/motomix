@@ -625,7 +625,7 @@ function renderProduct() {
     <div class="gallery-col">
       <div class="gallery">
         <div class="gallery__main" id="galMain" style="--galr:${p.ar || 1.333}">
-          <div class="gallery__strip" id="galStrip">${gal.map(g => `<div class="gallery__slide">${pic(g, `alt="${n.title}" draggable="false" decoding="async"`)}</div>`).join("")}</div>
+          <div class="gallery__strip" id="galStrip">${gal.map((g, gi) => `<div class="gallery__slide">${pic(g, `alt="${n.title}" draggable="false" decoding="async" ` + (gi ? 'loading="lazy"' : 'fetchpriority="high"'))}</div>`).join("")}</div>
           ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" type="button" aria-label="Попереднє фото">${ico("ic-arrow-l")}</button>
           <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
           <span class="gallery__count" id="galCount">1 / ${gal.length}</span>` : ""}
