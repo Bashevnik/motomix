@@ -302,6 +302,7 @@ function renderCats() {
       <span class="cat__n num-out">0${i + 1}</span>
       <div class="cat__body">
         <div class="cat__bar"></div>
+        <svg class="cat__ico"><use href="#${c.icon || 'ic-bike'}"></use></svg>
         <div class="cat__name">${c.name}</div>
         <div class="cat__meta">${c.short || ""}</div>
       </div>
@@ -397,7 +398,7 @@ function renderCatalog() {
       if (link) link.removeAttribute("href");
       document.title = "Каталог мототехніки — MOTOMIX";
     } else {
-      if (h1) h1.textContent = c;
+      if (h1) h1.innerHTML = (meta && meta.icon ? `<svg class="h1ico"><use href="#${meta.icon}"></use></svg>` : "") + c;
       if (desc) desc.textContent = meta ? meta.d : "";
       if (tail) tail.innerHTML = `<em>›</em><span>${c}</span>`;
       if (link) link.setAttribute("href", "catalog.html");
@@ -431,7 +432,9 @@ function renderCatalog() {
       panel.innerHTML = "";
       cfg.values.forEach(v => {
         const n = countFor(g, v);
-        const o = el(`<button type="button" class="${state[g] === v ? "sel" : ""}" ${!n && v !== ALL ? "disabled" : ""}>${v}<i>${n}</i></button>`);
+        const ic = g === "type" ? (CATEGORIES.find(c => c.name === v) || {}).icon : null;
+        const o = el(`<button type="button" class="${state[g] === v ? "sel" : ""}" ${!n && v !== ALL ? "disabled" : ""}>` +
+          `<span class="fopt">${ic ? `<svg class="fopt__ico"><use href="#${ic}"></use></svg>` : ""}${v}</span><i>${n}</i></button>`);
         o.addEventListener("click", () => { state[g] = v; box.classList.remove("open"); draw(); });
         panel.appendChild(o);
       });
@@ -985,6 +988,36 @@ function initModal() {
   });
 }
 
+/* форми, вбудовані прямо в сторінку (контакти) — без модалки */
+function initInlineForms() {
+  document.querySelectorAll('[data-inline-form]').forEach(form => {
+    const note = form.querySelector('.form__note');
+    const btn = form.querySelector('button[type="submit"]');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = {
+        subject: fd.get('subject') || 'Заявка з сайту',
+        name: fd.get('name'), phone: fd.get('phone'),
+        comment: fd.get('comment'), company: fd.get('company'),
+        page: location.pathname + location.search,
+      };
+      if (note) { note.textContent = 'Відправляємо…'; note.className = 'form__note fband__note'; }
+      if (btn) btn.disabled = true;
+      try {
+        const r = await fetch(ORDER_ENDPOINT || '/api/order', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+        });
+        if (!r.ok) throw new Error('bad status');
+        if (note) { note.textContent = '✅ Дякуємо! Передзвонимо найближчим часом.'; note.className = 'form__note fband__note ok'; }
+        form.reset();
+      } catch {
+        if (note) { note.textContent = '⚠️ Не вдалось відправити. Подзвоніть: +38 093 870 11 07'; note.className = 'form__note fband__note err'; }
+      } finally { if (btn) btn.disabled = false; }
+    });
+  });
+}
+
 function initSmooth() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const s = document.createElement('script');
@@ -1010,7 +1043,7 @@ function initSmooth() {
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
-  initChrome(); initModal(); initCards(); initCart();
+  initChrome(); initModal(); initCards(); initCart(); initInlineForms();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
   initAcc(); revealInit(); initSmooth();
 
