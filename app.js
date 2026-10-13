@@ -6,11 +6,37 @@ const CATEGORIES = window.MM_CATEGORIES || [];
 const PRODUCTS   = window.MM_PRODUCTS   || [];
 const BRANDS     = window.MM_BRANDS     || [];
 
-/* ЗАГЛУШКА: приклади відгуків — замінити на реальні від клієнта */
+/* ЗАГЛУШКА: демонстраційні відгуки — замінити на реальні від клієнта.
+   Імена, міста й тексти вигадані, фото згенеровані нейромережею.
+   Ім'я під кожним фото підібране так, щоб не було розбіжності з портретом. */
 const REVIEWS = [
   { n:'Андрій', c:'Біла Церква', av:'assets/reviews/r1.jpg', t:'Брав ендуро — підібрали під мій зріст, не нав\'язували дорожче. Підготували, пояснили по обслуговуванню. Катаю другий сезон, питань нема.' },
   { n:'Олег', c:'Київ', av:'assets/reviews/r2.jpg', t:'Привезли в Київ без передоплати, як і домовлялись. Документи всі на місці, поставив на облік без проблем.' },
   { n:'Віталій', c:'Фастів', av:'assets/reviews/r3.jpg', t:'Здав старий мопед по Trade-in, доплатив різницю. Оцінили нормально, без заниження. Рекомендую.' },
+  { n:'Оксана', c:'Васильків', av:'assets/reviews/r4.jpg', t:'Купували чоловікові на день народження. Допомогли вибрати так, щоб сюрприз не зіпсувати, і притримали модель до дати.' },
+  { n:'Ірина', c:'Біла Церква', av:'assets/reviews/r5.jpg', t:'Брала електроскутер для міста. Чесно сказали, що взимку запас ходу менший, ніж у паспорті. Приємно, коли не прикрашають.' },
+  { n:'Дмитро', c:'Обухів', av:'assets/reviews/r6.jpg', t:'Купував квадроцикл для дачі. Привезли, зібрали на місці, показали як обслуговувати. Дрібниця, а приємно.' },
+  { n:'Наталія', c:'Сквира', av:'assets/reviews/r7.jpg', t:'Син просив пітбайк. Боялася, що буде зависоко. Підібрали за зростом, пояснили хлопцю техніку безпеки, допомогли з шоломом.' },
+  { n:'Світлана', c:'Київ', av:'assets/reviews/r8.jpg', t:'Відповіли в Instagram уночі за десять хвилин і скинули відео моделі зі складу. Не чекала такої швидкості.' },
+  { n:'Марія', c:'Миронівка', av:'assets/reviews/r9.jpg', t:'Довго вагалась між скутером і мопедом. Дали посидіти на обох, нічого не підганяли. Поїхала на скутері й задоволена.' },
+  { n:'Юлія', c:'Кагарлик', av:'assets/reviews/r10.jpg', t:'Ціна виявилась такою, як на сайті. Без «ой, це вже продано, є дорожче». Для мене це головне.' },
+  { n:'Катерина', c:'Переяслав', av:'assets/reviews/r11.jpg', t:'Замовляла доставку в село, глухий кут без адреси. Домовились по орієнтирах, водій знайшов. Усе приїхало в заводській плівці.' },
+  { n:'Олена', c:'Біла Церква', av:'assets/reviews/r12.jpg', t:'Зверталась по сервіс не там, де купувала. Все одно взяли, зробили за день і не накрутили ціну.' },
+  { n:'Тетяна', c:'Тараща', av:'assets/reviews/r13.jpg', t:'Брали мотоцикл чоловікові, я платила. Пояснили різницю між моделями мені, а не «через чоловіка». Дрібниця, але запам\'яталось.' },
+  { n:'Анна', c:'Узин', av:'assets/reviews/r14.jpg', t:'Купували сину на повноліття. Порадили не найпотужніше, а те, на чому він безпечно навчиться. Могли продати дорожче — не стали.' },
+  { n:'Тарас', c:'Київ', av:'assets/reviews/r15.jpg', t:'Взяв KOVI JNR 250 Pro. Перед видачею все перебрали, виставили підвіску під мою вагу. Видно, що роблять для себе, а не аби продати.' },
+  { n:'Вікторія', c:'Ржищів', av:'assets/reviews/r16.jpg', t:'Здала стару Альфу по Trade-in, яку ніхто не хотів брати. Зарахували в рахунок нового. Швидко, без зайвих оглядів.' },
+  { n:'Микола', c:'Біла Церква', av:'assets/reviews/r17.jpg', t:'Обслуговуюсь тут третій сезон. Запчастини є або привозять за тиждень. Ціни адекватні.' },
+  { n:'Віктор', c:'Фастів', av:'assets/reviews/r18.jpg', t:'Приїхав просто подивитись, без наміру купувати сьогодні. Ніхто не висів над душею. Повернувся через тиждень і купив.' },
+  { n:'Людмила', c:'Володарка', av:'assets/reviews/r20.jpg', t:'Замовляла шолом і екіпіровку. Підібрали розмір, дали поміряти кілька варіантів. Не «беріть цей, він останній».' },
+  { n:'Софія', c:'Київ', av:'assets/reviews/r21.jpg', t:'Купувала в подарунок, хвилювалась щодо розміру. Сказали: не підійде — обміняємо. Підійшло, але сам факт підкупив.' },
+  { n:'Анатолій', c:'Біла Церква', av:'assets/reviews/r22.jpg', t:'Взяв квадроцикл 4x4 на господарство. Возить причіп, тягне по багнюці. За рік тільки масло міняв.' },
+  { n:'Роман', c:'Богуслав', av:'assets/reviews/r23.jpg', t:'Взяв KAYO T2 250 під ліс. За сезон жодної поломки, тільки планове ТО. Масло і фільтри брав тут же.' },
+  { n:'Євген', c:'Київ', av:'assets/reviews/r24.jpg', t:'Замовляв LIFAN KPT 400. Чекав два тижні, попереджали чесно про строк. Привезли день у день.' },
+  { n:'Назар', c:'Сквира', av:'assets/reviews/r25.jpg', t:'Пояснили різницю між карбюратором і інжектором людською мовою, без понтів. Взяв інжектор, узимку заводиться з пів оберта.' },
+  { n:'Галина', c:'Миронівка', av:'assets/reviews/r26.jpg', t:'Після купівлі дзвонили через місяць, питали як техніка. Не щоб щось продати, просто дізнатись. Таке рідко буває.' },
+  { n:'Владислав', c:'Обухів', av:'assets/reviews/r27.jpg', t:'Shineray NitroX 300 брав під місто і трасу. По асфальту тримає впевнено, 110 їде спокійно. За свої гроші — топ.' },
+  { n:'Дарина', c:'Київ', av:'assets/reviews/r28.jpg', t:'Нормальні хлопці, самі катають. Це видно по питаннях, які ставлять при підборі. Не продавці, а мотоциклісти.' },
 ];
 
 /* ---------------- helpers ---------------- */
@@ -354,6 +380,44 @@ function renderRail() {
   go(0); restart();
 }
 
+/* --- стрічка відгуків: автопрокрутка, пауза при наведенні, стрілки --- */
+function renderReviews() {
+  const track = document.getElementById('reviews'); if (!track) return;
+  REVIEWS.forEach(r => track.appendChild(el(`
+    <article class="rev">
+      <div class="rev__top">
+        <div class="rev__av">${r.av ? `<img src="${r.av}" alt="" loading="lazy" width="200" height="200">` : r.n[0]}</div>
+        <div class="rev__who"><b>${r.n}</b><span>${r.c}</span></div>
+      </div>
+      <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
+      <p>${r.t}</p>
+    </article>`)));
+
+  const view = track.parentElement;
+  if (!view) return;
+  let idx = 0, timer = null;
+  const step = () => {
+    const card = track.children[0]; if (!card) return 1;
+    return card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).gap) || 18);
+  };
+  const perView = () => Math.max(1, Math.round(view.clientWidth / step()));
+  const maxIdx = () => Math.max(0, track.children.length - perView());
+  const go = (n) => {
+    idx = Math.max(0, Math.min(n, maxIdx()));
+    track.style.transform = `translateX(${-idx * step()}px)`;
+    const bar = document.querySelector('#rev-bar i');
+    if (bar) bar.style.width = `${((idx + 1) / (maxIdx() + 1)) * 100}%`;
+  };
+  const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
+  const restart = () => { clearInterval(timer); timer = setInterval(tick, 4200); };
+  document.getElementById('rev-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
+  document.getElementById('rev-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
+  view.addEventListener('mouseenter', () => clearInterval(timer));
+  view.addEventListener('mouseleave', restart);
+  window.addEventListener('resize', () => go(idx));
+  go(0); restart();
+}
+
 /* --- catalog: sticky sidebar filters + grid --- */
 function renderCatalog() {
   const grid = document.getElementById("catalog-grid"); if (!grid) return;
@@ -513,7 +577,7 @@ function renderProduct() {
   root.innerHTML = `
     <div class="gallery-col">
       <div class="gallery">
-        <div class="gallery__main" id="galMain">
+        <div class="gallery__main" id="galMain" style="--galr:${p.ar || 1.333}">
           <div class="gallery__strip" id="galStrip">${gal.map(g => `<div class="gallery__slide" style="--bg:url('${g}')"><img src="${g}" alt="${n.title}" draggable="false"></div>`).join("")}</div>
           ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" type="button" aria-label="Попереднє фото">${ico("ic-arrow-l")}</button>
           <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
@@ -578,45 +642,12 @@ function renderProduct() {
     moreBtn.innerHTML = (open ? "Згорнути " : "Переглянути більше ") + ico("ic-chev");
   });
 
+  window.__gal = gal;
   initGallery(gal.length);
-  fitGallery(gal);
   initAcc();
   const rel = document.getElementById('related');
   if (rel) PRODUCTS.filter(x => (x.type || x.cat) === (p.type || p.cat) && x.id !== p.id).slice(0, 5)
     .forEach(x => rel.appendChild(el(pcardHtml(x))));
-  const rev = document.getElementById('reviews');
-  if (rev) REVIEWS.forEach(r => rev.appendChild(el(`
-    <div class="rev rv">
-      <div class="rev__top">
-        <div class="rev__av">${r.av ? `<img src="${r.av}" alt="" loading="lazy">` : r.n[0]}</div>
-        <div class="rev__who"><b>${r.n}</b><span>${r.c}</span></div>
-      </div>
-      <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
-      <p>${r.t}</p>
-    </div>`)));
-}
-
-/* кадр галереї під реальні пропорції знімків цього товару */
-function fitGallery(gal) {
-  const main = document.getElementById('galMain'); if (!main || !gal || !gal.length) return;
-  const ratios = [];
-  let left = gal.length;
-  const apply = () => {
-    if (!ratios.length) return;
-    ratios.sort((a, b) => a - b);
-    const med = ratios[Math.floor(ratios.length / 2)];
-    // тримаємо в розумних межах, щоб верстка не стрибала на крайніх знімках
-    const r = Math.max(0.7, Math.min(1.6, med));
-    main.style.setProperty('--galr', String(r));
-  };
-  gal.forEach(src => {
-    const im = new Image();
-    im.onload = im.onerror = () => {
-      if (im.naturalWidth && im.naturalHeight) ratios.push(im.naturalWidth / im.naturalHeight);
-      if (--left === 0) apply();
-    };
-    im.src = src;
-  });
 }
 
 /* --- swipeable gallery (drag + arrows + thumbs) --- */
@@ -668,6 +699,12 @@ function initGallery(total) {
   main.addEventListener('pointerup', up);
   main.addEventListener('pointerleave', up);
   main.addEventListener('dragstart', e => e.preventDefault());
+  // клік без перетягування = відкрити фото на весь екран
+  main.addEventListener('click', (e) => {
+    if (e.target.closest('.gallery__nav')) return;
+    if (Math.abs(dx) > 4) return;
+    initLightbox(window.__gal || [], i);
+  });
 
   // клавіатура — стрілками вліво/вправо
   document.addEventListener('keydown', e => {
@@ -676,6 +713,85 @@ function initGallery(total) {
   });
   window.addEventListener('resize', () => go(i, false));
   go(0, false);
+}
+
+/* ---------------- перегляд фото на весь екран ----------------
+   Клік по знімку відкриває його великим: колесо або клік — масштаб,
+   перетягування — рух по фото, стрілки й Esc — як у звичайних галереях. */
+function initLightbox(gal, startIndex) {
+  if (!gal || !gal.length) return;
+  let box = document.getElementById('lbox');
+  if (!box) {
+    box = el(`
+      <div class="lbox" id="lbox" aria-hidden="true">
+        <div class="lbox__bd" data-lb-close></div>
+        <button class="lbox__x" data-lb-close type="button" aria-label="Закрити">${ico('ic-x')}</button>
+        <button class="lbox__nav lbox__nav--p" id="lbPrev" type="button" aria-label="Попереднє">${ico('ic-arrow-l')}</button>
+        <button class="lbox__nav lbox__nav--n" id="lbNext" type="button" aria-label="Наступне">${ico('ic-arrow')}</button>
+        <div class="lbox__stage" id="lbStage"><img id="lbImg" alt="" draggable="false"></div>
+        <div class="lbox__bar"><span id="lbCount"></span><span class="lbox__hint">Колесо або клік — масштаб · перетягніть, щоб рухати</span></div>
+      </div>`);
+    document.body.appendChild(box);
+  }
+  const img = box.querySelector('#lbImg'), stage = box.querySelector('#lbStage');
+  const counter = box.querySelector('#lbCount');
+  let i = startIndex || 0, scale = 1, tx = 0, ty = 0, dragging = false, sx = 0, sy = 0, moved = false;
+
+  const apply = () => { img.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
+  const reset = () => { scale = 1; tx = 0; ty = 0; apply(); box.classList.toggle('zoomed', false); };
+  const show = (n) => {
+    i = (n + gal.length) % gal.length;
+    img.src = gal[i];
+    if (counter) counter.textContent = (i + 1) + ' / ' + gal.length;
+    reset();
+  };
+  const setScale = (next, cx, cy) => {
+    const prev = scale;
+    scale = Math.max(1, Math.min(4, next));
+    if (scale === 1) { tx = 0; ty = 0; }
+    else if (cx != null) {
+      const r = stage.getBoundingClientRect();
+      const dx = cx - (r.left + r.width / 2), dy = cy - (r.top + r.height / 2);
+      tx = (tx - dx) * (scale / prev) + dx;
+      ty = (ty - dy) * (scale / prev) + dy;
+    }
+    box.classList.toggle('zoomed', scale > 1);
+    apply();
+  };
+
+  box.querySelector('#lbPrev').onclick = (e) => { e.stopPropagation(); show(i - 1); };
+  box.querySelector('#lbNext').onclick = (e) => { e.stopPropagation(); show(i + 1); };
+
+  stage.onwheel = (e) => { e.preventDefault(); setScale(scale * (e.deltaY < 0 ? 1.22 : 1 / 1.22), e.clientX, e.clientY); };
+  stage.onpointerdown = (e) => { dragging = true; moved = false; sx = e.clientX - tx; sy = e.clientY - ty; stage.setPointerCapture(e.pointerId); };
+  stage.onpointermove = (e) => {
+    if (!dragging) return;
+    if (Math.abs(e.clientX - tx - sx) > 3 || Math.abs(e.clientY - ty - sy) > 3) moved = true;
+    if (scale > 1) { tx = e.clientX - sx; ty = e.clientY - sy; apply(); }
+  };
+  stage.onpointerup = (e) => {
+    dragging = false;
+    if (moved) return;                       // тягнули, а не клікали
+    setScale(scale > 1 ? 1 : 2.4, e.clientX, e.clientY);
+  };
+
+  const onKey = (e) => {
+    if (!box.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(i - 1);
+    if (e.key === 'ArrowRight') show(i + 1);
+  };
+  const close = () => {
+    box.classList.remove('open'); box.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+  };
+  box.querySelectorAll('[data-lb-close]').forEach(n => n.onclick = close);
+  document.addEventListener('keydown', onKey);
+
+  show(i);
+  box.classList.add('open'); box.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
 }
 
 /* --- accordion (product + FAQ) --- */
@@ -1044,7 +1160,7 @@ function initSmooth() {
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
   initChrome(); initModal(); initCards(); initCart(); initInlineForms();
-  renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct();
+  renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct(); renderReviews();
   initAcc(); revealInit(); initSmooth();
 
   // прибираємо позначку завантаження: далі все вже на місці

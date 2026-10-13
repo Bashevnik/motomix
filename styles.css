@@ -1394,3 +1394,53 @@ body.inner{padding-top:var(--hh)}
 .fband__f{display:block}
 .fband__f .opt{margin-left:6px}
 .fband__f input{display:block;margin-top:8px}
+
+/* =====================================================================
+   v20 — стрічка відгуків, перегляд фото на весь екран
+   ===================================================================== */
+
+/* ---- відгуки стрічкою ---- */
+.revs-view{overflow:hidden}
+.revs{display:flex;gap:clamp(12px,1.3vw,22px);transition:transform .7s var(--ease);will-change:transform}
+.revs .rev{flex:0 0 calc((100% - 2*clamp(12px,1.3vw,22px))/3);min-width:0}
+.revs-ctl{display:flex;align-items:center;gap:22px;margin-top:26px}
+.revs-ctl .rail__bar{flex:1;margin-top:0;max-width:none}
+.revs-nav{display:flex;gap:9px;flex:0 0 auto}
+.revs-nav .rail__nav{position:static;transform:none}
+.revs-nav .rail__nav:hover{transform:none}
+.rev__av{width:46px;height:46px;flex:0 0 auto}
+.rev p{overflow-wrap:anywhere}
+@media(max-width:980px){ .revs .rev{flex:0 0 calc((100% - clamp(12px,1.3vw,22px))/2)} }
+@media(max-width:620px){ .revs .rev{flex:0 0 100%} }
+
+/* ---- перегляд фото на весь екран ---- */
+.lbox{position:fixed;inset:0;z-index:200;display:none}
+.lbox.open{display:block}
+.lbox__bd{position:absolute;inset:0;background:rgba(8,8,10,.94);backdrop-filter:blur(2px)}
+.lbox__stage{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;
+  cursor:zoom-in;touch-action:none;padding:clamp(40px,6vw,80px) clamp(16px,7vw,110px)}
+.lbox.zoomed .lbox__stage{cursor:grab}
+.lbox.zoomed .lbox__stage:active{cursor:grabbing}
+.lbox__stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;
+  transition:transform .22s var(--ease);transform-origin:center;will-change:transform}
+.lbox__x{position:absolute;top:18px;right:18px;z-index:3;width:46px;height:46px;display:grid;place-items:center;
+  background:rgba(255,255,255,.1);color:#fff;cursor:pointer;transition:.22s}
+.lbox__x:hover{background:var(--red)}
+.lbox__x .icon{width:20px;height:20px}
+.lbox__nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:50px;height:68px;
+  display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;cursor:pointer;transition:.22s}
+.lbox__nav:hover{background:rgba(255,255,255,.2)}
+.lbox__nav .icon{width:21px;height:21px;pointer-events:none}
+.lbox__nav--p{left:12px}.lbox__nav--n{right:12px}
+.lbox__bar{position:absolute;left:0;right:0;bottom:16px;z-index:3;display:flex;justify-content:center;
+  align-items:center;gap:18px;color:#B9B9C2;font-size:.8rem;pointer-events:none;flex-wrap:wrap;padding-inline:16px}
+.lbox__hint{color:#7E7E88;font-size:.74rem}
+@media(max-width:700px){
+  .lbox__nav{width:42px;height:56px}
+  .lbox__hint{display:none}
+  .lbox__stage{padding:60px 10px 70px}
+}
+
+/* підказка, що знімок можна відкрити більше */
+.gallery__main{cursor:zoom-in}
+.gallery__main.drag{cursor:grabbing}
