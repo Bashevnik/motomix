@@ -1772,3 +1772,13 @@ picture{display:contents}
 /* вкладки перевізників переносяться, а не стискаються в нечитабельне */
 .dlv__tabs{flex-wrap:wrap}
 .dlv__tab{flex:1 1 calc(50% - 4px);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* З доставкою форма замовлення стала вищою за панель, і кнопка відправки
+   опинялась поза зоною прокрутки форми. На телефоні крутимо панель
+   цілком, а не вкладений блок — вкладені скроли тут тільки заважають. */
+@media(max-width:760px){
+  .cart__box{overflow-y:auto;overscroll-behavior:contain}
+  .cart__scroll{overflow:visible;flex:0 0 auto}
+  .cart__form{overflow:visible;flex:0 0 auto}
+  .cart__head{position:sticky;top:0;z-index:5;background:var(--surface)}
+}
