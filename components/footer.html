@@ -54,16 +54,18 @@
       <div class="dlv">
         <div class="dlv__tabs" role="tablist">
           <button type="button" class="dlv__tab is-on" data-dlv="np">Нова Пошта</button>
+          <button type="button" class="dlv__tab" data-dlv="up">Укрпошта</button>
+          <button type="button" class="dlv__tab" data-dlv="mist">Міст Експрес</button>
           <button type="button" class="dlv__tab" data-dlv="pickup">Самовивіз</button>
         </div>
 
-        <div class="dlv__np" id="dlvNp">
+        <div class="dlv__body" id="dlvFields">
           <label class="dlv__f">Місто або село
-            <input type="text" id="npCity" autocomplete="off" placeholder="Почніть вводити: Біла Церква">
+            <input type="text" id="npCity" autocomplete="address-level2" placeholder="Почніть вводити: Біла Церква">
             <div class="dlv__list" id="npCityList" hidden data-lenis-prevent></div>
           </label>
-          <label class="dlv__f">Відділення
-            <input type="text" id="npWh" autocomplete="off" placeholder="Спершу оберіть місто" disabled>
+          <label class="dlv__f" id="npWhWrap">Відділення
+            <input type="text" id="npWh" autocomplete="off" placeholder="Номер або адреса відділення">
             <div class="dlv__list" id="npWhList" hidden data-lenis-prevent></div>
           </label>
           <p class="dlv__hint" id="npHint" hidden></p>
@@ -72,6 +74,7 @@
         <div class="dlv__pickup" id="dlvPickup" hidden>
           <p>Забрати можна в салоні: <b>вул. Сухоярська, Біла Церква</b><br>щодня 9:00–20:00.</p>
         </div>
+      </div>
       </div>
 
       <div class="cart__sum cart__sum--form"><span>До сплати</span><b id="cartTotal2">0 ₴</b></div>

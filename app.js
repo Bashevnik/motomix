@@ -977,42 +977,61 @@ function cartStep(step) {
   show(foot, step === 'list' && cartList().length > 0);
 }
 
-/* ---------------- доставка: Нова Пошта з підказками ----------------
-   Підказки тягнемо через свій ендпоінт (ключ НП не можна тримати в
-   браузері). Якщо ключа нема або НП не відповідає — поля не блокуються,
-   людина просто вписує місто й відділення руками. Замовлення має
-   оформлятись у будь-якому випадку. */
+/* ---------------- доставка ----------------
+   Чотири варіанти: Нова Пошта, Укрпошта, Міст Експрес і самовивіз.
+   У Нової Пошти є відкритий API — там підказки міста й відділення.
+   В інших перевізників поля заповнюються руками: менеджер однаково
+   передзвонює і підтверджує відділення. Головне — щоб вибір доставки
+   ніколи не блокував оформлення. */
 const NP_ENDPOINT = (ORDER_ENDPOINT || '/api/order').replace(/\/order$/, '/np');
+
+const CARRIERS = {
+  np:     { label: 'Нова Пошта',   auto: true,  wh: 'Номер або адреса відділення' },
+  up:     { label: 'Укрпошта',     auto: false, wh: 'Індекс або номер відділення' },
+  mist:   { label: 'Міст Експрес', auto: false, wh: 'Номер або адреса відділення' },
+  pickup: { label: 'Самовивіз',    auto: false, wh: '' },
+};
 
 function initDelivery() {
   const wrap = document.querySelector('.dlv'); if (!wrap) return;
-  const npBox = document.getElementById('dlvNp'), pickBox = document.getElementById('dlvPickup');
+  const fields = document.getElementById('dlvFields'), pickBox = document.getElementById('dlvPickup');
   const city = document.getElementById('npCity'), wh = document.getElementById('npWh');
   const cityList = document.getElementById('npCityList'), whList = document.getElementById('npWhList');
   const hint = document.getElementById('npHint');
   let mode = 'np', cityRef = '', manual = false;
 
+  const showHint = (t) => { if (!hint) return; hint.hidden = !t; hint.textContent = t || ''; };
+
+  const setMode = (m) => {
+    mode = m;
+    const c = CARRIERS[m];
+    fields.hidden = m === 'pickup';
+    pickBox.hidden = m !== 'pickup';
+    if (m === 'pickup') { showHint(''); return; }
+    wh.placeholder = c.wh;
+    cityRef = ''; cityList.hidden = true; whList.hidden = true;
+    showHint(c.auto
+      ? ''
+      : 'Підкажіть місто й відділення — менеджер підтвердить і розрахує доставку.');
+  };
+
   wrap.querySelectorAll('.dlv__tab').forEach((t) => t.addEventListener('click', () => {
     wrap.querySelectorAll('.dlv__tab').forEach((x) => x.classList.toggle('is-on', x === t));
-    mode = t.dataset.dlv;
-    npBox.hidden = mode !== 'np';
-    pickBox.hidden = mode !== 'pickup';
+    setMode(t.dataset.dlv);
   }));
 
-  const goManual = (why) => {
+  const goManual = () => {
     if (manual) return;
     manual = true;
-    wh.disabled = false;
-    wh.placeholder = 'Напр.: відділення №12';
-    city.placeholder = 'Напр.: Біла Церква';
-    if (hint) { hint.hidden = false; hint.textContent = why || 'Підказки тимчасово недоступні — впишіть місто й відділення вручну, менеджер підтвердить.'; }
+    showHint('Підказки зараз недоступні — впишіть місто й відділення вручну, менеджер підтвердить.');
   };
 
   const ask = async (params) => {
-    const r = await fetch(NP_ENDPOINT + '?' + new URLSearchParams(params));
-    if (r.status === 503 || r.status === 502) { goManual(); return null; }
-    if (!r.ok) { goManual(); return null; }
-    return r.json();
+    try {
+      const r = await fetch(NP_ENDPOINT + '?' + new URLSearchParams(params));
+      if (!r.ok) { goManual(); return null; }
+      return await r.json();
+    } catch { goManual(); return null; }
   };
 
   const paint = (box, items, onPick) => {
@@ -1020,53 +1039,51 @@ function initDelivery() {
     box.innerHTML = items.map((i, k) =>
       `<button type="button" data-k="${k}"><b>${i.name}</b>${i.area ? `<span>${i.area}</span>` : ''}</button>`).join('');
     box.hidden = false;
-    box.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
-      onPick(items[+b.dataset.k]); box.hidden = true;
+    box.querySelectorAll('button').forEach((btn) => btn.addEventListener('click', () => {
+      onPick(items[+btn.dataset.k]); box.hidden = true;
     }));
   };
 
   let t1 = null;
   city.addEventListener('input', () => {
-    cityRef = ''; wh.value = '';
-    if (!manual) { wh.disabled = true; wh.placeholder = 'Спершу оберіть місто'; }
+    cityRef = '';
     clearTimeout(t1);
+    if (!CARRIERS[mode].auto || manual) { cityList.hidden = true; return; }
     const q = city.value.trim();
     if (q.length < 2) { cityList.hidden = true; return; }
     t1 = setTimeout(async () => {
       const d = await ask({ q });
-      if (!d) return;
-      paint(cityList, d.items, (it) => {
-        city.value = it.name; cityRef = it.ref;
-        wh.disabled = false; wh.placeholder = 'Номер або адреса відділення'; wh.focus();
-      });
+      if (!d || !d.items) return;
+      paint(cityList, d.items, (it) => { city.value = it.name; cityRef = it.ref; wh.focus(); });
     }, 260);
   });
 
   let t2 = null;
   wh.addEventListener('input', () => {
     clearTimeout(t2);
-    if (manual || !cityRef) { whList.hidden = true; return; }
+    if (!CARRIERS[mode].auto || manual || !cityRef) { whList.hidden = true; return; }
     t2 = setTimeout(async () => {
       const d = await ask({ city: cityRef, q: wh.value.trim() });
-      if (!d) return;
+      if (!d || !d.items) return;
       paint(whList, d.items, (it) => { wh.value = it.name; });
     }, 260);
   });
-  wh.addEventListener('focus', () => { if (!manual && cityRef && !wh.value) wh.dispatchEvent(new Event('input')); });
+  wh.addEventListener('focus', () => {
+    if (CARRIERS[mode].auto && !manual && cityRef && !wh.value) wh.dispatchEvent(new Event('input'));
+  });
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('#npCityList') && e.target !== city) cityList.hidden = true;
     if (!e.target.closest('#npWhList') && e.target !== wh) whList.hidden = true;
   });
 
-  // Навмисно не чіпаємо НП до першого вводу: інакше кожна сторінка сайту
-  // стукала б в ендпоінт і засмічувала консоль відповіддю 503, коли ключа нема.
+  setMode('np');
 
   window.__deliveryValue = () => {
     if (mode === 'pickup') return 'Самовивіз — вул. Сухоярська, Біла Церква';
     const c = city.value.trim(), w = wh.value.trim();
     if (!c && !w) return '';
-    return 'Нова Пошта: ' + [c, w].filter(Boolean).join(', ');
+    return CARRIERS[mode].label + ': ' + [c, w].filter(Boolean).join(', ');
   };
 }
 

@@ -1720,3 +1720,55 @@ picture{display:contents}
 .dlv__list span{display:block;font-size:.76rem;color:var(--ash);margin-top:2px}
 .dlv__hint{margin-top:4px;font-size:.76rem;color:var(--ash);line-height:1.45}
 .dlv__pickup p{font-size:.9rem;color:var(--ink-2);line-height:1.6}
+
+/* =====================================================================
+   v28 — мобільне меню: техніка плиткою з іконками, решта дрібніше
+   Було тринадцять однакових рядків підряд — очі не чіплялись ні за що.
+   ===================================================================== */
+.mobile-menu{padding:18px clamp(14px,4vw,22px) 24px;gap:0;overflow-y:auto;max-height:calc(100dvh - var(--htop))}
+.mm__lbl{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:#7A7A85;
+  margin:4px 0 11px;font-weight:600}
+.mm__grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.mm__grid a{--c:9px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  padding:13px 13px 14px;background:rgba(255,255,255,.06);border-bottom:0;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);transition:.2s;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.mm__grid a:active{background:var(--red)}
+.mm__grid svg{width:38px;height:25px;fill:none;stroke:#fff;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.95}
+.mm__grid span{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:.9rem;
+  letter-spacing:.02em;color:#fff;line-height:1.1}
+
+.mm__all{--c:10px;display:flex;align-items:center;gap:13px;padding:15px 16px;margin-bottom:20px;
+  background:var(--red);border-bottom:0;transition:.2s;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+.mm__all .icon{width:24px;height:24px;color:#fff;flex:0 0 auto}
+.mm__all span{flex:1;display:flex;flex-direction:column;gap:2px;font-family:var(--disp);font-weight:600;
+  text-transform:uppercase;font-size:1.02rem;color:#fff;letter-spacing:.02em}
+.mm__all em{font-family:var(--body);font-style:normal;font-weight:400;font-size:.74rem;
+  text-transform:none;letter-spacing:0;color:rgba(255,255,255,.82)}
+.mm__all-arr{width:19px;height:19px;color:#fff;opacity:.9}
+
+.mm__info{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.mm__info a{--c:7px;flex:1 1 auto;padding:10px 13px;font-family:var(--body);font-weight:500;
+  text-transform:none;font-size:.84rem;letter-spacing:0;color:#C9C9D2;border-bottom:0;white-space:nowrap;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);text-align:center;
+  clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c))}
+
+.mm__foot{border-top:1px solid rgba(255,255,255,.1);padding-top:16px}
+.mm__tel{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;margin-bottom:10px;
+  font-family:var(--disp);font-weight:600;font-size:1.12rem;color:#fff;border-bottom:0;letter-spacing:.03em}
+.mm__tel .icon{width:19px;height:19px;color:var(--red)}
+.mobile-menu .btn{margin-top:0}
+
+/* адреса під підзаголовком на головній */
+.hero__addr{display:inline-flex;align-items:center;gap:10px;margin-top:14px;color:#C6C6D0;
+  font-size:.92rem;transition:.22s}
+.hero__addr:hover{color:#fff}
+.hero__addr .icon{width:17px;height:17px;color:var(--red);flex:0 0 auto}
+.hero__addr b{color:#fff;font-weight:600}
+@media(max-width:560px){ .hero__addr{font-size:.84rem;gap:8px} }
+
+/* вкладки перевізників переносяться, а не стискаються в нечитабельне */
+.dlv__tabs{flex-wrap:wrap}
+.dlv__tab{flex:1 1 calc(50% - 4px);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

@@ -54,18 +54,34 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="catalog.html">Весь каталог</a>
-  <a href="catalog.html?type=Ендуро">Ендуро</a>
-  <a href="catalog.html?type=Мотарди">Мотарди</a>
-  <a href="catalog.html?type=Дорожні">Дорожні</a>
-  <a href="catalog.html?type=Спортбайки">Спортбайки</a>
-  <a href="catalog.html?type=Пітбайки">Пітбайки</a>
-  <a href="catalog.html?type=Квадроцикли">Квадроцикли</a>
-  <a href="catalog.html?type=Електроскутери">Електроскутери</a>
-  <a href="catalog.html?type=Аксесуари">Аксесуари</a>
-  <a href="delivery.html">Доставка та оплата</a>
-  <a href="about.html">Про нас</a>
-  <a href="contacts.html">Контакти</a>
-  <a href="tel:+380938701107">093 870 11 07</a>
-  <button class="btn btn--red btn--block" data-order="Заявка з меню">Залишити заявку</button>
+  <div class="mm__lbl">Техніка</div>
+  <div class="mm__grid">
+    <a href="catalog.html?type=Ендуро"><svg><use href="#ic-t-enduro"></use></svg><span>Ендуро</span></a>
+    <a href="catalog.html?type=Мотарди"><svg><use href="#ic-t-motard"></use></svg><span>Мотарди</span></a>
+    <a href="catalog.html?type=Дорожні"><svg><use href="#ic-t-road"></use></svg><span>Дорожні</span></a>
+    <a href="catalog.html?type=Спортбайки"><svg><use href="#ic-t-sport"></use></svg><span>Спортбайки</span></a>
+    <a href="catalog.html?type=Пітбайки"><svg><use href="#ic-t-pit"></use></svg><span>Пітбайки</span></a>
+    <a href="catalog.html?type=Квадроцикли"><svg><use href="#ic-t-quad"></use></svg><span>Квадроцикли</span></a>
+    <a href="catalog.html?type=Електроскутери"><svg><use href="#ic-t-escooter"></use></svg><span>Е-скутери</span></a>
+    <a href="catalog.html?type=Аксесуари"><svg><use href="#ic-t-gear"></use></svg><span>Аксесуари</span></a>
+  </div>
+
+  <a class="mm__all" href="catalog.html">
+    <svg class="icon"><use href="#ic-engine"></use></svg>
+    <span>Весь каталог<em>45 позицій у наявності</em></span>
+    <svg class="icon mm__all-arr"><use href="#ic-arrow"></use></svg>
+  </a>
+
+  <div class="mm__lbl">Інформація</div>
+  <div class="mm__info">
+    <a href="delivery.html">Доставка та оплата</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+
+  <div class="mm__foot">
+    <a class="mm__tel" href="tel:+380938701107"><svg class="icon"><use href="#ic-phone"></use></svg>093 870 11 07</a>
+    <button class="btn btn--red btn--block" data-order="Заявка з меню">Залишити заявку</button>
+  </div>
 </div>
+
