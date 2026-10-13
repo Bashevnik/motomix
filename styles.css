@@ -1626,3 +1626,32 @@ picture{display:contents}
    а так вона перекривала нижній рядок із підписом студії. */
 .callback-fab{transition:.4s var(--ease),opacity .3s,visibility .3s}
 .callback-fab.tucked{opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);pointer-events:none}
+
+/* =====================================================================
+   v25 — контакти в шапці мінімалістично
+   Рамки й підписи над значеннями перевантажували рядок. Лишаємо тільки
+   дрібну іконку і текст: читається з першого погляду, нічого зайвого.
+   ===================================================================== */
+.hcontact{display:inline-flex;align-items:center;gap:8px;padding:0;background:none;box-shadow:none;
+  clip-path:none;color:#B6B6C0;font-size:.86rem;white-space:nowrap;transition:.22s}
+.hcontact:hover{background:none;box-shadow:none;color:#fff}
+.hcontact .icon{width:16px;height:16px;flex:0 0 auto;color:#7C7C87;transition:.22s}
+.hcontact:hover .icon{color:var(--red)}
+.header__phone{font-weight:600;color:#fff;font-size:.94rem;letter-spacing:.01em}
+.header__util{gap:22px}
+.header__util .btn{margin-left:2px}
+
+/* логотип трохи менший */
+.brand img,.header.scrolled .brand img{height:66px}
+:root{--htop:74px;--hh:114px}
+
+@media(max-width:1440px){ .header__addr{display:none} }
+@media(max-width:980px){
+  :root{--htop:62px;--hh:62px}
+  .brand img,.header.scrolled .brand img{height:46px}
+  .header__util{gap:10px}
+  .hcontact span{display:none}
+  .header__phone{width:42px;height:42px;display:grid;place-items:center;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  .header__phone .icon{width:17px;height:17px;color:#fff}
+}
