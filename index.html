@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preload" href="components/header.html" as="fetch" crossorigin>
     <link rel="preload" href="components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" as="image" href="assets/hero/hero-main.webp" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/logo.webp" type="image/webp" fetchpriority="high">
     <link rel="stylesheet" href="styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="assets/logo.png">
@@ -22,7 +24,7 @@
 
     <!-- 01 · HERO -->
     <section class="hero">
-        <div class="hero__media"><img src="assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></div>
+        <div class="hero__media"><picture><source srcset="assets/hero/hero-main.webp" type="image/webp"><img src="assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></picture></div>
         <div class="wrap hero__inner">
             <div class="hero__copy">
                 <span class="eyebrow hero__eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Мототехніка · Біла Церква</span>
@@ -86,7 +88,7 @@
         <div class="wrap">
             <div class="story">
                 <div class="story__media rv">
-                    <img src="assets/hero/story-2.jpg" alt="Ендуро в русі">
+                    <picture><source srcset="assets/hero/story-2.webp" type="image/webp"><img src="assets/hero/story-2.jpg" alt="Ендуро в русі"></picture>
                     <span class="story__tag">Ендуро</span>
                 </div>
                 <div class="story__text rv">
@@ -121,7 +123,7 @@
         <div class="wrap">
             <div class="story story--rev">
                 <div class="story__media rv">
-                    <img src="assets/hero/story-1.jpg" alt="Мотоцикл на дорозі">
+                    <picture><source srcset="assets/hero/story-1.webp" type="image/webp"><img src="assets/hero/story-1.jpg" alt="Мотоцикл на дорозі"></picture>
                     <span class="story__tag">Сервіс</span>
                 </div>
                 <div class="story__text rv">
@@ -157,7 +159,7 @@
 
     <!-- 09 · TRADE-IN CTA -->
     <section class="cta">
-        <img class="cta__bg" src="assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.jpg" alt="">
+        <picture><source srcset="assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.webp" type="image/webp"><img class="cta__bg" src="assets/olx/lifan-kpt-400-2026-novyy-43-ps-inzhektor-3.jpg" alt=""></picture>
         <div class="cta__shade"></div>
         <div class="wrap cta__in">
             <div class="cta__l">

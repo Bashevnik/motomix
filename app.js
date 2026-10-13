@@ -44,6 +44,12 @@ const SWIPE_MS = 3000;
 
 /* ---------------- helpers ---------------- */
 const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
+/* webp легший за jpeg приблизно на чверть; <picture> сам обирає формат,
+   а старий браузер отримає звичайний jpg із src */
+const webpOf = (s) => String(s || '').replace(/.(jpe?g|png)$/i, '.webp');
+const pic = (src, attrs) =>
+  `<picture><source srcset="${webpOf(src)}" type="image/webp"><img src="${src}" ${attrs || ''}></picture>`;
+
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const priceText = (p) => p.priceRaw || "Ціна за запитом";
 const stockOf = () => "В наявності";
@@ -126,7 +132,7 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
   <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
-      <img src="${p.img}" alt="${n.title}" loading="lazy" decoding="async" width="450" height="600">
+      ${pic(p.img, `alt="${n.title}" loading="lazy" decoding="async" width="450" height="600"`)}
     </div>
     <div class="pcard__body">
       <h3 class="pcard__name">${n.title}</h3>
@@ -406,7 +412,7 @@ function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach((c, i) => box.appendChild(el(`
     <a class="cat rv" href="catalog.html?type=${encodeURIComponent(c.name)}">
-      <img src="${c.img}" alt="${c.name}" loading="lazy">
+      ${pic(c.img, `alt="${c.name}" loading="lazy" decoding="async"`)}
       <span class="cat__n num-out">0${i + 1}</span>
       <div class="cat__body">
         <div class="cat__bar"></div>
@@ -450,7 +456,7 @@ function renderReviews() {
   REVIEWS.forEach(r => track.appendChild(el(`
     <article class="rev">
       <div class="rev__top">
-        <div class="rev__av">${r.av ? `<img src="${r.av}" alt="" loading="lazy" width="200" height="200">` : r.n[0]}</div>
+        <div class="rev__av">${r.av ? `${pic(r.av, `alt="" loading="lazy" decoding="async" width="200" height="200"`)}` : r.n[0]}</div>
         <div class="rev__who"><b>${r.n}</b><span>${r.c}</span></div>
       </div>
       <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
@@ -619,12 +625,12 @@ function renderProduct() {
     <div class="gallery-col">
       <div class="gallery">
         <div class="gallery__main" id="galMain" style="--galr:${p.ar || 1.333}">
-          <div class="gallery__strip" id="galStrip">${gal.map(g => `<div class="gallery__slide" style="--bg:url('${g}')"><img src="${g}" alt="${n.title}" draggable="false"></div>`).join("")}</div>
+          <div class="gallery__strip" id="galStrip">${gal.map(g => `<div class="gallery__slide">${pic(g, `alt="${n.title}" draggable="false" decoding="async"`)}</div>`).join("")}</div>
           ${gal.length > 1 ? `<button class="gallery__nav gallery__nav--p" id="galPrev" type="button" aria-label="Попереднє фото">${ico("ic-arrow-l")}</button>
           <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
           <span class="gallery__count" id="galCount">1 / ${gal.length}</span>` : ""}
         </div>
-        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button type="button" class="${i ? "" : "active"}" data-i="${i}" aria-label="Фото ${i + 1}"><img src="${g}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button type="button" class="${i ? "" : "active"}" data-i="${i}" aria-label="Фото ${i + 1}">${pic(g, `alt="" loading="lazy" decoding="async"`)}</button>`).join("")}</div>` : ""}
       </div>
       <section class="pdesc" id="pdesc">
         <h2 class="pdesc__t">Опис</h2>
@@ -782,7 +788,8 @@ function initLightbox(gal, startIndex) {
   const reset = () => { scale = 1; tx = 0; ty = 0; apply(); box.classList.toggle('zoomed', false); };
   const show = (n) => {
     i = (n + gal.length) % gal.length;
-    img.src = gal[i];
+    img.onerror = function () { img.onerror = null; img.src = gal[i]; };
+    img.src = webpOf(gal[i]);
     if (counter) counter.textContent = (i + 1) + ' / ' + gal.length;
     reset();
   };
@@ -916,7 +923,7 @@ function cartPaintBody() {
   box.innerHTML = list.map(i => {
     const n = nameOf(i.p);
     return `<article class="ci" data-id="${i.p.id}">
-      <a class="ci__img" href="product.html?id=${i.p.id}"><img src="${i.p.img}" alt="${n.title}" loading="lazy"></a>
+      <a class="ci__img" href="product.html?id=${i.p.id}">${pic(i.p.img, `alt="${n.title}" loading="lazy" decoding="async"`)}</a>
       <div class="ci__main">
         <a class="ci__name" href="product.html?id=${i.p.id}">${n.title}</a>
         <div class="ci__price">${priceText(i.p)}</div>
