@@ -1868,3 +1868,26 @@ picture{display:contents}
 .dlv--bad .dlv__hint{color:var(--red);font-weight:600}
 @keyframes dlvShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @media(prefers-reduced-motion:reduce){ .dlv--bad .dlv__tabs{animation:none} }
+
+/* =====================================================================
+   v31 — адреса в шапці: місто як опора, вулиця й години підписом
+   Один довгий сірий рядок читався як підпис до нічого і важив стільки ж,
+   скільки телефон. Розносимо на два рівні й відділяємо волосяною рискою,
+   щоб адреса з телефоном виглядали одним контактним вузлом.
+   ===================================================================== */
+.header__addr{align-items:center;gap:11px;padding-right:20px;position:relative}
+.header__addr::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:1px;height:28px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.15),transparent)}
+.header__addr .icon{width:17px;height:17px;color:#9A9AA5}
+.addr__tx{display:flex;flex-direction:column;gap:2px;line-height:1.14;text-align:left}
+.addr__tx b{font-size:.88rem;font-weight:600;color:#E9E9EF;letter-spacing:.01em}
+.addr__tx em{font-style:normal;font-size:.715rem;color:#8A8A95;letter-spacing:.012em}
+.header__addr:hover .addr__tx b{color:#fff}
+.header__addr:hover .addr__tx em{color:#AFAFBA}
+.header__util{gap:18px}
+@media(max-width:1480px){ .header__addr{display:none} }
+@media(max-width:980px){ .addr__tx{display:none} }
+
+/* Клас із display:grid перебивав атрибут hidden — порожній кошик
+   усюди світив червоним нулем. */
+.hcart__n[hidden]{display:none}
