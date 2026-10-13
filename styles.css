@@ -1493,3 +1493,32 @@ body.inner{padding-top:var(--hh)}
    щоб вона не розтягувала ряд праворуч. */
 .meganav__in{overflow:visible;flex-wrap:wrap}
 .mi--more .mi__drop{left:auto;right:0;min-width:236px}
+
+/* =====================================================================
+   v22 — контраст меню, чистий кадр товару, нескінченні стрічки
+   ===================================================================== */
+
+/* Меню було ледь видно: старі правила .meganav a (світлий текст під темну
+   шапку) перебивали .tnav за специфічністю. Піднімаємо специфічність. */
+.meganav .tnav{color:var(--ink);background:rgba(11,11,13,.045);
+  box-shadow:inset 0 0 0 1px rgba(11,11,13,.1)}
+.meganav .tnav .tnav__i{stroke-width:1.75;opacity:1}
+.meganav .tnav:hover,.meganav .tnav:focus-visible{background:var(--ink);color:#fff;box-shadow:none}
+.meganav .tnav:hover .tnav__i{stroke:#fff}
+.meganav .tnav.active{background:var(--ink);color:#fff;box-shadow:none}
+.meganav .tnav.active .tnav__i{stroke:#fff}
+.meganav .mi--more>a{color:var(--ink);box-shadow:inset 0 0 0 1px rgba(11,11,13,.1)}
+.meganav .mi--more:hover>a{background:var(--ink);color:#fff;box-shadow:none}
+
+/* Кадр товару: без заливки й без розмитої підкладки — лише тонка рамка.
+   Пропорція кадру тепер збігається з фото, тож закривати нічим. */
+.gallery__main{background:transparent;box-shadow:inset 0 0 0 1px rgba(11,11,13,.16)}
+.gallery__slide::before{display:none}
+.gallery__slide img{padding:0}
+.gallery__thumbs button{background:transparent;box-shadow:inset 0 0 0 1px rgba(11,11,13,.16)}
+.gallery__thumbs button.active{box-shadow:inset 0 0 0 2px var(--ink)}
+.gallery__thumbs img{padding:3px}
+
+/* Торгові марки — клікабельні: ведуть у каталог із цим брендом */
+.bchip{text-decoration:none;transition:.26s var(--ease)}
+a.bchip:hover{background:var(--ink);color:#fff;box-shadow:none}

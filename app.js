@@ -322,6 +322,85 @@ function initPriceSlider(box, state, onChange) {
 
 const fmtUah = (n) => Math.round(n).toLocaleString('uk-UA').replace(/,/g, ' ');
 
+/* ---------------- нескінченна стрічка ----------------
+   Один механізм для всіх каруселей сайту. Правило:
+   автосвайп на одну комірку раз на 3 секунди, а коли блоки закінчуються —
+   далі йдуть ті самі спочатку, ланцюжком без кінця і без відмотування назад.
+
+   Як це працює: дублюємо вміст доріжки. Коли доїхали до початку копії,
+   миттєво (без анімації) повертаємо доріжку на ту саму картинку в оригіналі.
+   Око цього не бачить — зсув однаковий, кадр ідентичний. */
+function initLoopRail(track, opts) {
+  opts = opts || {};
+  const view = track.parentElement;
+  if (!track || !view || !track.children.length) return null;
+
+  const originals = [...track.children];
+  const count = originals.length;
+
+  // копія потрібна, тільки якщо оригіналу не вистачає на всю ширину
+  originals.forEach((n) => {
+    const c = n.cloneNode(true);
+    c.setAttribute('aria-hidden', 'true');
+    c.dataset.clone = '1';
+    track.appendChild(c);
+  });
+
+  let idx = 0, timer = null, animating = false;
+
+  const step = () => {
+    const card = track.children[0];
+    if (!card) return 1;
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  };
+  const perView = () => Math.max(1, Math.floor((view.clientWidth + 1) / step()));
+
+  const place = (animate) => {
+    track.style.transition = animate ? 'transform .62s var(--ease)' : 'none';
+    track.style.transform = `translateX(${-idx * step()}px)`;
+    if (opts.bar) {
+      const b = document.querySelector(opts.bar);
+      if (b) b.style.width = `${((idx % count) + 1) / count * 100}%`;
+    }
+  };
+
+  const go = (n) => {
+    if (animating) return;
+    idx = n;
+    animating = true;
+    place(true);
+    const after = () => {
+      animating = false;
+      // пройшли повний круг — безшовно вертаємось на початок оригіналу
+      if (idx >= count) { idx -= count; place(false); }
+      if (idx < 0) { idx += count; place(false); }
+    };
+    const t = setTimeout(after, 640);
+    track.addEventListener('transitionend', function once() {
+      clearTimeout(t); track.removeEventListener('transitionend', once); after();
+    }, { once: true });
+  };
+
+  const tick = () => go(idx + 1);
+  const restart = () => { clearInterval(timer); timer = setInterval(tick, SWIPE_MS); };
+  const stop = () => clearInterval(timer);
+
+  if (opts.prev) document.querySelector(opts.prev)?.addEventListener('click', () => { go(idx - 1); restart(); });
+  if (opts.next) document.querySelector(opts.next)?.addEventListener('click', () => { go(idx + 1); restart(); });
+  view.addEventListener('mouseenter', stop);
+  view.addEventListener('mouseleave', restart);
+  // на телефоні пауза, поки палець на стрічці
+  view.addEventListener('touchstart', stop, { passive: true });
+  view.addEventListener('touchend', restart, { passive: true });
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : restart()));
+  window.addEventListener('resize', () => place(false));
+
+  place(false);
+  if (count > perView()) restart();
+  return { go, stop, restart };
+}
+
 /* ---------------- renders ---------------- */
 function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
@@ -341,7 +420,9 @@ function renderCats() {
 function renderBrands() {
   const box = document.getElementById('brands-track'); if (!box) return;
   const track = el(`<div class="marquee__track"></div>`);
-  [...BRANDS, ...BRANDS].forEach(b => track.appendChild(el(`<div class="bchip">${b}</div>`)));
+  // клік по марці веде в каталог, уже відфільтрований цим брендом
+  [...BRANDS, ...BRANDS].forEach(b => track.appendChild(el(
+    `<a class="bchip" href="catalog.html?brand=${encodeURIComponent(b)}">${b}</a>`)));
   box.appendChild(track);
 }
 
@@ -356,34 +437,14 @@ function renderStrip() {
   box.appendChild(track);
 }
 
-/* --- product rail: autoscroll 1 card / 3s, arrows sit on the rail --- */
+/* --- стрічка товарів на головній --- */
 function renderRail() {
   const track = document.getElementById('rail-track'); if (!track) return;
-  PRODUCTS.slice(0, 8).forEach(p => track.appendChild(el(pcardHtml(p))));
-  const view = track.parentElement, bar = document.querySelector('#rail-bar i');
-  let idx = 0;
-  const step = () => {
-    const card = track.children[0]; if (!card) return 1;
-    return card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).gap) || 16);
-  };
-  const maxIdx = () => Math.max(0, track.children.length - Math.floor(view.clientWidth / step()));
-  const go = (i) => {
-    idx = Math.max(0, Math.min(i, maxIdx()));
-    track.style.transform = `translateX(${-idx * step()}px)`;
-    if (bar) bar.style.width = `${((idx + 1) / (maxIdx() + 1)) * 100}%`;
-  };
-  let timer = null;
-  const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
-  const restart = () => { clearInterval(timer); timer = setInterval(tick, SWIPE_MS); };
-  document.getElementById('rail-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
-  document.getElementById('rail-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
-  view.addEventListener('mouseenter', () => clearInterval(timer));
-  view.addEventListener('mouseleave', restart);
-  window.addEventListener('resize', () => go(idx));
-  go(0); restart();
+  PRODUCTS.slice(0, 10).forEach(p => track.appendChild(el(pcardHtml(p))));
+  initLoopRail(track, { prev: '#rail-prev', next: '#rail-next', bar: '#rail-bar i' });
 }
 
-/* --- стрічка відгуків: автопрокрутка, пауза при наведенні, стрілки --- */
+/* --- стрічка відгуків --- */
 function renderReviews() {
   const track = document.getElementById('reviews'); if (!track) return;
   REVIEWS.forEach(r => track.appendChild(el(`
@@ -395,30 +456,7 @@ function renderReviews() {
       <div class="rev__stars">${Array(5).fill(ico('ic-star')).join('')}</div>
       <p>${r.t}</p>
     </article>`)));
-
-  const view = track.parentElement;
-  if (!view) return;
-  let idx = 0, timer = null;
-  const step = () => {
-    const card = track.children[0]; if (!card) return 1;
-    return card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).gap) || 18);
-  };
-  const perView = () => Math.max(1, Math.round(view.clientWidth / step()));
-  const maxIdx = () => Math.max(0, track.children.length - perView());
-  const go = (n) => {
-    idx = Math.max(0, Math.min(n, maxIdx()));
-    track.style.transform = `translateX(${-idx * step()}px)`;
-    const bar = document.querySelector('#rev-bar i');
-    if (bar) bar.style.width = `${((idx + 1) / (maxIdx() + 1)) * 100}%`;
-  };
-  const tick = () => go(idx >= maxIdx() ? 0 : idx + 1);
-  const restart = () => { clearInterval(timer); timer = setInterval(tick, SWIPE_MS); };
-  document.getElementById('rev-prev')?.addEventListener('click', () => { go(idx - 1); restart(); });
-  document.getElementById('rev-next')?.addEventListener('click', () => { go(idx + 1); restart(); });
-  view.addEventListener('mouseenter', () => clearInterval(timer));
-  view.addEventListener('mouseleave', restart);
-  window.addEventListener('resize', () => go(idx));
-  go(0); restart();
+  initLoopRail(track, { prev: '#rev-prev', next: '#rev-next', bar: '#rev-bar i' });
 }
 
 /* --- catalog: sticky sidebar filters + grid --- */
@@ -555,7 +593,7 @@ function renderCatalog() {
   draw();
 
   // прийшли в розділ — одразу листаємо до товарів, банер лишається вище
-  if (qs("type") || qs("cat") || qs("q") || qs("brand")) {
+  if (!cameBack() && (qs("type") || qs("cat") || qs("q") || qs("brand"))) {
     const jump = () => {
       const bar = document.getElementById("fbar") || grid;
       if (!bar) return;
@@ -1005,6 +1043,43 @@ function initCart() {
   });
 }
 
+/* ---------------- повернення на те саме місце ----------------
+   Клікнув товар у блоці посеред сторінки, натиснув «назад» — і маєш
+   опинитися там само, а не вгорі. Позицію пишемо перед виходом зі
+   сторінки, а повертаємо лише коли браузер каже, що це саме «назад». */
+const SCROLL_KEY = () => 'mm:scroll:' + location.pathname + location.search;
+
+const cameBack = () => {
+  try {
+    const nav = performance.getEntriesByType('navigation')[0];
+    return !!nav && nav.type === 'back_forward';
+  } catch { return false; }
+};
+
+function initScrollMemory() {
+  const save = () => {
+    try { sessionStorage.setItem(SCROLL_KEY(), String(Math.round(window.scrollY))); } catch {}
+  };
+  addEventListener('pagehide', save);
+  addEventListener('beforeunload', save);
+  // Safari/iOS іноді не дає pagehide доїхати — підстраховуємось
+  document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+}
+
+function restoreScroll() {
+  if (!cameBack()) return false;
+  let y = 0;
+  try { y = parseInt(sessionStorage.getItem(SCROLL_KEY()) || '0', 10) || 0; } catch {}
+  if (y <= 0) return false;
+  const jump = () => {
+    if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true });
+    else window.scrollTo(0, y);
+  };
+  requestAnimationFrame(() => requestAnimationFrame(jump));
+  setTimeout(jump, 240);          // після того, як домалюються картки
+  return true;
+}
+
 /* ---------------- chrome ---------------- */
 function initCards() {
   document.addEventListener("click", (e) => {
@@ -1144,7 +1219,7 @@ function initSmooth() {
   s.onload = () => {
     try {
       const lenis = window.__lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-      lenis.scrollTo(0, { immediate: true });
+      if (!cameBack()) lenis.scrollTo(0, { immediate: true });
       const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
       requestAnimationFrame(raf);
     } catch {}
@@ -1155,7 +1230,9 @@ function initSmooth() {
 /* ---------------- boot ---------------- */
 (async function boot() {
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  window.scrollTo(0, 0);
+  const back = cameBack();
+  if (!back) window.scrollTo(0, 0);
+  initScrollMemory();
   await Promise.all([...document.querySelectorAll('[data-include]')].map(async n => {
     try { n.innerHTML = await (await fetch(n.getAttribute('data-include'))).text(); } catch {}
     n.classList.add('filled');
@@ -1168,4 +1245,5 @@ function initSmooth() {
 
   // прибираємо позначку завантаження: далі все вже на місці
   requestAnimationFrame(() => document.documentElement.classList.remove('booting'));
+  if (back) restoreScroll();
 })();
