@@ -1059,8 +1059,8 @@ function initDelivery() {
     if (!e.target.closest('#npWhList') && e.target !== wh) whList.hidden = true;
   });
 
-  // перевіряємо ключ одразу, щоб людина не чекала марно
-  ask({ q: 'ки' }).then((d) => { if (d && d.items) return; }).catch(() => goManual());
+  // Навмисно не чіпаємо НП до першого вводу: інакше кожна сторінка сайту
+  // стукала б в ендпоінт і засмічувала консоль відповіддю 503, коли ключа нема.
 
   window.__deliveryValue = () => {
     if (mode === 'pickup') return 'Самовивіз — вул. Сухоярська, Біла Церква';
