@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MOTOMIX — мотоцикли, квадроцикли, електроскутери · Біла Церква</title>
     <meta name="description" content="MOTOMIX — мототехніка у Білій Церкві: мотоцикли, ендуро, пітбайки, квадроцикли, електроскутери. KOVI, LIFAN, GEON, KAYO, SHINERAY. Доставка по Україні без передоплати.">
-    <link rel="preload" href="/components/header.html" as="fetch" crossorigin>
-    <link rel="preload" href="/components/footer.html" as="fetch" crossorigin>
+    <link rel="preload" href="/components/header" as="fetch">
+    <link rel="preload" href="/components/footer" as="fetch">
     <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,10 +16,12 @@
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
     <meta name="theme-color" content="#F2F1ED">
+    <script src="/data.js" defer></script>
+    <script src="/app.js" defer></script>
 </head>
 
 <body>
-    <div data-include="/components/header.html"></div>
+    <div data-include="/components/header"></div>
 
     <!-- 01 · HERO -->
     <section class="hero">
@@ -171,9 +173,7 @@
         </div>
     </section>
 
-    <div data-include="/components/footer.html"></div>
-    <script src="/data.js"></script>
-    <script src="/app.js"></script>
+    <div data-include="/components/footer"></div>
 </body>
 
 </html>
