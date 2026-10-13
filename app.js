@@ -1510,17 +1510,28 @@ function initInlineForms() {
 
 function initSmooth() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js';
-  s.onload = () => {
-    try {
-      const lenis = window.__lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-      if (!cameBack()) lenis.scrollTo(0, { immediate: true });
-      const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
-      requestAnimationFrame(raf);
-    } catch {}
+  // Lenis згладжує лише колесо миші. На сенсорному екрані він не дає нічого,
+  // але тримає цикл requestAnimationFrame на кожному кадрі — на телефоні це
+  // з'їдало головний потік весь час, поки сторінка відкрита.
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  const start = () => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js';
+    s.onload = () => {
+      try {
+        const lenis = window.__lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+        const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+        requestAnimationFrame(raf);
+      } catch {}
+    };
+    document.head.appendChild(s);
   };
-  document.head.appendChild(s);
+
+  // Чекаємо, поки сторінка звільнить головний потік: прокрутка все одно
+  // починається пізніше, ніж перша відмальовка.
+  if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 2500 });
+  else setTimeout(start, 1200);
 }
 
 /* ---------------- boot ---------------- */
