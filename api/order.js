@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
   const comment = clean(body.comment, 600);
   const subject = clean(body.subject, 120) || 'Заявка з сайту';
   const page = clean(body.page, 200);
+  const delivery = clean(body.delivery, 160);
 
   // Имя необязательно: меньше полей — больше заявок. Телефон остаётся.
   if (!phone) return res.status(400).json({ error: 'Phone is required' });
@@ -70,6 +71,7 @@ module.exports = async (req, res) => {
       `ТОВАРИ (${items.length} поз., ${totalQty} шт):\n${lines}\n` +
       `────────────────────\n` +
       `РАЗОМ: ${money(total)}\n` +
+      (delivery ? `Доставка: ${delivery}\n` : '') +
       (comment ? `Коментар: ${comment}\n` : '') +
       (page ? `Сторінка: ${page}\n` : '') +
       `Час: ${when} (Київ)`;
@@ -116,7 +118,28 @@ module.exports = async (req, res) => {
       }).then((r) => r.json()).catch((e) => ({ ok: false, error: String(e) }))
     ));
 
-    if (results.some((d) => d && d.ok)) return res.status(200).json({ success: true, kind: isOrder ? 'order' : 'lead' });
+    if (results.some((d) => d && d.ok)) {
+      // Кладемо замовлення в журнал, щоб його було видно в панелі бота,
+      // а не тільки в стрічці повідомлень.
+      try {
+        const { loadCfg, saveCfg } = require('./_store.js');
+        const cfg = await loadCfg();
+        cfg.orders = cfg.orders || [];
+        cfg.orders.unshift({
+          d: when,
+          n: name || '',
+          p: phone,
+          s: isOrder ? total : 0,
+          it: isOrder ? items.map((x) => x.name + ' ×' + x.qty).join(', ').slice(0, 160) : subject,
+          c: comment ? comment.slice(0, 160) : '',
+          np: delivery || '',
+          done: false,
+        });
+        cfg.orders = cfg.orders.slice(0, 15);
+        await saveCfg(cfg);
+      } catch (e) { console.error('order log failed:', e); }
+      return res.status(200).json({ success: true, kind: isOrder ? 'order' : 'lead' });
+    }
 
     console.error('Telegram API error:', JSON.stringify(results));
     return res.status(502).json({ error: 'Failed to send to Telegram' });

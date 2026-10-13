@@ -35,6 +35,7 @@ function defaults() {
     recipients: envList(process.env.TELEGRAM_ORDER_CHAT_ID || process.env.TELEGRAM_CHAT_ID),
     allowed: envList(process.env.TELEGRAM_ALLOWED).map(norm),
     await: null,
+    orders: [],
     pinId: null,
   };
 }
@@ -59,6 +60,7 @@ async function loadCfg() {
     recipients: Array.isArray(cfg.recipients) && cfg.recipients.length ? cfg.recipients.map(String) : base.recipients,
     allowed: Array.isArray(cfg.allowed) ? cfg.allowed.map(norm) : base.allowed,
     await: cfg.await || null,
+    orders: Array.isArray(cfg.orders) ? cfg.orders : [],
     pinId: pinned.message_id,
   };
 }
@@ -68,7 +70,7 @@ const render = (cfg) =>
   `Не видаляйте це повідомлення — у ньому зберігаються налаштування бота.\n\n` +
   `Отримувачі замовлень: ${cfg.recipients.length}\n` +
   `Доступ за юзернеймом: ${cfg.allowed.length ? cfg.allowed.map((u) => '@' + u).join(', ') : '—'}\n\n` +
-  JSON.stringify({ recipients: cfg.recipients, allowed: cfg.allowed, await: cfg.await || null });
+  JSON.stringify({ recipients: cfg.recipients, allowed: cfg.allowed, await: cfg.await || null, orders: (cfg.orders || []).slice(0, 15) });
 
 async function saveCfg(cfg) {
   const chat = adminChat();

@@ -977,6 +977,99 @@ function cartStep(step) {
   show(foot, step === 'list' && cartList().length > 0);
 }
 
+/* ---------------- доставка: Нова Пошта з підказками ----------------
+   Підказки тягнемо через свій ендпоінт (ключ НП не можна тримати в
+   браузері). Якщо ключа нема або НП не відповідає — поля не блокуються,
+   людина просто вписує місто й відділення руками. Замовлення має
+   оформлятись у будь-якому випадку. */
+const NP_ENDPOINT = (ORDER_ENDPOINT || '/api/order').replace(/\/order$/, '/np');
+
+function initDelivery() {
+  const wrap = document.querySelector('.dlv'); if (!wrap) return;
+  const npBox = document.getElementById('dlvNp'), pickBox = document.getElementById('dlvPickup');
+  const city = document.getElementById('npCity'), wh = document.getElementById('npWh');
+  const cityList = document.getElementById('npCityList'), whList = document.getElementById('npWhList');
+  const hint = document.getElementById('npHint');
+  let mode = 'np', cityRef = '', manual = false;
+
+  wrap.querySelectorAll('.dlv__tab').forEach((t) => t.addEventListener('click', () => {
+    wrap.querySelectorAll('.dlv__tab').forEach((x) => x.classList.toggle('is-on', x === t));
+    mode = t.dataset.dlv;
+    npBox.hidden = mode !== 'np';
+    pickBox.hidden = mode !== 'pickup';
+  }));
+
+  const goManual = (why) => {
+    if (manual) return;
+    manual = true;
+    wh.disabled = false;
+    wh.placeholder = 'Напр.: відділення №12';
+    city.placeholder = 'Напр.: Біла Церква';
+    if (hint) { hint.hidden = false; hint.textContent = why || 'Підказки тимчасово недоступні — впишіть місто й відділення вручну, менеджер підтвердить.'; }
+  };
+
+  const ask = async (params) => {
+    const r = await fetch(NP_ENDPOINT + '?' + new URLSearchParams(params));
+    if (r.status === 503 || r.status === 502) { goManual(); return null; }
+    if (!r.ok) { goManual(); return null; }
+    return r.json();
+  };
+
+  const paint = (box, items, onPick) => {
+    if (!items || !items.length) { box.hidden = true; return; }
+    box.innerHTML = items.map((i, k) =>
+      `<button type="button" data-k="${k}"><b>${i.name}</b>${i.area ? `<span>${i.area}</span>` : ''}</button>`).join('');
+    box.hidden = false;
+    box.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
+      onPick(items[+b.dataset.k]); box.hidden = true;
+    }));
+  };
+
+  let t1 = null;
+  city.addEventListener('input', () => {
+    cityRef = ''; wh.value = '';
+    if (!manual) { wh.disabled = true; wh.placeholder = 'Спершу оберіть місто'; }
+    clearTimeout(t1);
+    const q = city.value.trim();
+    if (q.length < 2) { cityList.hidden = true; return; }
+    t1 = setTimeout(async () => {
+      const d = await ask({ q });
+      if (!d) return;
+      paint(cityList, d.items, (it) => {
+        city.value = it.name; cityRef = it.ref;
+        wh.disabled = false; wh.placeholder = 'Номер або адреса відділення'; wh.focus();
+      });
+    }, 260);
+  });
+
+  let t2 = null;
+  wh.addEventListener('input', () => {
+    clearTimeout(t2);
+    if (manual || !cityRef) { whList.hidden = true; return; }
+    t2 = setTimeout(async () => {
+      const d = await ask({ city: cityRef, q: wh.value.trim() });
+      if (!d) return;
+      paint(whList, d.items, (it) => { wh.value = it.name; });
+    }, 260);
+  });
+  wh.addEventListener('focus', () => { if (!manual && cityRef && !wh.value) wh.dispatchEvent(new Event('input')); });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#npCityList') && e.target !== city) cityList.hidden = true;
+    if (!e.target.closest('#npWhList') && e.target !== wh) whList.hidden = true;
+  });
+
+  // перевіряємо ключ одразу, щоб людина не чекала марно
+  ask({ q: 'ки' }).then((d) => { if (d && d.items) return; }).catch(() => goManual());
+
+  window.__deliveryValue = () => {
+    if (mode === 'pickup') return 'Самовивіз — вул. Сухоярська, Біла Церква';
+    const c = city.value.trim(), w = wh.value.trim();
+    if (!c && !w) return '';
+    return 'Нова Пошта: ' + [c, w].filter(Boolean).join(', ');
+  };
+}
+
 function initCart() {
   cartPaintBadge(); cartPaintBody();
 
@@ -1030,6 +1123,7 @@ function initCart() {
       subject: 'Замовлення з кошика',
       name: fd.get('name'), phone: fd.get('phone'), comment: fd.get('comment'), company: fd.get('company'),
       page: location.pathname + location.search,
+      delivery: (window.__deliveryValue ? window.__deliveryValue() : ''),
       total: sum,
       items: list.map(i => ({
         id: i.p.id, name: nameOf(i.p).title, qty: i.q,
@@ -1265,7 +1359,7 @@ function initSmooth() {
   }));
   const setHH = () => { const h = document.getElementById("header"); if (h) document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); };
   setHH(); window.addEventListener("resize", setHH); setTimeout(setHH, 350);
-  initChrome(); initModal(); initCards(); initCart(); initInlineForms(); initFabHide();
+  initChrome(); initModal(); initCards(); initCart(); initInlineForms(); initFabHide(); initDelivery();
   renderStrip(); renderCats(); renderRail(); renderBrands(); renderCatalog(); renderProduct(); renderReviews();
   initAcc(); revealInit(); initSmooth();
 

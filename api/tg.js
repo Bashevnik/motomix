@@ -16,17 +16,64 @@ const SITE = 'https://motomix.vercel.app';
 
 const isAdmin = (id) => String(id) === String(adminChat());
 
+/* ---------- журнал замовлень у панелі ---------- */
+const PER_PAGE = 8;
+const money = (n) => Number(n || 0).toLocaleString('uk-UA').replace(/,/g, ' ') + ' грн';
+
+function ordersKb(cfg, page) {
+  const list = cfg.orders || [];
+  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  const pg = Math.min(Math.max(0, page), pages - 1);
+  const slice = list.slice(pg * PER_PAGE, pg * PER_PAGE + PER_PAGE);
+  const rows = slice.map((o, k) => {
+    const i = pg * PER_PAGE + k;
+    const mark = o.done ? '✅' : '🟡';
+    return [{ text: `${mark} ${o.n || 'Без імені'} · ${money(o.s)}`, callback_data: 'ord:' + i }];
+  });
+  if (pages > 1) rows.push([
+    { text: '◀', callback_data: 'opg:' + (pg - 1 + pages) % pages },
+    { text: `${pg + 1}/${pages}`, callback_data: 'noop' },
+    { text: '▶', callback_data: 'opg:' + (pg + 1) % pages },
+  ]);
+  rows.push([{ text: '🏠 Меню', callback_data: 'home' }]);
+  return { inline_keyboard: rows };
+}
+
+function orderCard(o, i) {
+  return '🧾 <b>Замовлення</b>\n' +
+    '────────────────────\n' +
+    `📅 ${o.d || '—'}\n` +
+    `👤 ${o.n || 'імʼя не вказали'}\n` +
+    `📞 <code>${o.p || '—'}</code>\n` +
+    (o.np ? `🚚 ${o.np}\n` : '') +
+    '────────────────────\n' +
+    `🏍 ${o.it || '—'}\n` +
+    `💰 <b>${money(o.s)}</b>\n` +
+    (o.c ? `💬 ${o.c}\n` : '') +
+    (o.done ? '\n✅ Опрацьовано' : '\n🟡 В роботі');
+}
+
+const orderKb = (o, i) => ({
+  inline_keyboard: [
+    [{ text: o.done ? '↩️ Повернути в роботу' : '✅ Опрацьовано', callback_data: 'odone:' + i }],
+    [{ text: '📞 Подзвонити', url: 'tel:' + String(o.p || '').replace(/[^\d+]/g, '') }],
+    [{ text: '‹ До списку', callback_data: 'opg:0' }, { text: '🏠 Меню', callback_data: 'home' }],
+  ],
+});
+
 const panelText = (cfg) =>
   '🏍 <b>MOTOMIX</b> — панель замовлень\n' +
   '────────────────────\n' +
+  `📦 Замовлень збережено: <b>${(cfg.orders || []).length}</b>\n` +
   `👥 Отримувачів: <b>${cfg.recipients.length}</b>\n` +
   `🔑 Доступ за юзернеймом: <b>${cfg.allowed.length ? cfg.allowed.map((u) => '@' + u).join(', ') : 'нікого'}</b>\n\n` +
   'Сюди падають замовлення з кошика і заявки з сайту.';
 
 const panelKb = () => ({
   inline_keyboard: [
+    [{ text: '📦 Замовлення', callback_data: 'opg:0' }],
     [{ text: '👥 Отримувачі', callback_data: 'list' }, { text: '➕ Додати доступ', callback_data: 'add' }],
-    [{ text: '📊 Статус', callback_data: 'stat' }, { text: '🧾 Тестове замовлення', callback_data: 'demo' }],
+    [{ text: '📊 Статус', callback_data: 'stat' }, { text: '🧾 Приклад замовлення', callback_data: 'demo' }],
     [{ text: '🌐 Відкрити сайт', url: SITE }],
   ],
 });
@@ -105,6 +152,31 @@ module.exports = async (req, res) => {
           '➕ <b>Видати доступ</b>\n\nНадішліть юзернейм у форматі <code>@username</code>.\n\n' +
           'Далі людина відкриває @Motomixbc_bot і тисне <b>Старт</b> — після цього замовлення почнуть приходити і їй.\n\n' +
           '<i>Telegram не дозволяє боту написати першим, тому крок зі «Старт» обовʼязковий.</i>', backKb());
+        return done();
+      }
+
+      if (data === 'noop') return done();
+
+      if (data.startsWith('opg:')) {
+        const pg = parseInt(data.slice(4), 10) || 0;
+        const list = cfg.orders || [];
+        if (!list.length) { await edit(chat, mid, '📦 Замовлень поки нема.\n\nЯк тільки хтось оформить на сайті — воно зʼявиться тут.', backKb()); return done(); }
+        await edit(chat, mid, '📦 <b>Замовлення</b>\n\nОберіть, щоб побачити деталі:', ordersKb(cfg, pg));
+        return done();
+      }
+
+      if (data.startsWith('ord:')) {
+        const i = parseInt(data.slice(4), 10);
+        const ord = (cfg.orders || [])[i];
+        if (!ord) { await edit(chat, mid, '📦 Замовлення не знайдено.', backKb()); return done(); }
+        await edit(chat, mid, orderCard(ord, i), orderKb(ord, i));
+        return done();
+      }
+
+      if (data.startsWith('odone:')) {
+        const i = parseInt(data.slice(6), 10);
+        const ord = (cfg.orders || [])[i];
+        if (ord) { ord.done = !ord.done; await saveCfg(cfg); await edit(chat, mid, orderCard(ord, i), orderKb(ord, i)); }
         return done();
       }
 

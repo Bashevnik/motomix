@@ -51,6 +51,29 @@
       <label>Ім'я <span class="opt">не обов'язково</span><input type="text" name="name" placeholder="Як до вас звертатися"></label>
       <label>Телефон<input type="tel" name="phone" required placeholder="+38 0__ ___ __ __"></label>
       <label>Коментар <span class="opt">не обов'язково</span><textarea name="comment" rows="2" placeholder="Зручний час дзвінка, питання по доставці"></textarea></label>
+      <div class="dlv">
+        <div class="dlv__tabs" role="tablist">
+          <button type="button" class="dlv__tab is-on" data-dlv="np">Нова Пошта</button>
+          <button type="button" class="dlv__tab" data-dlv="pickup">Самовивіз</button>
+        </div>
+
+        <div class="dlv__np" id="dlvNp">
+          <label class="dlv__f">Місто або село
+            <input type="text" id="npCity" autocomplete="off" placeholder="Почніть вводити: Біла Церква">
+            <div class="dlv__list" id="npCityList" hidden data-lenis-prevent></div>
+          </label>
+          <label class="dlv__f">Відділення
+            <input type="text" id="npWh" autocomplete="off" placeholder="Спершу оберіть місто" disabled>
+            <div class="dlv__list" id="npWhList" hidden data-lenis-prevent></div>
+          </label>
+          <p class="dlv__hint" id="npHint" hidden></p>
+        </div>
+
+        <div class="dlv__pickup" id="dlvPickup" hidden>
+          <p>Забрати можна в салоні: <b>вул. Сухоярська, Біла Церква</b><br>щодня 9:00–20:00.</p>
+        </div>
+      </div>
+
       <div class="cart__sum cart__sum--form"><span>До сплати</span><b id="cartTotal2">0 ₴</b></div>
       <button type="submit" class="btn btn--red btn--block btn--lg" id="cartSend">Підтвердити замовлення</button>
       <button class="cart__clear" id="cartBack" type="button">← Назад до кошика</button>
