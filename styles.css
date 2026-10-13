@@ -1,3 +1,10 @@
+/* Шрифти лежать у нас: мінус сторонній домен і мінус блокуючий запит
+   перед першою відмальовкою. Змінні — один файл на всі насиченості. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(assets/fonts/inter-cyrillic.woff2) format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(assets/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/oswald-cyrillic.woff2) format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/oswald-latin.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+
 /* =====================================================================
    MOTOMIX — design system "SPEED" · LIGHT
    Геометрія з логотипа: нахил італіка → зрізи 45°, червоні слеші.
@@ -1654,4 +1661,35 @@ picture{display:contents}
   .header__phone{width:42px;height:42px;display:grid;place-items:center;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
   .header__phone .icon{width:17px;height:17px;color:#fff}
+}
+
+/* =====================================================================
+   v26 — кошик праворуч від «Заявки», щільніші кнопки
+   ===================================================================== */
+.header__util{gap:16px}
+.header__util .btn{padding:.78em 1.5em;font-size:.82rem;margin-left:0}
+.hcart{width:40px;height:40px}
+@media(max-width:980px){ .header__util{gap:9px} .hcart{width:40px;height:40px} }
+
+/* =====================================================================
+   ПІДВАЛ — MOTOMIX у фірмовому червоно-білому металі
+   Градієнт заповнює всю висоту літер: білий верх, фірмовий червоний
+   у тілі, темна смуга «горизонту» для металевого зламу і світлий низ.
+   Тонкий темний контур тримає літери читабельними на чорному тлі.
+   ===================================================================== */
+.footer__word{
+  background:linear-gradient(177deg,
+    #FFFFFF 0%,
+    #FFF2F2 14%,
+    #F05A60 30%,
+    #E01B24 43%,
+    #7E0D13 50%,      /* темний злам — без нього метал виглядає як заливка */
+    #E8343C 57%,
+    #FF8A8E 70%,
+    #FFF4F4 84%,
+    #FFFFFF 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(224,27,36,.28));
+  paint-order:stroke fill;
 }

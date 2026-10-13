@@ -47,6 +47,14 @@ const el = (h) => { const t = document.createElement('template'); t.innerHTML = 
 /* webp легший за jpeg приблизно на чверть; <picture> сам обирає формат,
    а старий браузер отримає звичайний jpg із src */
 const webpOf = (s) => String(s || '').replace(/.(jpe?g|png)$/i, '.webp');
+/* для карточок і плиток браузер сам обирає менший файл: на телефоні
+   картинка показується ~470px, тягнути 900 немає сенсу */
+const picCard = (src, attrs, sizes) => {
+  const w = webpOf(src);
+  const sm = w.replace('/olx/', '/olx/sm/');
+  return `<picture><source type="image/webp" srcset="${sm} 480w, ${w} 900w" sizes="${sizes || '(max-width:620px) 50vw, (max-width:1180px) 33vw, 20vw'}"><img src="${src}" ${attrs || ''}></picture>`;
+};
+
 const pic = (src, attrs) =>
   `<picture><source srcset="${webpOf(src)}" type="image/webp"><img src="${src}" ${attrs || ''}></picture>`;
 
@@ -132,7 +140,7 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
   <article class="pcard rv" data-href="product.html?id=${p.id}" tabindex="0">
     <div class="pcard__media">
       ${p.badge ? `<span class="pcard__badge">${p.badge}</span>` : ""}
-      ${pic(p.img, `alt="${n.title}" loading="lazy" decoding="async" width="450" height="600"`)}
+      ${picCard(p.img, `alt="${n.title}" loading="lazy" decoding="async" width="450" height="600"`)}
     </div>
     <div class="pcard__body">
       <h3 class="pcard__name">${n.title}</h3>
@@ -412,7 +420,7 @@ function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach((c, i) => box.appendChild(el(`
     <a class="cat rv" href="catalog.html?type=${encodeURIComponent(c.name)}">
-      ${pic(c.img, `alt="${c.name}" loading="lazy" decoding="async"`)}
+      ${picCard(c.img, `alt="${c.name}" loading="lazy" decoding="async"`, "(max-width:640px) 50vw, 25vw")}
       <span class="cat__n num-out">0${i + 1}</span>
       <div class="cat__body">
         <div class="cat__bar"></div>
@@ -630,7 +638,7 @@ function renderProduct() {
           <button class="gallery__nav gallery__nav--n" id="galNext" type="button" aria-label="Наступне фото">${ico("ic-arrow")}</button>
           <span class="gallery__count" id="galCount">1 / ${gal.length}</span>` : ""}
         </div>
-        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button type="button" class="${i ? "" : "active"}" data-i="${i}" aria-label="Фото ${i + 1}">${pic(g, `alt="" loading="lazy" decoding="async"`)}</button>`).join("")}</div>` : ""}
+        ${gal.length > 1 ? `<div class="gallery__thumbs" id="galThumbs">${gal.map((g, i) => `<button type="button" class="${i ? "" : "active"}" data-i="${i}" aria-label="Фото ${i + 1}">${picCard(g, `alt="" loading="lazy" decoding="async"`, "100px")}</button>`).join("")}</div>` : ""}
       </div>
       <section class="pdesc" id="pdesc">
         <h2 class="pdesc__t">Опис</h2>
@@ -923,7 +931,7 @@ function cartPaintBody() {
   box.innerHTML = list.map(i => {
     const n = nameOf(i.p);
     return `<article class="ci" data-id="${i.p.id}">
-      <a class="ci__img" href="product.html?id=${i.p.id}">${pic(i.p.img, `alt="${n.title}" loading="lazy" decoding="async"`)}</a>
+      <a class="ci__img" href="product.html?id=${i.p.id}">${picCard(i.p.img, `alt="${n.title}" loading="lazy" decoding="async"`, "90px")}</a>
       <div class="ci__main">
         <a class="ci__name" href="product.html?id=${i.p.id}">${n.title}</a>
         <div class="ci__price">${priceText(i.p)}</div>
