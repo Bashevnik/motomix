@@ -8,7 +8,8 @@
     <meta name="description" content="MOTOMIX — команда райдерів із Білої Церкви. Чесна консультація, офіційні бренди, сервіс і Trade-in.">
     <link rel="preload" href="/components/header" as="fetch">
     <link rel="preload" href="/components/footer" as="fetch">
-    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/logo.png">
+    <link rel="preload" as="image" href="/assets/hero/enduro-action.jpg" imagesrcset="/assets/hero/enduro-action-1100.jpg 1100w, /assets/hero/enduro-action.jpg 1880w" imagesizes="100vw" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
@@ -22,7 +23,7 @@
     <div data-include="/components/header"></div>
 
     <section class="phero">
-        <div class="phero__media"><img src="/assets/hero/enduro-action.jpg" srcset="/assets/hero/enduro-action-1100.jpg 1100w, /assets/hero/enduro-action.jpg 1880w" sizes="100vw" alt=""></div>
+        <div class="phero__media"><img fetchpriority="high" src="/assets/hero/enduro-action.jpg" srcset="/assets/hero/enduro-action-1100.jpg 1100w, /assets/hero/enduro-action.jpg 1880w" sizes="100vw" alt=""></div>
         <div class="wrap phero__in">
             <div class="crumbs"><a href="/">Головна</a><em>›</em><span>Про нас</span></div>
             <h1>Ми живемо<br>мотодрайвом</h1>
