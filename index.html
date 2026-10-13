@@ -9,9 +9,7 @@
     <link rel="preload" href="/components/header" as="fetch">
     <link rel="preload" href="/components/footer" as="fetch">
     <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
     <link rel="icon" href="/assets/favicon.png" sizes="64x64">
@@ -25,7 +23,7 @@
 
     <!-- 01 · HERO -->
     <section class="hero">
-        <div class="hero__media"><img src="/assets/hero/hero-main.jpg" alt="Ендуро на заході сонця"></div>
+        <div class="hero__media"><img src="/assets/hero/hero-main.jpg" srcset="/assets/hero/hero-main-1200.jpg 1200w, /assets/hero/hero-main.jpg 2000w" sizes="105vw" alt="Ендуро на заході сонця"></div>
         <div class="wrap hero__inner">
             <div class="hero__copy">
                 <span class="eyebrow hero__eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Мототехніка · Біла Церква</span>
@@ -90,7 +88,7 @@
         <div class="wrap">
             <div class="story">
                 <div class="story__media rv">
-                    <img src="/assets/hero/story-2.jpg" alt="Ендуро в русі" loading="lazy" decoding="async">
+                    <img src="/assets/hero/story-2.jpg" srcset="/assets/hero/story-2-1000.jpg 1000w, /assets/hero/story-2.jpg 2000w" sizes="(max-width: 900px) 92vw, 46vw" alt="Ендуро в русі" loading="lazy" decoding="async">
                     <span class="story__tag">Ендуро</span>
                 </div>
                 <div class="story__text rv">
@@ -125,7 +123,7 @@
         <div class="wrap">
             <div class="story story--rev">
                 <div class="story__media rv">
-                    <img src="/assets/hero/story-1.jpg" alt="Мотоцикл на дорозі" loading="lazy" decoding="async">
+                    <img src="/assets/hero/story-1.jpg" srcset="/assets/hero/story-1-1000.jpg 1000w, /assets/hero/story-1.jpg 2000w" sizes="(max-width: 900px) 92vw, 46vw" alt="Мотоцикл на дорозі" loading="lazy" decoding="async">
                     <span class="story__tag">Сервіс</span>
                 </div>
                 <div class="story__text rv">
