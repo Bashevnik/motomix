@@ -8,8 +8,7 @@
     <meta name="description" content="MOTOMIX — мототехніка у Білій Церкві: мотоцикли, ендуро, пітбайки, квадроцикли, електроскутери. KOVI, LIFAN, GEON, KAYO, SHINERAY. Доставка по Україні без передоплати.">
     <link rel="preload" href="/components/header" as="fetch">
     <link rel="preload" href="/components/footer" as="fetch">
-    <link rel="preload" as="image" href="/assets/logo.png">
-    <link rel="preload" as="image" href="/assets/hero/hero-main.jpg" imagesrcset="/assets/hero/hero-main-1200.jpg 1200w, /assets/hero/hero-main.jpg 2000w" imagesizes="105vw" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/logo.png" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/styles.css">
     <script>document.documentElement.classList.add('booting');</script>
@@ -24,7 +23,7 @@
 
     <!-- 01 · HERO -->
     <section class="hero">
-        <div class="hero__media"><img fetchpriority="high" src="/assets/hero/hero-main.jpg" srcset="/assets/hero/hero-main-1200.jpg 1200w, /assets/hero/hero-main.jpg 2000w" sizes="105vw" alt="Ендуро на заході сонця"></div>
+        <div class="hero__media"><img src="/assets/hero/hero-main.jpg" srcset="/assets/hero/hero-main-1200.jpg 1200w, /assets/hero/hero-main.jpg 2000w" sizes="105vw" alt="Ендуро на заході сонця"></div>
         <div class="wrap hero__inner">
             <div class="hero__copy">
                 <span class="eyebrow hero__eyebrow"><span class="slashes"><i></i><i></i><i></i></span> Мототехніка · Біла Церква</span>
