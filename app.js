@@ -1062,8 +1062,11 @@ function initDelivery() {
     } catch { goManual(); return null; }
   };
 
+  const busy = (box) => { box.innerHTML = '<div class="dlv__busy">Шукаємо…</div>'; box.hidden = false; };
+  const empty = (box, t) => { box.innerHTML = '<div class="dlv__busy">' + t + '</div>'; box.hidden = false; };
+
   const paint = (box, items, onPick) => {
-    if (!items || !items.length) { box.hidden = true; return; }
+    if (!items || !items.length) { empty(box, 'Нічого не знайшли — впишіть вручну'); return; }
     box.innerHTML = items.map((i, k) =>
       `<button type="button" data-k="${k}"><b>${i.name}</b>${i.area ? `<span>${i.area}</span>` : ''}</button>`).join('');
     box.hidden = false;
@@ -1079,9 +1082,10 @@ function initDelivery() {
     if (!CARRIERS[mode].auto || manual) { cityList.hidden = true; return; }
     const q = city.value.trim();
     if (q.length < 2) { cityList.hidden = true; return; }
+    busy(cityList);
     t1 = setTimeout(async () => {
       const d = await ask({ q });
-      if (!d || !d.items) return;
+      if (!d || !d.items) { cityList.hidden = true; return; }
       paint(cityList, d.items, (it) => { city.value = it.name; cityRef = it.ref; wh.focus(); });
     }, 260);
   });
@@ -1090,9 +1094,10 @@ function initDelivery() {
   wh.addEventListener('input', () => {
     clearTimeout(t2);
     if (!CARRIERS[mode].auto || manual || !cityRef) { whList.hidden = true; return; }
+    busy(whList);
     t2 = setTimeout(async () => {
       const d = await ask({ city: cityRef, name: city.value.trim(), q: wh.value.trim() });
-      if (!d || !d.items) return;
+      if (!d || !d.items) { whList.hidden = true; return; }
       paint(whList, d.items, (it) => { wh.value = it.name; });
     }, 260);
   });

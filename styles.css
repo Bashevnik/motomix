@@ -1862,3 +1862,6 @@ picture{display:contents}
   .thx__steps{grid-template-columns:1fr}
   .thx__cta .btn{width:100%;justify-content:center}
 }
+
+/* стан пошуку підказок: поле не повинно виглядати мертвим, поки чекаємо НП */
+.dlv__busy{padding:12px 13px;font-size:.84rem;color:var(--ash);font-family:var(--body)}
