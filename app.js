@@ -76,7 +76,7 @@ const webpOf = (s) => abs(s);
 
 const ico = (id) => `<svg class="icon"><use href="#${id}"></use></svg>`;
 const priceText = (p) => p.priceRaw || "Ціна за запитом";
-const stockOf = () => "В наявності";
+const stockOf = (p) => p.stock || "В наявності";
 const qs = (k) => { const r = routeParams(); return (r[k] !== undefined && r[k] !== '') ? r[k] : new URLSearchParams(location.search).get(k); };
 
 /* ---------------- нормалізація назв з OLX ----------------
@@ -99,6 +99,7 @@ const nmCap = (t) => t.includes("-")
 
 const _nmCache = new Map();
 function nameOf(p) {
+  if (p.displayName) return { title: p.displayName, meta: p.cc ? p.cc + " см³" : (p.type || "") };
   if (_nmCache.has(p.id)) return _nmCache.get(p.id);
   let s = (p.name || "")
     .replace(/[‍⁠️]/g, "")
@@ -163,7 +164,7 @@ const pcardHtml = (p) => { const n = nameOf(p); return `
       <p class="pcard__sub">${n.meta || p.type || ""}</p>
       <div class="pcard__foot">
         <div class="pcard__price">${priceText(p)}</div>
-        <span class="pcard__stock">${stockOf(p)}</span>
+        <span class="pcard__stock${p.stock ? " stock--confirm" : ""}">${stockOf(p)}</span>
         <button class="pcard__add" type="button" data-cart-add="${p.id}">${ico("ic-cart")} В кошик</button>
       </div>
     </div>
@@ -436,8 +437,8 @@ function renderCats() {
   const box = document.getElementById('cats'); if (!box) return;
   CATEGORIES.forEach((c, i) => box.appendChild(el(`
     <a class="cat rv" href="${urlType(c.name)}">
-      ${picCard(c.img, `alt="${c.name}" loading="lazy" decoding="async"`, "(max-width:640px) 50vw, 25vw")}
-      <span class="cat__n num-out">0${i + 1}</span>
+      ${c.img ? picCard(c.img, `alt="${c.name}" loading="lazy" decoding="async"`, "(max-width:640px) 50vw, 25vw") : `<span class="cat__announcement" aria-hidden="true">KOVE</span>`}
+      <span class="cat__n num-out">${String(i + 1).padStart(2, "0")}</span>
       <div class="cat__body">
         <div class="cat__bar"></div>
         <svg class="cat__ico"><use href="#${c.icon || 'ic-bike'}"></use></svg>
@@ -477,6 +478,7 @@ function renderRail() {
 /* --- стрічка відгуків --- */
 function renderReviews() {
   const track = document.getElementById('reviews'); if (!track) return;
+  if (PRODUCTS.find(p => p.id === qs('id'))?.displayName) { track.closest('section').hidden = true; return; }
   REVIEWS.forEach(r => track.appendChild(el(`
     <article class="rev">
       <div class="rev__top">
@@ -497,7 +499,7 @@ function renderCatalog() {
   const ALL = "Усі";
   const groups = {
     type:  { label: "Тип",        values: [ALL, ...CATEGORIES.map(c => c.name)] },
-    brand: { label: "Бренд",      values: [ALL, ...[...new Set(PRODUCTS.map(p => p.brand))]] },
+    brand: { label: "Бренд",      values: [ALL, ...[...new Set([...PRODUCTS.map(p => p.brand), "KOVE"])]] },
     cc:    { label: "Об’єм, см³", values: [ALL, ...[...new Set(PRODUCTS.map(p => p.cc).filter(Boolean))].sort((a,b)=>a-b)] },
   };
   const state = { type: ALL, brand: ALL, cc: ALL, priceMin: 0, priceMax: Infinity };
@@ -524,11 +526,14 @@ function renderCatalog() {
     const h1 = document.getElementById("cat-h1"), desc = document.getElementById("cat-desc");
     const tail = document.getElementById("cat-crumb-tail"), img = document.getElementById("cat-img");
     const link = document.getElementById("cat-crumb-link");
-    const c = state.type !== ALL ? state.type : (grp || ALL);
+    const c = state.brand === "KOVE" ? "KOVE" : state.type !== ALL ? state.type : (grp || ALL);
     const meta = CATEGORIES.find(x => x.name === c);
+    const comingSoon = c === "KOVE";
+    document.querySelector(".phero")?.classList.toggle("phero--coming", comingSoon);
+    if (img) img.hidden = comingSoon;
     if (c === ALL) {
       if (h1) h1.textContent = "Каталог мототехніки";
-      if (desc) desc.textContent = "Ендуро, мотарди, дорожні, спортбайки, пітбайки, квадроцикли та електроскутери — обери тип або скористайся фільтром.";
+      if (desc) desc.textContent = "Мотоцикли, скутери, квадроцикли та трицикли - обери тип техніки або скористайся фільтром.";
       if (tail) tail.innerHTML = "";
       if (link) link.removeAttribute("href");
       document.title = "Каталог мототехніки — MOTOMIX";
@@ -550,9 +555,10 @@ function renderCatalog() {
     if (sort === "cheap") list = [...list].sort((a, b) => (a.priceUah || 1e9) - (b.priceUah || 1e9));
     if (sort === "exp") list = [...list].sort((a, b) => (b.priceUah || 0) - (a.priceUah || 0));
     grid.innerHTML = "";
-    if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
+    if (state.type === "KOVE" || state.brand === "KOVE") grid.appendChild(el(`<section class="catalog-soon" aria-label="Надходження KOVE"><span class="eyebrow">Незабаром у MOTOMIX</span><h2>KOVE - скоро в наявності</h2><p>Готуємо поповнення каталогу. Моделі, ціни та терміни надходження уточнюються.</p><button class="btn btn--red" type="button" data-order="Запит про надходження KOVE">Дізнатися про надходження</button></section>`));
+    else if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
     else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
-    if (countEl) countEl.textContent = `Знайдено: ${list.length}`;
+    if (countEl) countEl.textContent = state.type === "KOVE" || state.brand === "KOVE" ? "Очікуємо надходження" : `Знайдено: ${list.length}`;
     paintHead(); paintBars(); paintChips(); revealInit();
   };
 
@@ -568,8 +574,8 @@ function renderCatalog() {
       cfg.values.forEach(v => {
         const n = countFor(g, v);
         const ic = g === "type" ? (CATEGORIES.find(c => c.name === v) || {}).icon : null;
-        const o = el(`<button type="button" class="${state[g] === v ? "sel" : ""}" ${!n && v !== ALL ? "disabled" : ""}>` +
-          `<span class="fopt">${ic ? `<svg class="fopt__ico"><use href="#${ic}"></use></svg>` : ""}${v}</span><i>${n}</i></button>`);
+        const o = el(`<button type="button" class="${state[g] === v ? "sel" : ""}" ${!n && v !== ALL && v !== "KOVE" ? "disabled" : ""}>` +
+          `<span class="fopt">${ic ? `<svg class="fopt__ico"><use href="#${ic}"></use></svg>` : ""}${v}</span><i>${v === "KOVE" ? "Скоро" : n}</i></button>`);
         o.addEventListener("click", () => { state[g] = v; box.classList.remove("open"); draw(); });
         panel.appendChild(o);
       });
@@ -673,9 +679,8 @@ function renderProduct() {
       <h1 class="pdp__title">${n.title}</h1>
       ${n.meta ? `<p class="pdp__sub">${n.meta}</p>` : ""}
       <div class="pdp__status">
-        <span class="pdp__stock">${stockOf(p)}</span>
-        <span class="pdp__stars">${Array(5).fill(ico('ic-star')).join('')}</span>
-        <span class="pdp__revn">${REVIEWS.length} відгуки</span>
+        <span class="pdp__stock${p.stock ? " stock--confirm" : ""}">${stockOf(p)}</span>
+        ${p.displayName ? "" : `<span class="pdp__stars">${Array(5).fill(ico('ic-star')).join('')}</span><span class="pdp__revn">${REVIEWS.length} відгуки</span>`}
       </div>
       <div class="pdp__price"><b>${priceText(p)}</b></div>
       <div class="pdp__actions">

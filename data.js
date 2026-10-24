@@ -1018,3 +1018,208 @@ window.MM_PRODUCTS = [
    "ar": 0.75
   }
  ];
+
+/* Нове надходження: фото власника, 23.10.2026. Джерела: PRODUCT-UPDATE-2026-10-23.md. */
+window.MM_CATEGORIES.push(...[
+  {
+    "name": "Трицикли",
+    "slug": "tricycle",
+    "group": "Трицикли",
+    "icon": "ic-t-trike",
+    "short": "Пасажирські та вантажні",
+    "d": "Електричні трицикли для щоденних поїздок, покупок і господарських справ. Пасажирські моделі та техніка з вантажною платформою.",
+    "img": "assets/new-products/sokmoto-mini.jpg"
+  },
+  {
+    "name": "Скутери",
+    "slug": "scooter",
+    "group": "Скутери",
+    "icon": "ic-t-escooter",
+    "short": "Щоденні поїздки",
+    "d": "Бензинові скутери для міських і приміських маршрутів. Комплектацію та наявність уточнюйте у менеджера.",
+    "img": "assets/new-products/lifan-kpv-150.jpg"
+  },
+  {
+    "name": "KOVE",
+    "slug": "kove",
+    "group": "Мотоцикли",
+    "icon": "ic-t-enduro",
+    "short": "Скоро в наявності",
+    "d": "Мотоцикли KOVE скоро з’являться в MOTOMIX. Моделі, ціни та терміни надходження уточнюються.",
+    "comingSoon": true
+  }
+]);
+window.MM_BRANDS.push("KOVE");
+window.MM_PRODUCTS.unshift(...[
+  {
+    "id": "sokmoto-mini",
+    "name": "SOK MOTO Mini",
+    "displayName": "SOK MOTO Mini",
+    "brand": "SOK MOTO",
+    "cat": "Трицикли",
+    "type": "Трицикли",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/sokmoto-mini.jpg",
+    "gallery": [
+      "assets/new-products/sokmoto-mini.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Компактний електричний трицикл із задньою вантажною платформою. Підійде для повсякденних господарських поїздок і перевезення речей. На фото - широка спинка, підлокітники, низький прохід до сидіння та відкритий кузов із бортами. Основні характеристики • Електричний привід • Три колеса • Переднє дискове гальмо • Вантажна платформа позаду сидіння. Параметри батареї, допустиме навантаження та комплектацію конкретного екземпляра уточнюйте у менеджера.",
+    "source": "https://sokmoto.com/sokmoto"
+  },
+  {
+    "id": "fada-elite",
+    "name": "FADA eLITE",
+    "displayName": "FADA eLITE",
+    "brand": "FADA",
+    "cat": "Трицикли",
+    "type": "Трицикли",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/fada-elite.jpg",
+    "gallery": [
+      "assets/new-products/fada-elite.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Пасажирський електротрицикл FADA eLITE для щоденних поїздок. Триколісне компонування, низька підлога та сидіння зі спинкою спрощують посадку. На фото - сірий кузов, кругла передня фара, дзеркала, підлокітники й переднє дискове гальмо. Модель представлена в лінійці FADA з електричним приводом. Версію акумулятора, потужність і фактичний запас ходу уточнюйте перед замовленням.",
+    "source": "https://motomarket.in.ua/fada-elite-lfp"
+  },
+  {
+    "id": "fada-oldi",
+    "name": "FADA OLDi",
+    "displayName": "FADA OLDi",
+    "brand": "FADA",
+    "cat": "Трицикли",
+    "type": "Трицикли",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/fada-oldi.jpg",
+    "gallery": [
+      "assets/new-products/fada-oldi.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Електричний трицикл FADA OLDi для повсякденних поїздок і покупок. На фото - передній багажник, сидіння зі спинкою та підлокітниками, дзеркала й низька підлога. Три колеса дозволяють зупинятися без балансування, як на двоколісному скутері. У лінійці є різні версії двигуна й батареї: комплектацію, запас ходу та допустиме навантаження цього екземпляра уточнюйте у менеджера.",
+    "source": "https://motomarket.in.ua/fada-oldi-max"
+  },
+  {
+    "id": "sokmoto-e-lead",
+    "name": "SOK MOTO E-Lead",
+    "displayName": "SOK MOTO E-Lead",
+    "brand": "SOK MOTO",
+    "cat": "Електроскутери",
+    "type": "Електроскутери",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/sokmoto-e-lead.jpg",
+    "gallery": [
+      "assets/new-products/sokmoto-e-lead.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Міський електроскутер SOK MOTO E-Lead із просторою підлогою та довгим сидінням. На фото - коричневий кузов, задній кофр, дзеркала й переднє дискове гальмо. Електрична тяга підходить для щоденних поїздок без перемикання механічних передач. Модель випускається з різними батареями; їхню ємність, потужність двигуна та запас ходу конкретного скутера уточнюйте перед покупкою.",
+    "source": "https://sokmoto.com/ebikes/sokmoto-e-lead-lifepo4"
+  },
+  {
+    "id": "sokmoto-wolf",
+    "name": "SOK MOTO Wolf",
+    "displayName": "SOK MOTO Wolf",
+    "brand": "SOK MOTO",
+    "cat": "Електроскутери",
+    "type": "Електроскутери",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/sokmoto-wolf.jpg",
+    "gallery": [
+      "assets/new-products/sokmoto-wolf.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Електроскутер SOK MOTO Wolf для міських маршрутів. Чорний корпус із помаранчевими акцентами, виразна передня оптика та довге сидіння формують його впізнаваний вигляд. На фото встановлено задній кофр і дзеркала. Лінійка Wolf має електричний привід і різні варіанти акумулятора. Точні параметри батареї, заряджання та запас ходу уточнюйте у менеджера для обраної комплектації.",
+    "source": "https://sokmoto.com/sokmoto-wolf"
+  },
+  {
+    "id": "fada-n9",
+    "name": "FADA N9",
+    "displayName": "FADA N9",
+    "brand": "FADA",
+    "cat": "Електроскутери",
+    "type": "Електроскутери",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/fada-n9.jpg",
+    "gallery": [
+      "assets/new-products/fada-n9.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Компактний електроскутер FADA N9 із низькою підлогою для зручної посадки. На фото - синій кузов, передня фара, круглі дзеркала, задній кофр та переднє дискове гальмо. Формат моделі підходить для повсякденних міських поїздок. У різних випусках N9 відрізняються потужність і тип батареї: перед замовленням уточніть комплектацію та доступний запас ходу.",
+    "source": "https://motomarket.in.ua/fada-n9"
+  },
+  {
+    "id": "kayo-ts90",
+    "name": "KAYO TS90",
+    "displayName": "KAYO TS90",
+    "brand": "KAYO",
+    "cat": "Пітбайки",
+    "type": "Пітбайки",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/kayo-ts90.jpg",
+    "gallery": [
+      "assets/new-products/kayo-ts90.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Компактний пітбайк KAYO TS90 для навчання їзді поза дорогами загального користування. Модель має чотиритактний двигун із повітряним охолодженням, чотириступеневу напівавтоматичну коробку передач та колеса 12/10 дюймів. Передні й задні гальма - дискові. На фото - біло-червоне оформлення із синіми акцентами. Підбір за зростом, спорядження та комплектацію конкретного випуску обговоріть із менеджером.",
+    "source": "https://kayomotorcycles.eu/product/kayo-ts90/"
+  },
+  {
+    "id": "lifan-kpv-150",
+    "name": "LIFAN KPV 150",
+    "displayName": "LIFAN KPV 150",
+    "brand": "LIFAN",
+    "cat": "Скутери",
+    "type": "Скутери",
+    "priceRaw": "Ціна за запитом",
+    "priceUah": null,
+    "stock": "Уточнюйте наявність",
+    "badge": "Новинка",
+    "img": "assets/new-products/lifan-kpv-150.jpg",
+    "gallery": [
+      "assets/new-products/lifan-kpv-150.jpg"
+    ],
+    "ar": 0.75,
+    "desc": "Скутер об’ємом 150 см³ для повсякденних поїздок. На фото - високе прозоре вітрове скло, дзеркала, широке сидіння та переднє дискове гальмо. Деталі модифікації, комплектацію, витрати пального й умови замовлення уточнюйте у менеджера.",
+    "source": "https://motomarket.in.ua/lifan-kpv-150",
+    "cc": 150,
+    "identificationNote": "Власник підтвердив виправлення назви на LIFAN KPV 150."
+  }
+]);
+for (const update of [
+  {
+    "id": "dytyachi-pidbayky-exdrive-110-2026",
+    "img": "assets/new-products/dytyachi-pidbayky-exdrive-110-2026.jpg"
+  },
+  {
+    "id": "kvadrotsykel-sok-moto-terra-x-250cc-2026r",
+    "img": "assets/new-products/kvadrotsykel-sok-moto-terra-x-250cc-2026r.jpg"
+  },
+  {
+    "id": "quadraterra-300-4x4-2026-novyy",
+    "img": "assets/new-products/quadraterra-300-4x4-2026-novyy.jpg"
+  }
+]) {
+  const product = window.MM_PRODUCTS.find(p => p.id === update.id);
+  if (product) { product.gallery = [update.img, ...(product.gallery || [product.img]).filter(img => img !== update.img)]; product.img = update.img; product.ar = 0.75; }
+}
