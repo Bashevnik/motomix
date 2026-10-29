@@ -557,13 +557,14 @@ function renderCatalog() {
     grid.innerHTML = "";
     const selectedMeta = CATEGORIES.find(x => x.name === state.type);
     const accessoryProducts = PRODUCTS.filter(p => p.accessoryCategory);
+    const originalAccessoryProducts = list.filter(p => !p.accessoryCategory);
     if (state.type === "KOVE" || state.brand === "KOVE") grid.appendChild(el(`<section class="catalog-soon" aria-label="Надходження KOVE"><span class="eyebrow">Незабаром у MOTOMIX</span><h2>KOVE - скоро в наявності</h2><p>Готуємо поповнення каталогу. Моделі, ціни та терміни надходження уточнюються.</p><button class="btn btn--red" type="button" data-order="Запит про надходження KOVE">Дізнатися про надходження</button></section>`));
     else if (state.type === "Аксесуари") {
-      accessoryProducts.forEach(p => grid.appendChild(el(pcardHtml(p))));
+      [...accessoryProducts, ...originalAccessoryProducts].forEach(p => grid.appendChild(el(pcardHtml(p))));
     }
     else if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
     else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
-    if (countEl) countEl.textContent = state.type === "Аксесуари" ? `Знайдено: ${accessoryProducts.length}` : state.type === "KOVE" || state.brand === "KOVE" ? "Очікуємо надходження" : `Знайдено: ${list.length}`;
+    if (countEl) countEl.textContent = state.type === "Аксесуари" ? `Знайдено: ${accessoryProducts.length + originalAccessoryProducts.length}` : state.type === "KOVE" || state.brand === "KOVE" ? "Очікуємо надходження" : `Знайдено: ${list.length}`;
     paintHead(); paintBars(); paintChips(); revealInit();
   };
 
