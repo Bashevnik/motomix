@@ -557,16 +557,16 @@ function renderCatalog() {
     grid.innerHTML = "";
     const selectedMeta = CATEGORIES.find(x => x.name === state.type);
     const accessoryCats = CATEGORIES.filter(x => x.accessoryGroup);
+    const accessoryProducts = PRODUCTS.filter(p => p.accessoryCategory);
     const accessoryLinks = (cats) => cats.map(x => `<a class="accessory-link" href="${urlType(x.name)}"><span class="accessory-link__eyebrow">Екіпірування</span><b>${x.name}</b><span>${x.short}</span><i aria-hidden="true">→</i></a>`).join("");
     if (state.type === "KOVE" || state.brand === "KOVE") grid.appendChild(el(`<section class="catalog-soon" aria-label="Надходження KOVE"><span class="eyebrow">Незабаром у MOTOMIX</span><h2>KOVE - скоро в наявності</h2><p>Готуємо поповнення каталогу. Моделі, ціни та терміни надходження уточнюються.</p><button class="btn btn--red" type="button" data-order="Запит про надходження KOVE">Дізнатися про надходження</button></section>`));
     else if (state.type === "Аксесуари") {
       grid.appendChild(el(`<section class="accessory-hub" aria-label="Категорії екіпірування"><div class="accessory-hub__intro"><span class="eyebrow">Екіпірування MOTOMIX</span><h2>Підбери захист під свій маршрут</h2><p>Розмір і посадку спорядження краще перевірити перед купівлею. Напиши або зателефонуй - допоможемо підібрати.</p></div><div class="accessory-hub__group"><h3>Шоломи</h3><div class="accessory-hub__links">${accessoryLinks(accessoryCats.filter(x => x.accessoryGroup === "helmets"))}</div></div><div class="accessory-hub__group"><h3>Захист і взуття</h3><div class="accessory-hub__links">${accessoryLinks(accessoryCats.filter(x => x.accessoryGroup === "gear"))}</div></div></section>`));
-      list.forEach(p => grid.appendChild(el(pcardHtml(p))));
+      accessoryProducts.forEach(p => grid.appendChild(el(pcardHtml(p))));
     }
-    else if (selectedMeta?.accessoryGroup) grid.appendChild(el(`<section class="catalog-soon" aria-label="${selectedMeta.name}"><span class="eyebrow">Екіпірування MOTOMIX</span><h2>${selectedMeta.name} - скоро в каталозі</h2><p>${selectedMeta.d} Перші позиції готуємо до додавання.</p><a class="btn btn--red" href="/catalog/accessories">Усі аксесуари</a></section>`));
     else if (!list.length) grid.appendChild(el(`<div class="empty"><b>Нічого не знайшли</b><p>Спробуй змінити фільтри або залиш заявку — підберемо під запит.</p></div>`));
     else list.forEach(p => grid.appendChild(el(pcardHtml(p))));
-    if (countEl) countEl.textContent = state.type === "Аксесуари" ? `Напрямів: ${accessoryCats.length}` : state.type === "KOVE" || state.brand === "KOVE" || selectedMeta?.accessoryGroup ? "Очікуємо надходження" : `Знайдено: ${list.length}`;
+    if (countEl) countEl.textContent = state.type === "Аксесуари" ? `Напрямів: ${accessoryCats.length}` : state.type === "KOVE" || state.brand === "KOVE" ? "Очікуємо надходження" : `Знайдено: ${list.length}`;
     paintHead(); paintBars(); paintChips(); revealInit();
   };
 
