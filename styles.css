@@ -2004,3 +2004,20 @@ picture{display:contents}
 .pcard__stock.stock--confirm{color:var(--ash)}
 .pcard__stock.stock--confirm::before{background:var(--ash)}
 .pdp__stock.stock--confirm{background:var(--surface-2);color:var(--ink-2)}
+
+/* Accessory catalogue: editorial directory, ready for incoming product cards. */
+.accessory-hub{grid-column:1/-1;background:var(--surface);padding:clamp(24px,4vw,56px);border-top:4px solid var(--red)}
+.accessory-hub__intro{max-width:720px;margin-bottom:clamp(30px,4vw,48px)}
+.accessory-hub h2,.accessory-hub h3{font-family:var(--disp);text-transform:uppercase;color:var(--ink)}
+.accessory-hub h2{font-size:clamp(30px,4vw,52px);line-height:1.04;margin:10px 0 14px}
+.accessory-hub h3{font-size:1.15rem;letter-spacing:.08em;margin:0 0 12px}
+.accessory-hub__group + .accessory-hub__group{margin-top:28px}
+.accessory-hub__links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.accessory-link{position:relative;min-height:160px;padding:20px;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden;transition:transform .25s var(--ease),background .25s var(--ease)}
+.accessory-link::after{content:"";position:absolute;right:-24px;bottom:-45px;width:150px;height:150px;border:1px solid rgba(255,255,255,.16);border-radius:50%}
+.accessory-link:hover{transform:translateY(-3px);background:var(--red)}
+.accessory-link__eyebrow{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#a3a3ab;margin-bottom:auto}
+.accessory-link b{font-family:var(--disp);font-size:1.6rem;line-height:1;text-transform:uppercase;position:relative;z-index:1}
+.accessory-link span:not(.accessory-link__eyebrow){font-size:.82rem;color:rgba(255,255,255,.72);margin-top:8px;position:relative;z-index:1}
+.accessory-link i{font-style:normal;font-size:1.5rem;margin-top:10px;position:relative;z-index:1}
+@media(max-width:760px){.accessory-hub__links{grid-template-columns:1fr}.accessory-link{min-height:132px}.accessory-link b{font-size:1.45rem}}

@@ -1223,3 +1223,13 @@ for (const update of [
   const product = window.MM_PRODUCTS.find(p => p.id === update.id);
   if (product) { product.gallery = [update.img, ...(product.gallery || [product.img]).filter(img => img !== update.img)]; product.img = update.img; product.ar = 0.75; }
 }
+
+/* Підкатегорії екіпірування. Товарні картки додаватимуться сюди після надходження. */
+window.MM_CATEGORIES.push(
+  { name: "Шоломи ендуро", slug: "helmet-enduro", group: "Аксесуари", icon: "ic-t-gear", short: "Для ендуро та бездоріжжя", d: "Шоломи для ендуро-поїздок: підбір посадки, розміру та сумісності з окулярами уточнюйте у менеджера.", accessoryGroup: "helmets", hiddenFromHome: true },
+  { name: "Шоломи інтеграли", slug: "helmet-integral", group: "Аксесуари", icon: "ic-t-gear", short: "Закриті для міста і траси", d: "Закриті шоломи-інтеграли для міських та дорожніх маршрутів. Допоможемо підібрати розмір і посадку.", accessoryGroup: "helmets", hiddenFromHome: true },
+  { name: "Шоломи кросові", slug: "helmet-cross", group: "Аксесуари", icon: "ic-t-gear", short: "Для мотокросу", d: "Кросові шоломи для заїздів і тренувань. Запитуйте про доступні розміри та комплектацію.", accessoryGroup: "helmets", hiddenFromHome: true },
+  { name: "Мотоперчатки", slug: "gloves", group: "Аксесуари", icon: "ic-t-gear", short: "Захист і контроль", d: "Мотоперчатки для поїздок містом, трасою та бездоріжжям. Допоможемо з підбором розміру.", accessoryGroup: "gear", hiddenFromHome: true },
+  { name: "Моточерепахи", slug: "body-armor", group: "Аксесуари", icon: "ic-t-gear", short: "Захист корпусу", d: "Моточерепахи для захисту корпусу під час активної їзди. Уточнюйте доступні розміри.", accessoryGroup: "gear", hiddenFromHome: true },
+  { name: "Мотоботинки", slug: "boots", group: "Аксесуари", icon: "ic-t-gear", short: "Захист гомілки і стопи", d: "Мотоботинки для впевненої посадки та захисту на маршруті. Допоможемо визначити розмір.", accessoryGroup: "gear", hiddenFromHome: true }
+);
