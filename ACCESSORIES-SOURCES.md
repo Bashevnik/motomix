@@ -2,6 +2,8 @@
 
 Фото для каталогу збережені локально у `assets/accessories/` у форматі JPG. На сторінках усі показуються у єдиній пропорції 4:3. Джерела - Wikimedia Commons.
 
+Верхній банер розділу: [MotoEqipments HelmetBootsJacketAndGloves](https://commons.wikimedia.org/wiki/File:MotoEqipments_HelmetBootsJacketAndGloves.jpg), CC BY-SA 4.0.
+
 | Категорія | Джерело | Ліцензія |
 | --- | --- | --- |
 | Шоломи ендуро | [Javier Garcia Vico helmet 2007](https://commons.wikimedia.org/wiki/File:Javier_Garcia_Vico_helmet_2007.JPG) | CC BY-SA 3.0 |

@@ -71,9 +71,9 @@ window.MM_CATEGORIES = [
    "slug": "accessories",
    "group": "Аксесуари",
    "icon": "ic-t-gear",
-   "short": "Оптика та екіпіровка",
-   "d": "Оптика, екіпіровка та дрібниці, які потрібні одразу після покупки техніки.",
-   "img": "assets/olx/protyvotumanky-dlya-moto-12-v-try-riznykh-kolor-1.jpg"
+   "short": "Шоломи та екіпіровка",
+   "d": "Шоломи, мотоперчатки, захист корпусу та мотоботинки. Підберемо спорядження за розміром і стилем їзди.",
+   "img": "assets/accessories/hero-gear.jpg"
   }
  ];
 window.MM_BRANDS = ["KOVI","LIFAN","GEON","KAYO","SHINERAY","MUSTANG","FADA","MOTOMIX","SOK MOTO","KAWASAKI","EXDRIVE","TEKKEN","QUADRATERRA","MORBIDELLI"];
