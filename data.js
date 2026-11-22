@@ -1243,3 +1243,28 @@ window.MM_PRODUCTS.unshift(
   { id: "moto-body-armor", name: "Моточерепахи", displayName: "Моточерепахи", brand: "MOTOMIX", cat: "Аксесуари", type: "Моточерепахи", priceRaw: "Ціна за запитом", priceUah: null, stock: "Уточнюйте наявність", badge: "Екіпірування", img: "assets/accessories/body-armor.jpg", gallery: ["assets/accessories/body-armor.jpg"], ar: 0.75, accessoryCategory: true, desc: "Захист корпусу для активної їзди. Уточнюйте доступні розміри та сумісність зі спорядженням.", source: "https://commons.wikimedia.org/wiki/File:Herobiker_motocross_jacket_DSCF2203.jpg" },
   { id: "moto-boots", name: "Мотоботинки", displayName: "Мотоботинки", brand: "MOTOMIX", cat: "Аксесуари", type: "Мотоботинки", priceRaw: "Ціна за запитом", priceUah: null, stock: "Уточнюйте наявність", badge: "Екіпірування", img: "assets/accessories/boots.jpg", gallery: ["assets/accessories/boots.jpg"], ar: 0.75, accessoryCategory: true, desc: "Мотоботинки для захисту стопи та гомілки. Допоможемо визначити розмір перед замовленням.", source: "https://commons.wikimedia.org/wiki/File:AXO_touring_boots.jpg" }
 );
+
+/* Зміни з адмін-панелі лежать в окремому файлі catalog-overrides.js.
+   Базовий каталог лишається безпечним стартовим станом, а застосовані правки
+   потрапляють на сайт після автоматичного Vercel-деплою. */
+window.MM_APPLY_ADMIN_CATALOG = function applyAdminCatalog(state) {
+  const catalog = state || window.MM_ADMIN_CATALOG;
+  if (!catalog || typeof catalog !== 'object') return;
+  const merge = (list, entries) => {
+    (entries || []).forEach((entry) => {
+      if (!entry || !entry.id) return;
+      const at = list.findIndex((item) => item.id === entry.id);
+      if (entry.hidden) { if (at >= 0) list.splice(at, 1); return; }
+      if (at >= 0) Object.assign(list[at], entry);
+      else list.unshift(entry);
+    });
+  };
+  merge(window.MM_PRODUCTS, catalog.products);
+  (catalog.categories || []).forEach((entry) => {
+    if (!entry || !entry.slug) return;
+    const at = window.MM_CATEGORIES.findIndex((item) => item.slug === entry.slug);
+    if (entry.hidden) { if (at >= 0) window.MM_CATEGORIES.splice(at, 1); return; }
+    if (at >= 0) Object.assign(window.MM_CATEGORIES[at], entry);
+    else window.MM_CATEGORIES.push(entry);
+  });
+};

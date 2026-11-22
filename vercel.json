@@ -31,7 +31,16 @@
       ]
     },
     {
-      "source": "/(styles.css|app.js|data.js)",
+      "source": "/catalog-overrides.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/(styles.css|app.js|data.js|admin.css|admin.js)",
       "headers": [
         {
           "key": "Cache-Control",

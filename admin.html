@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>MOTOMIX - адмін-панель</title>
+  <link rel="icon" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/admin.css">
+  <script src="/data.js" defer></script>
+  <script src="/catalog-overrides.js" defer></script>
+  <script src="/admin.js" defer></script>
+</head>
+<body>
+  <main class="login" id="login-view">
+    <section class="login__card">
+      <img src="/assets/logo.png" alt="MOTOMIX" class="login__logo">
+      <p class="eyebrow">Керування каталогом</p>
+      <h1>Адмін-панель</h1>
+      <p class="login__copy">Вхід для керування товарами, категоріями та заявками.</p>
+      <form id="login-form" class="form-stack" autocomplete="on">
+        <label>Логін<input id="login-user" name="username" autocomplete="username" required></label>
+        <label>Пароль<input id="login-password" name="password" type="password" autocomplete="current-password" required></label>
+        <p class="form-error" id="login-error" role="alert"></p>
+        <button class="btn btn--red" type="submit">Увійти</button>
+      </form>
+    </section>
+  </main>
+
+  <div class="admin hidden" id="admin-view">
+    <header class="admin__top">
+      <a href="/" class="admin__brand"><img src="/assets/logo.png" alt="MOTOMIX"><span>Адмін-панель</span></a>
+      <div class="admin__top-actions"><a href="/" class="link-btn" target="_blank" rel="noopener">Відкрити сайт</a><button class="link-btn" id="logout" type="button">Вийти</button></div>
+    </header>
+    <div class="admin__shell">
+      <nav class="admin__nav" aria-label="Навігація адмін-панелі">
+        <button class="nav-item active" data-view="dashboard" type="button">Огляд</button>
+        <button class="nav-item" data-view="products" type="button">Товари</button>
+        <button class="nav-item" data-view="categories" type="button">Категорії</button>
+        <button class="nav-item" data-view="orders" type="button">Заявки</button>
+        <button class="nav-item" data-view="settings" type="button">Налаштування</button>
+      </nav>
+      <section class="admin__content">
+        <section class="panel-view active" id="dashboard-view">
+          <div class="section-head"><div><p class="eyebrow">MOTOMIX</p><h1>Огляд каталогу</h1></div><button class="btn btn--red" data-open-product type="button">Додати товар</button></div>
+          <div class="metrics" id="metrics"></div>
+          <article class="notice"><h2>Публікація змін</h2><p>Зміни зберігаються окремим комітом у GitHub та автоматично публікуються Vercel. Перед першим збереженням додайте GitHub token у налаштуваннях.</p><button class="text-action" data-go-settings type="button">Відкрити налаштування</button></article>
+        </section>
+
+        <section class="panel-view" id="products-view">
+          <div class="section-head"><div><p class="eyebrow">Каталог</p><h1>Товари</h1></div><button class="btn btn--red" data-open-product type="button">Додати товар</button></div>
+          <div class="toolbar"><input id="product-search" type="search" placeholder="Пошук за назвою або брендом"><select id="product-filter"><option value="">Усі категорії</option></select></div>
+          <div class="admin-grid" id="products-list"></div>
+        </section>
+
+        <section class="panel-view" id="categories-view">
+          <div class="section-head"><div><p class="eyebrow">Навігація</p><h1>Категорії</h1></div><button class="btn btn--red" id="add-category" type="button">Додати категорію</button></div>
+          <div class="category-list" id="categories-list"></div>
+        </section>
+
+        <section class="panel-view" id="orders-view">
+          <div class="section-head"><div><p class="eyebrow">Заявки сайту</p><h1>Останні звернення</h1></div><button class="link-btn" id="refresh-orders" type="button">Оновити</button></div>
+          <div class="orders" id="orders-list"><p class="empty-state">Завантаження заявок…</p></div>
+        </section>
+
+        <section class="panel-view" id="settings-view">
+          <div class="section-head"><div><p class="eyebrow">Доступ до публікації</p><h1>Налаштування</h1></div></div>
+          <form class="settings-card form-stack" id="settings-form">
+            <label>GitHub personal access token<input id="github-token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+            <p>Token потрібен лише для запису у репозиторій <b>Bashevnik/motomix</b>. Він живе тільки в поточній вкладці браузера та не зберігається на сайті.</p>
+            <button class="btn btn--red" type="submit">Зберегти для цієї сесії</button>
+          </form>
+          <article class="notice notice--small"><h2>Як створити token</h2><ol><li>У GitHub відкрийте Settings → Developer settings → Personal access tokens.</li><li>Створіть fine-grained token для репозиторію MOTOMIX.</li><li>Дайте дозвіл <b>Contents: Read and write</b> та вставте token вище.</li></ol></article>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <dialog class="modal" id="product-modal"><form method="dialog" class="modal__card form-stack" id="product-form"><div class="modal__head"><h2 id="product-modal-title">Новий товар</h2><button class="icon-btn" value="cancel" aria-label="Закрити">×</button></div><input id="p-id" type="hidden"><div class="form-grid"><label>Назва<input id="p-name" required></label><label>Бренд<input id="p-brand" placeholder="MOTOMIX"></label><label>Категорія<select id="p-type" required></select></label><label>Ціна<input id="p-price" placeholder="Ціна за запитом"></label><label>Наявність<input id="p-stock" placeholder="Уточнюйте наявність"></label><label>Позначка<input id="p-badge" placeholder="Новинка"></label></div><label>Опис<textarea id="p-desc" rows="4"></textarea></label><label>Посилання на джерело / виробника<input id="p-source" type="url" placeholder="https://"></label><label>Фото товару<input id="p-image" type="file" accept="image/jpeg,image/png,image/webp"></label><img class="preview hidden" id="p-preview" alt="Попередній перегляд"><p class="form-error" id="product-error" role="alert"></p><div class="modal__actions"><button class="link-btn" id="delete-product" type="button">Приховати товар</button><button class="btn btn--red" type="submit">Зберегти товар</button></div></form></dialog>
+
+  <dialog class="modal" id="category-modal"><form method="dialog" class="modal__card form-stack" id="category-form"><div class="modal__head"><h2 id="category-modal-title">Нова категорія</h2><button class="icon-btn" value="cancel" aria-label="Закрити">×</button></div><input id="c-slug-original" type="hidden"><label>Назва<input id="c-name" required></label><label>Slug для посилання<input id="c-slug" pattern="[a-z0-9-]+" required placeholder="new-category"></label><label>Короткий підзаголовок<input id="c-short"></label><label>Опис<textarea id="c-desc" rows="4"></textarea></label><p class="form-error" id="category-error" role="alert"></p><div class="modal__actions"><button class="link-btn" id="delete-category" type="button">Приховати категорію</button><button class="btn btn--red" type="submit">Зберегти категорію</button></div></form></dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>
