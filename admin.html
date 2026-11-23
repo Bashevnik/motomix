@@ -65,12 +65,8 @@
 
         <section class="panel-view" id="settings-view">
           <div class="section-head"><div><p class="eyebrow">Доступ до публікації</p><h1>Налаштування</h1></div></div>
-          <form class="settings-card form-stack" id="settings-form">
-            <label>GitHub personal access token<input id="github-token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
-            <p>Token потрібен лише для запису у репозиторій <b>Bashevnik/motomix</b>. Він живе тільки в поточній вкладці браузера та не зберігається на сайті.</p>
-            <button class="btn btn--red" type="submit">Зберегти для цієї сесії</button>
-          </form>
-          <article class="notice notice--small"><h2>Як створити token</h2><ol><li>У GitHub відкрийте Settings → Developer settings → Personal access tokens.</li><li>Створіть fine-grained token для репозиторію MOTOMIX.</li><li>Дайте дозвіл <b>Contents: Read and write</b> та вставте token вище.</li></ol></article>
+          <article class="notice" id="publish-ready" hidden><h2>Публікацію підключено</h2><p>Зміни товарів, категорій і фотографій записуються в GitHub та автоматично зʼявляються на сайті після деплою Vercel.</p></article>
+          <article class="notice" id="publish-missing"><h2>Публікація потребує одноразового підключення</h2><p>Token більше не вводиться в адмін-панелі й не зберігається у браузері. Його один раз додає власник проєкту в секрети Vercel.</p><ol><li>Створіть fine-grained token GitHub лише для <b>Bashevnik/motomix</b>.</li><li>Надайте дозвіл <b>Contents: Read and write</b>.</li><li>У Vercel → Project Settings → Environment Variables створіть <code>MOTOMIX_GITHUB_TOKEN</code> і вставте token.</li><li>Зробіть Redeploy. Після цього усі менеджери працюватимуть в адмінці без token.</li></ol><p>Детальна інструкція: <a href="/ADMIN-SETUP.md" target="_blank" rel="noopener">ADMIN-SETUP.md</a>.</p></article>
         </section>
       </section>
     </div>

@@ -17,9 +17,10 @@
 1. У GitHub відкрийте **Settings → Developer settings → Personal access tokens → Fine-grained tokens**.
 2. Створіть token лише для репозиторію `Bashevnik/motomix`.
 3. У **Repository permissions** виберіть `Contents: Read and write`.
-4. Відкрийте `/admin`, увійдіть і в розділі **Налаштування** вставте token.
+4. У Vercel відкрийте **Project Settings → Environment Variables** та створіть змінну `MOTOMIX_GITHUB_TOKEN` зі значенням цього token для Production, Preview і Development.
+5. Зробіть **Redeploy** проєкту у Vercel.
 
-Token зберігається тільки у `sessionStorage` поточної вкладки. Він не записується в код сайту, GitHub або Vercel. Після закриття вкладки його потрібно вставити знову.
+Token зберігається у Vercel Environment Variables і ніколи не показується в адмін-панелі, браузері або репозиторії. Після одноразового налаштування менеджери працюють з панеллю без token.
 
 Панель записує лише `catalog-overrides.js` та нові файли в `assets/admin/`. Це свідомо обмежує доступ: вона не може змінити інші файли проєкту.
 
@@ -27,6 +28,7 @@ Token зберігається тільки у `sessionStorage` поточної
 
 Початкові облікові дані власник отримує окремо. Для production рекомендовано замінити їх у Vercel Environment Variables:
 
+- `MOTOMIX_GITHUB_TOKEN` — fine-grained token GitHub для запису каталогу;
 - `MOTOMIX_ADMIN_USER` — новий логін;
 - `MOTOMIX_ADMIN_PASSWORD_SCRYPT` — scrypt-хеш нового пароля;
 - необов'язково: `MOTOMIX_GITHUB_REPO` і `MOTOMIX_GITHUB_BRANCH`.

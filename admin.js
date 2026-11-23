@@ -15,7 +15,6 @@
   const basic = () => `Basic ${btoa(`${auth.user}:${auth.password}`)}`;
   const api = async (path, options = {}) => {
     const headers = { Authorization: basic(), ...(options.headers || {}) };
-    if (auth.githubToken) headers['X-Motomix-GitHub-Token'] = auth.githubToken;
     const response = await fetch(`/api/admin${path}`, { ...options, headers });
     const body = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(body.error || 'Помилка запиту.');
@@ -64,14 +63,14 @@
     } catch (error) { box.innerHTML = `<p class="empty-state">${escape(error.message)}</p>`; }
   }
   async function saveCatalog(message) {
-    if (!auth.githubToken) { view('settings'); throw new Error('Додайте GitHub token перед публікацією.'); }
+    if (!auth.githubConfigured) { view('settings'); throw new Error('Публікація ще не підключена. Потрібне одноразове налаштування Vercel.'); }
     const source = `/* MOTOMIX admin catalog state. Managed through /admin. */\nwindow.MM_ADMIN_CATALOG = ${JSON.stringify(state, null, 2)};\nwindow.MM_APPLY_ADMIN_CATALOG?.(window.MM_ADMIN_CATALOG);\n`;
     await api('?action=save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: 'catalog-overrides.js', content: btoa(unescape(encodeURIComponent(source))), message }) });
   }
   async function uploadImage(file, id) {
     if (!file) return null;
     if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size > 3 * 1024 * 1024) throw new Error('Оберіть JPG, PNG або WEBP до 3 МБ.');
-    if (!auth.githubToken) { view('settings'); throw new Error('Додайте GitHub token перед завантаженням фото.'); }
+    if (!auth.githubConfigured) { view('settings'); throw new Error('Публікація ще не підключена. Потрібне одноразове налаштування Vercel.'); }
     const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
     const base64 = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
     const path = `assets/admin/${slugify(id) || `product-${Date.now()}`}.${ext}`;
@@ -88,16 +87,14 @@
     editingCategory = category || null; const c = category || {};
     $('#category-modal-title').textContent = category ? 'Редагувати категорію' : 'Нова категорія'; $('#c-slug-original').value = c.slug || ''; $('#c-name').value = c.name || ''; $('#c-slug').value = c.slug || ''; $('#c-group').value = c.group || ''; $('#c-icon').value = c.icon || ''; $('#c-img').value = c.img || ''; $('#c-accessory-group').value = c.accessoryGroup || ''; $('#c-short').value = c.short || ''; $('#c-desc').value = c.d || ''; $('#c-hidden-home').checked = Boolean(c.hiddenFromHome); $('#category-error').textContent = ''; $('#delete-category').style.visibility = category ? 'visible' : 'hidden'; $('#category-modal').showModal();
   }
-  function start() { $('#login-view').classList.add('hidden'); $('#admin-view').classList.remove('hidden'); state = structuredClone(window.MM_ADMIN_CATALOG || state); renderAll(); }
+  function start(session = {}) { if (auth) { auth.githubConfigured = Boolean(session.githubConfigured); delete auth.githubToken; saveSession(auth); } $('#login-view').classList.add('hidden'); $('#admin-view').classList.remove('hidden'); $('#publish-ready').hidden = !auth?.githubConfigured; $('#publish-missing').hidden = Boolean(auth?.githubConfigured); state = structuredClone(window.MM_ADMIN_CATALOG || state); renderAll(); }
 
   document.addEventListener('DOMContentLoaded', () => {
-    $('#login-form').addEventListener('submit', async (event) => { event.preventDefault(); const error = $('#login-error'); error.textContent = ''; const user = $('#login-user').value.trim(); const password = $('#login-password').value; try { const probe = { user, password, githubToken: '' }; auth = probe; await api('?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login' }) }); saveSession(auth); start(); } catch (e) { auth = null; error.textContent = e.message; } });
+    $('#login-form').addEventListener('submit', async (event) => { event.preventDefault(); const error = $('#login-error'); error.textContent = ''; const user = $('#login-user').value.trim(); const password = $('#login-password').value; try { auth = { user, password }; const session = await api('?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login' }) }); saveSession(auth); start(session); } catch (e) { auth = null; error.textContent = e.message; } });
     $('#logout').addEventListener('click', () => { sessionStorage.removeItem('motomix-admin'); location.reload(); });
     $$('.nav-item').forEach((button) => button.addEventListener('click', () => view(button.dataset.view)));
     $$('[data-go-settings]').forEach((button) => button.addEventListener('click', () => view('settings'))); $$('[data-open-product]').forEach((button) => button.addEventListener('click', () => openProduct()));
     $('#product-search').addEventListener('input', renderProducts); $('#product-filter').addEventListener('change', renderProducts); $('#add-category').addEventListener('click', () => openCategory()); $('#refresh-orders').addEventListener('click', loadOrders);
-    $('#settings-form').addEventListener('submit', (event) => { event.preventDefault(); auth.githubToken = $('#github-token').value.trim(); saveSession(auth); notify(auth.githubToken ? 'Token додано лише для цієї сесії.' : 'Token видалено.'); });
-    $('#github-token').value = auth?.githubToken || '';
     $('#p-image').addEventListener('change', (event) => { const file = event.target.files[0]; if (!file) return; const preview = $('#p-preview'); preview.src = URL.createObjectURL(file); preview.classList.remove('hidden'); });
     $('#product-form').addEventListener('submit', async (event) => { event.preventDefault(); const error = $('#product-error'); error.textContent = ''; const submit = $('#product-form button[type="submit"]'); submit.disabled = true; try { const id = slugify($('#p-id').value) || slugify($('#p-name').value) || `product-${Date.now()}`; const file = $('#p-image').files[0]; const image = await uploadImage(file, id); const old = editingProduct || {}; const gallery = $('#p-gallery').value.split(/\r?\n/).map((value) => value.trim()).filter(Boolean); const priceUahText = $('#p-price-uah').value.trim(); const entry = { ...old, id, name: $('#p-name').value.trim(), displayName: $('#p-display-name').value.trim(), brand: $('#p-brand').value.trim(), cat: $('#p-cat').value.trim(), type: $('#p-type').value.trim(), priceRaw: $('#p-price').value.trim(), priceUah: priceUahText === '' ? null : Number(priceUahText), cur: $('#p-cur').value.trim(), stock: $('#p-stock').value.trim(), badge: $('#p-badge').value.trim(), cc: $('#p-cc').value.trim() === '' ? null : Number($('#p-cc').value), img: image || $('#p-img-path').value.trim(), gallery: image ? [image, ...gallery.filter((value) => value !== image)] : gallery, ar: Number($('#p-ar').value) || old.ar || .75, desc: $('#p-desc').value.trim(), source: $('#p-source').value.trim(), olx: $('#p-olx').value.trim(), identificationNote: $('#p-identification-note').value.trim(), accessoryCategory: $('#p-accessory').checked }; if (!entry.name || !entry.type || !entry.id) throw new Error('Заповніть ID, вихідну назву та тип товару.'); if (!entry.img) throw new Error('Додайте головне фото: шлях, URL або файл.'); if (editingProduct && editingProduct.id !== id) replaceOverride({ id: editingProduct.id, hidden: true }); replaceOverride(entry); applyLocal(); await saveCatalog(`Admin: ${editingProduct ? 'update' : 'add'} product ${id}`); $('#product-modal').close(); renderAll(); notify('Товар збережено. Vercel опублікує зміни автоматично.'); } catch (e) { error.textContent = e.message; } finally { submit.disabled = false; } });
     $('#delete-product').addEventListener('click', async () => { if (!editingProduct || !confirm(`Приховати «${editingProduct.displayName || editingProduct.name}» з каталогу?`)) return; try { replaceOverride({ id: editingProduct.id, hidden: true }); applyLocal(); await saveCatalog(`Admin: hide product ${editingProduct.id}`); $('#product-modal').close(); renderAll(); notify('Товар приховано.'); } catch (e) { $('#product-error').textContent = e.message; } });

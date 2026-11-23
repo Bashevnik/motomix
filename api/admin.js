@@ -29,10 +29,10 @@ function isAdmin(req) {
   catch { return false; }
 }
 
-function githubToken(req) { return clean(req.headers['x-motomix-github-token'], 300); }
+function githubToken(req) { return clean(process.env.MOTOMIX_GITHUB_TOKEN || req.headers['x-motomix-github-token'], 300); }
 async function github(req, method, pathname, body) {
   const token = githubToken(req);
-  if (!token) throw new Error('Додайте GitHub token у налаштуваннях панелі.');
+  if (!token) throw new Error('Публікація ще не підключена. Додайте MOTOMIX_GITHUB_TOKEN у Vercel Environment Variables.');
   const response = await fetch(`https://api.github.com${pathname}`, {
     method,
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'User-Agent': 'motomix-admin', 'X-GitHub-Api-Version': '2022-11-28' },
@@ -60,8 +60,8 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   const action = clean(req.query && req.query.action || req.body && req.body.action, 30);
   if (!isAdmin(req)) return json(res, 401, { error: 'Невірний логін або пароль.' });
-  if (req.method === 'GET' && action === 'session') return json(res, 200, { ok: true, user: process.env.MOTOMIX_ADMIN_USER || DEFAULT_USER });
-  if (req.method === 'POST' && action === 'login') return json(res, 200, { ok: true, user: process.env.MOTOMIX_ADMIN_USER || DEFAULT_USER });
+  if (req.method === 'GET' && action === 'session') return json(res, 200, { ok: true, user: process.env.MOTOMIX_ADMIN_USER || DEFAULT_USER, githubConfigured: Boolean(process.env.MOTOMIX_GITHUB_TOKEN) });
+  if (req.method === 'POST' && action === 'login') return json(res, 200, { ok: true, user: process.env.MOTOMIX_ADMIN_USER || DEFAULT_USER, githubConfigured: Boolean(process.env.MOTOMIX_GITHUB_TOKEN) });
   if (req.method === 'GET' && action === 'orders') {
     try { const { loadCfg } = require('./_store.js'); const cfg = await loadCfg(); return json(res, 200, { ok: true, orders: cfg.orders || [] }); }
     catch { return json(res, 200, { ok: true, orders: [] }); }
