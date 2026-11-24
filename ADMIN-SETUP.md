@@ -15,7 +15,7 @@
 Панель зберігає зміни в GitHub, а Vercel автоматично публікує нову версію сайту. Зазвичай оновлення видно протягом 1–2 хвилин.
 
 1. У GitHub відкрийте **Settings → Developer settings → Personal access tokens → Fine-grained tokens**.
-2. Створіть token лише для репозиторію `Bashevnik/motomix`.
+2. Створіть токен лише для репозиторію `Bashevnik/motomix`.
 3. У **Repository permissions** виберіть `Contents: Read and write`.
 4. У Vercel відкрийте **Project Settings → Environment Variables** та створіть змінну `MOTOMIX_GITHUB_TOKEN` зі значенням цього токена для Production, Preview і Development.
 5. Зробіть **Redeploy** проєкту у Vercel.
@@ -28,7 +28,7 @@
 
 Початкові облікові дані власник отримує окремо. Для production рекомендовано замінити їх у Vercel Environment Variables:
 
-- `MOTOMIX_GITHUB_TOKEN` — fine-grained token GitHub для запису каталогу;
+- `MOTOMIX_GITHUB_TOKEN` — fine-grained токен GitHub для запису каталогу;
 - `MOTOMIX_ADMIN_USER` — новий логін;
 - `MOTOMIX_ADMIN_PASSWORD_SCRYPT` — scrypt-хеш нового пароля;
 - необов'язково: `MOTOMIX_GITHUB_REPO` і `MOTOMIX_GITHUB_BRANCH`.
