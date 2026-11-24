@@ -9,7 +9,7 @@ window.MM_ADMIN_CATALOG = {
       "brand": "MOTOMIX",
       "cat": "Аксесуари",
       "type": "Шоломи ендуро",
-      "priceRaw": "1200",
+      "priceRaw": "",
       "priceUah": null,
       "stock": "Уточнюйте наявність",
       "badge": "Екіпірування",
