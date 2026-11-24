@@ -12,15 +12,15 @@
 
 ## Одноразове підключення публікації
 
-Панель зберігає зміни в GitHub, а Vercel автоматично публікує нову версію сайту.
+Панель зберігає зміни в GitHub, а Vercel автоматично публікує нову версію сайту. Зазвичай оновлення видно протягом 1–2 хвилин.
 
 1. У GitHub відкрийте **Settings → Developer settings → Personal access tokens → Fine-grained tokens**.
 2. Створіть token лише для репозиторію `Bashevnik/motomix`.
 3. У **Repository permissions** виберіть `Contents: Read and write`.
-4. У Vercel відкрийте **Project Settings → Environment Variables** та створіть змінну `MOTOMIX_GITHUB_TOKEN` зі значенням цього token для Production, Preview і Development.
+4. У Vercel відкрийте **Project Settings → Environment Variables** та створіть змінну `MOTOMIX_GITHUB_TOKEN` зі значенням цього токена для Production, Preview і Development.
 5. Зробіть **Redeploy** проєкту у Vercel.
 
-Token зберігається у Vercel Environment Variables і ніколи не показується в адмін-панелі, браузері або репозиторії. Після одноразового налаштування менеджери працюють з панеллю без token.
+Токен зберігається у Vercel Environment Variables і ніколи не показується в панелі керування, браузері або репозиторії. Після одноразового налаштування менеджери працюють із панеллю без токена.
 
 Панель записує лише `catalog-overrides.js` та нові файли в `assets/admin/`. Це свідомо обмежує доступ: вона не може змінити інші файли проєкту.
 
